@@ -30,11 +30,18 @@ export function isAdmin(role) {
   return role === ROLES.ADMIN
 }
 
+export function canInitiateChat(role) {
+  return [ROLES.ADMIN, ROLES.CLINICIAN, ROLES.RESEARCHER].includes(role)
+}
+
 export function getNavLinks(role) {
   const links = [{ path: '/dashboard', label: 'Dashboard' }]
   if (canViewDirectory(role)) links.push({ path: '/directory', label: 'Directory' })
   if (canPostChallenge(role) || role === ROLES.INDUSTRY) {
     links.push({ path: '/challenges', label: 'Challenges' })
+  }
+  if (canInitiateChat(role)) {
+    links.push({ path: '/messages', label: 'Messages' })
   }
   if ([ROLES.ADMIN, ROLES.CLINICIAN, ROLES.RESEARCHER, ROLES.INDUSTRY].includes(role)) {
     links.push({ path: '/pipeline', label: 'Pipeline' })

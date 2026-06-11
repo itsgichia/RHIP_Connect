@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import toast from 'react-hot-toast'
 import api from '../hooks/useApi'
 import { useAuth } from '../context/AuthContext'
+import { useNotifications } from '../context/NotificationContext'
 import { canPostChallenge } from '../utils/roles'
 import ChallengeForm from '../components/forms/ChallengeForm'
 import MatchCard from '../components/ui/MatchCard'
 
 export default function ChallengePage() {
   const { user } = useAuth()
+  const { refresh: refreshNotifications } = useNotifications()
   const [challenges, setChallenges] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [matches, setMatches] = useState([])
@@ -54,8 +57,15 @@ export default function ChallengePage() {
     pollMatches(id)
   }
 
-  const handleSend = (matchId, message) => {
-    setSentMatches((prev) => new Set([...prev, matchId]))
+  const handleSend = async (matchId, message) => {
+    try {
+      await api.post('/threads/initiate', { match_id: matchId, opening_message: message })
+      setSentMatches((prev) => new Set([...prev, matchId]))
+      refreshNotifications()
+      toast.success('Connection request sent')
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Could not send connection request')
+    }
   }
 
   return (

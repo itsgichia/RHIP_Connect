@@ -9,6 +9,7 @@ from app.models import (
     NotificationType,
     Readiness,
     Role,
+    ThreadStatus,
     Visibility,
 )
 
@@ -213,6 +214,76 @@ class NotificationResponse(BaseModel):
 class NotificationListResponse(BaseModel):
     notifications: list[NotificationResponse]
     unread_count: int
+
+
+class OkResponse(BaseModel):
+    ok: bool = True
+
+
+# Threads / Messages
+class ThreadInitiateRequest(BaseModel):
+    match_id: str
+    opening_message: str = Field(min_length=1)
+
+
+class ThreadInitiateResponse(BaseModel):
+    thread_id: str
+    status: ThreadStatus
+
+
+class ThreadRespondRequest(BaseModel):
+    accepted: bool
+
+
+class ThreadRespondResponse(BaseModel):
+    thread_id: str
+    status: ThreadStatus
+
+
+class ChallengeContext(BaseModel):
+    id: str
+    title: str
+    description: str
+    specialty_area: str
+    posted_by_name: Optional[str] = None
+
+
+class ChatMessageResponse(BaseModel):
+    id: str
+    thread_id: str
+    sender_id: str
+    sender_name: str
+    content: str
+    created_at: datetime
+    is_mine: bool = False
+
+    model_config = {"from_attributes": True}
+
+
+class MessageCreate(BaseModel):
+    content: str = Field(min_length=1)
+
+
+class ThreadListItem(BaseModel):
+    id: str
+    status: ThreadStatus
+    challenge_title: Optional[str] = None
+    other_participant_name: str
+    last_message_snippet: Optional[str] = None
+    last_message_at: Optional[datetime] = None
+    unread: bool = False
+    pending_response: bool = False
+
+
+class ThreadListResponse(BaseModel):
+    threads: list[ThreadListItem]
+
+
+class ThreadMessagesResponse(BaseModel):
+    messages: list[ChatMessageResponse]
+    challenge_context: Optional[ChallengeContext] = None
+    thread_status: ThreadStatus
+    can_respond: bool = False
 
 
 # User

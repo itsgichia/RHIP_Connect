@@ -99,3 +99,56 @@ async def send_investor_enquiry_notification(enquiry) -> None:
     <p><strong>Message:</strong> {enquiry.message}</p>
     """
     await _send_email(ADMIN_EMAIL, f"New Investor Contact — {enquiry.name}", body)
+
+
+async def send_match_notification_email(
+    researcher: User,
+    challenge,
+    match_rank: int,
+    reasoning: str,
+    clinician_name: str,
+) -> None:
+    body = f"""
+    <p>Hi {researcher.name},</p>
+    <p>Dr. {clinician_name} posted a clinical challenge: <strong>{challenge.title}</strong>.</p>
+    <p>Qwen ranked you #{match_rank} because: <em>{reasoning}</em></p>
+    <p><a href="{FRONTEND_URL}/challenges">Log in to RHIP Connect</a> to view and respond.</p>
+    """
+    await _send_email(
+        researcher.email,
+        "You've been matched to a clinical challenge on RHIP Connect",
+        body,
+    )
+
+
+async def send_connection_request_email(
+    receiver: User,
+    initiator: User,
+    challenge,
+    opening_message: str,
+) -> None:
+    body = f"""
+    <p>Hi {receiver.name},</p>
+    <p><strong>{initiator.name}</strong> wants to connect with you on RHIP Connect.</p>
+    <p>Re: <strong>{challenge.title}</strong></p>
+    <p><em>"{opening_message}"</em></p>
+    <p><a href="{FRONTEND_URL}/messages">Log in to accept or decline</a>.</p>
+    """
+    await _send_email(
+        receiver.email,
+        f"{initiator.name} wants to connect with you on RHIP Connect",
+        body,
+    )
+
+
+async def send_new_message_email(recipient: User, sender: User, thread_id: str) -> None:
+    body = f"""
+    <p>Hi {recipient.name},</p>
+    <p>You have a new message from <strong>{sender.name}</strong> on RHIP Connect.</p>
+    <p><a href="{FRONTEND_URL}/messages/{thread_id}">Log in to reply</a>.</p>
+    """
+    await _send_email(
+        recipient.email,
+        f"New message from {sender.name} on RHIP Connect",
+        body,
+    )

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ROLE_LABELS } from '../../utils/roles'
+import NotificationBell from '../ui/NotificationBell'
 
 export default function NavBar() {
   const { user, logout } = useAuth()
@@ -16,7 +17,9 @@ export default function NavBar() {
   return (
     <header className="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between">
       <span className="font-display text-lg font-semibold text-rhip-dark">RHIP Connect</span>
-      <div className="relative">
+      <div className="flex items-center gap-2">
+        <NotificationBell />
+        <div className="relative">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-rhip-lightBg transition-colors"
@@ -36,6 +39,7 @@ export default function NavBar() {
             </button>
           </div>
         )}
+        </div>
       </div>
     </header>
   )

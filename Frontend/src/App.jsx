@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
+import { NotificationProvider } from './context/NotificationContext'
 import AppLayout from './components/layout/AppLayout'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
@@ -11,6 +12,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage'
 import DashboardPage from './pages/DashboardPage'
 import DirectoryPage from './pages/DirectoryPage'
 import ChallengePage from './pages/ChallengePage'
+import MessagesPage from './pages/MessagesPage'
 
 function PlaceholderPage({ title }) {
   return (
@@ -24,6 +26,7 @@ function PlaceholderPage({ title }) {
 export default function App() {
   return (
     <AuthProvider>
+      <NotificationProvider>
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
@@ -37,6 +40,8 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/directory" element={<DirectoryPage />} />
             <Route path="/challenges" element={<ChallengePage />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:threadId" element={<MessagesPage />} />
             <Route path="/pipeline" element={<PlaceholderPage title="Innovation Pipeline" />} />
             <Route path="/passport" element={<PlaceholderPage title="Precinct Passport" />} />
             <Route path="/admin" element={<PlaceholderPage title="Admin Panel" />} />
@@ -44,6 +49,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      </NotificationProvider>
     </AuthProvider>
   )
 }

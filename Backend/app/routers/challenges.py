@@ -4,6 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app import email_service
 from app.auth import get_current_user, require_roles
 from app.database import SessionLocal, get_db
 from app.models import (
@@ -57,12 +58,13 @@ async def run_ai_matching(challenge_id: str):
             profile = db.query(Profile).filter(Profile.id == m["profile_id"]).first()
             if not profile:
                 continue
+            rank = m.get("rank", 1)
             ai_match = AIMatch(
                 challenge_id=challenge.id,
                 profile_id=m["profile_id"],
                 score=m["score"],
                 reasoning=m["reasoning"],
-                rank=m.get("rank", 1),
+                rank=rank,
             )
             db.add(ai_match)
             db.add(Notification(
@@ -72,6 +74,22 @@ async def run_ai_matching(challenge_id: str):
                 body=f"Your expertise was matched to: '{challenge.title}'",
                 action_url=f"/challenges/{challenge.id}",
             ))
+
+        db.flush()
+        challenger = db.query(User).filter(User.id == challenge.posted_by).first()
+        for m in matches:
+            profile = db.query(Profile).filter(Profile.id == m["profile_id"]).first()
+            if not profile:
+                continue
+            researcher = db.query(User).filter(User.id == profile.user_id).first()
+            if researcher and challenger:
+                await email_service.send_match_notification_email(
+                    researcher,
+                    challenge,
+                    m.get("rank", 1),
+                    m["reasoning"],
+                    challenger.name,
+                )
 
         challenge.status = ChallengeStatus.MATCHED
         db.commit()

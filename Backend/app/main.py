@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import auth, challenges, directory, forms, impact, pipeline
+from app.routers import auth, challenges, directory, forms, impact, messages, notifications, pipeline
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,6 +23,8 @@ app.include_router(pipeline.router, prefix=API_PREFIX)
 app.include_router(forms.router, prefix=API_PREFIX)
 app.include_router(directory.router, prefix=API_PREFIX)
 app.include_router(challenges.router, prefix=API_PREFIX)
+app.include_router(messages.router, prefix=API_PREFIX)
+app.include_router(notifications.router, prefix=API_PREFIX)
 
 
 @app.get("/health")

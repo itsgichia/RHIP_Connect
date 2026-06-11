@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../hooks/useApi'
 import { useAuth } from '../context/AuthContext'
+import { useNotifications } from '../context/NotificationContext'
 import { ROLE_LABELS, ROLES } from '../utils/roles'
 
 export default function DashboardPage() {
   const { user } = useAuth()
+  const { notifications } = useNotifications()
   const [stats, setStats] = useState({})
 
   useEffect(() => {
@@ -14,10 +16,13 @@ export default function DashboardPage() {
       try {
         if (user?.role === ROLES.CLINICIAN || user?.role === ROLES.RESEARCHER) {
           const { data } = await api.get('/challenges')
-          const mine = data.challenges.filter(
-            (c) => c.posted_by?.name === user.name || user.role === ROLES.RESEARCHER
-          )
-          results.challenges = mine.slice(0, 5)
+          const mine = user.role === ROLES.RESEARCHER
+            ? data.challenges.filter((c) => c.status === 'matched').slice(0, 5)
+            : data.challenges.filter((c) => c.posted_by?.name === user.name).slice(0, 5)
+          results.challenges = mine
+          const threads = await api.get('/threads')
+          results.pendingConnections = threads.data.threads.filter((t) => t.pending_response).length
+          results.activeThreads = threads.data.threads.filter((t) => t.status === 'active').length
         }
         if (user?.role === ROLES.INDUSTRY) {
           const { data } = await api.get('/challenges')
@@ -50,7 +55,9 @@ export default function DashboardPage() {
         {(user?.role === ROLES.CLINICIAN || user?.role === ROLES.RESEARCHER) && (
           <>
             <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <h3 className="font-semibold text-rhip-dark mb-4">Recent Challenges</h3>
+              <h3 className="font-semibold text-rhip-dark mb-4">
+                {user?.role === ROLES.RESEARCHER ? 'Matched Challenges' : 'Recent Challenges'}
+              </h3>
               {(stats.challenges || []).length > 0 ? (
                 <ul className="space-y-2">
                   {stats.challenges.map((c) => (
@@ -71,6 +78,26 @@ export default function DashboardPage() {
                   Post a Challenge
                 </Link>
               )}
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-2">Connection Requests</h3>
+              <p className="font-display text-3xl font-bold text-rhip-teal">{stats.pendingConnections ?? 0}</p>
+              <Link to="/messages" className="text-sm text-rhip-teal hover:underline mt-2 inline-block">
+                View messages →
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-4">Recent Notifications</h3>
+              <ul className="space-y-2">
+                {notifications.slice(0, 5).map((n) => (
+                  <li key={n.id} className="text-sm text-rhip-body">
+                    <span className={!n.is_read ? 'font-medium' : ''}>{n.title}</span>
+                  </li>
+                ))}
+                {notifications.length === 0 && (
+                  <li className="text-sm text-rhip-muted">No notifications yet.</li>
+                )}
+              </ul>
             </div>
             <div className="bg-rhip-dark rounded-2xl p-6 text-white">
               <h3 className="font-display text-lg font-semibold mb-2">Precinct Passport</h3>
