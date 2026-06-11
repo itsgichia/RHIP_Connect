@@ -1,0 +1,82 @@
+[
+  {
+    "title": "AI-Guided Depression Treatment Pathways",
+    "description": "Machine learning model to predict treatment response in major depression, enabling personalised antidepressant selection.",
+    "stage": 7,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Portable TMS Device for Home Use",
+    "description": "Developing a portable transcranial magnetic stimulation device for treatment-resistant depression in outpatient settings.",
+    "stage": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "feasibility",
+    "visibility": "public"
+  },
+  {
+    "title": "Pharmacogenomic Cancer Panel",
+    "description": "Clinical-grade pharmacogenomic testing panel for personalised oncology treatment selection.",
+    "stage": 8,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "commercial",
+    "visibility": "public"
+  },
+  {
+    "title": "Liquid Biopsy Early Detection Platform",
+    "description": "Multi-cancer early detection platform using circulating tumour DNA analysis.",
+    "stage": 7,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Rare Disease Gene Therapy Pipeline",
+    "description": "AAV-based gene therapy candidates for three rare paediatric genetic disorders.",
+    "stage": 5,
+    "specialty_area": "Rare Diseases",
+    "readiness": "feasibility",
+    "visibility": "public"
+  },
+  {
+    "title": "Neuromuscular Patient Registry Platform",
+    "description": "National registry and natural history study platform for neuromuscular disorders.",
+    "stage": 8,
+    "specialty_area": "Rare Diseases",
+    "readiness": "commercial",
+    "visibility": "public"
+  },
+  {
+    "title": "Integrated Care Coordination System",
+    "description": "Digital platform connecting primary care, specialists, and community services for chronic disease management.",
+    "stage": 6,
+    "specialty_area": "Health Systems",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Clinical AI Decision Support Tool",
+    "description": "Real-time clinical decision support using federated learning across hospital networks.",
+    "stage": 7,
+    "specialty_area": "Health Systems",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Digital Mental Health Monitoring App",
+    "description": "Smartphone app for continuous mood monitoring in bipolar disorder patients.",
+    "stage": 4,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "early",
+    "visibility": "precinct"
+  },
+  {
+    "title": "CAR-T Solid Tumour Platform",
+    "description": "Next-generation CAR-T cell therapy platform targeting solid tumour antigens.",
+    "stage": 5,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "feasibility",
+    "visibility": "precinct"
+  }
+]

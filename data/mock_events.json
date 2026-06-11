@@ -1,0 +1,56 @@
+[
+  {
+    "name": "RHIP Innovation Showcase 2026",
+    "date": "2026-03-15",
+    "type": "showcase",
+    "qr_code": "RHIP-SHOWCASE-2026"
+  },
+  {
+    "name": "Clinical Research Symposium",
+    "date": "2026-04-22",
+    "type": "conference",
+    "qr_code": "RHIP-CONF-2026-04"
+  },
+  {
+    "name": "Health Translation Workshop",
+    "date": "2026-05-10",
+    "type": "workshop",
+    "qr_code": "RHIP-WORKSHOP-2026-05"
+  },
+  {
+    "name": "Precinct Networking Evening",
+    "date": "2026-06-18",
+    "type": "networking",
+    "qr_code": "RHIP-NET-2026-06"
+  },
+  {
+    "name": "Mental Health Research Day",
+    "date": "2026-07-08",
+    "type": "conference",
+    "qr_code": "RHIP-MH-2026-07"
+  },
+  {
+    "name": "Industry Partnership Forum",
+    "date": "2026-08-14",
+    "type": "networking",
+    "qr_code": "RHIP-IND-2026-08"
+  },
+  {
+    "name": "Rare Diseases Summit",
+    "date": "2026-09-20",
+    "type": "conference",
+    "qr_code": "RHIP-RARE-2026-09"
+  },
+  {
+    "name": "Digital Health Hackathon",
+    "date": "2026-10-05",
+    "type": "workshop",
+    "qr_code": "RHIP-HACK-2026-10"
+  },
+  {
+    "name": "Annual RHIP Gala",
+    "date": "2026-11-28",
+    "type": "showcase",
+    "qr_code": "RHIP-GALA-2026-11"
+  }
+]
