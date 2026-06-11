@@ -19,8 +19,11 @@ export default function ChallengePage() {
 
   const fetchChallenges = useCallback(async () => {
     const { data } = await api.get('/challenges')
-    setChallenges(data.challenges)
-  }, [])
+    const list = canPostChallenge(user?.role)
+      ? data.challenges.filter((c) => c.posted_by?.name === user?.name)
+      : data.challenges
+    setChallenges(list)
+  }, [user?.name, user?.role])
 
   useEffect(() => {
     fetchChallenges()

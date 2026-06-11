@@ -102,7 +102,7 @@ async def send_investor_enquiry_notification(enquiry) -> None:
 
 
 async def send_match_notification_email(
-    researcher: User,
+    researcher,
     challenge,
     match_rank: int,
     reasoning: str,
@@ -122,8 +122,8 @@ async def send_match_notification_email(
 
 
 async def send_connection_request_email(
-    receiver: User,
-    initiator: User,
+    receiver,
+    initiator,
     challenge,
     opening_message: str,
 ) -> None:
@@ -141,7 +141,7 @@ async def send_connection_request_email(
     )
 
 
-async def send_new_message_email(recipient: User, sender: User, thread_id: str) -> None:
+async def send_new_message_email(recipient, sender, thread_id: str) -> None:
     body = f"""
     <p>Hi {recipient.name},</p>
     <p>You have a new message from <strong>{sender.name}</strong> on RHIP Connect.</p>
