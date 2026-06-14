@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.auth import get_current_user, get_optional_user, require_roles
 from app.database import get_db
-from app.models import Project, Role, User, Visibility
+from app.models import Project, Readiness, Role, User, Visibility
 from app.schemas import ProjectCreate, ProjectListResponse, ProjectResponse
 
 router = APIRouter(prefix="/pipeline", tags=["pipeline"])

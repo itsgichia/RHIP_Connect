@@ -152,3 +152,18 @@ async def send_new_message_email(recipient, sender, thread_id: str) -> None:
         f"New message from {sender.name} on RHIP Connect",
         body,
     )
+
+
+async def send_passport_tier_upgrade_email(user, new_tier: str, events_attended: int) -> None:
+    tier_label = new_tier.capitalize()
+    body = f"""
+    <p>Hi {user.name},</p>
+    <p>Congratulations! You've reached <strong>{tier_label}</strong> tier on the RHIP Precinct Passport.</p>
+    <p>You've attended <strong>{events_attended}</strong> RHIP events this year.</p>
+    <p><a href="{FRONTEND_URL}/passport">View your passport</a> to see your rewards.</p>
+    """
+    await _send_email(
+        user.email,
+        f"You've reached {tier_label} tier on the RHIP Precinct Passport!",
+        body,
+    )

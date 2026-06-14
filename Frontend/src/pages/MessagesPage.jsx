@@ -13,6 +13,7 @@ export default function MessagesPage() {
   const [threads, setThreads] = useState([])
   const [loading, setLoading] = useState(true)
   const [threadStatus, setThreadStatus] = useState(null)
+  const [challengeContext, setChallengeContext] = useState(null)
   const [canRespond, setCanRespond] = useState(false)
 
   const fetchThreads = useCallback(async () => {

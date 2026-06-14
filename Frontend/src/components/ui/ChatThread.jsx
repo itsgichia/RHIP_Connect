@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
 import api from '../../hooks/useApi'
+import { useNotifications } from '../../context/NotificationContext'
 
 export default function ChatThread({
   threadId,
@@ -10,6 +11,7 @@ export default function ChatThread({
   canRespond,
   onStatusChange,
 }) {
+  const { refresh: refreshNotifications } = useNotifications()
   const [messages, setMessages] = useState([])
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(true)
@@ -41,6 +43,7 @@ export default function ChatThread({
       const { data } = await api.post(`/threads/${threadId}/respond`, { accepted })
       onStatusChange?.(data.status)
       toast.success(accepted ? 'Connection accepted' : 'Connection declined')
+      refreshNotifications()
       await loadMessages()
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Could not respond')
@@ -55,6 +58,7 @@ export default function ChatThread({
       const { data } = await api.post(`/threads/${threadId}/messages`, { content: content.trim() })
       setMessages((prev) => [...prev, data])
       setContent('')
+      refreshNotifications()
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Could not send message')
     } finally {

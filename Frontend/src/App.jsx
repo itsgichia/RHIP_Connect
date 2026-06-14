@@ -13,6 +13,8 @@ import DashboardPage from './pages/DashboardPage'
 import DirectoryPage from './pages/DirectoryPage'
 import ChallengePage from './pages/ChallengePage'
 import MessagesPage from './pages/MessagesPage'
+import PipelinePage from './pages/PipelinePage'
+import PassportPage from './pages/PassportPage'
 
 function PlaceholderPage({ title }) {
   return (
@@ -42,8 +44,8 @@ export default function App() {
             <Route path="/challenges" element={<ChallengePage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/messages/:threadId" element={<MessagesPage />} />
-            <Route path="/pipeline" element={<PlaceholderPage title="Innovation Pipeline" />} />
-            <Route path="/passport" element={<PlaceholderPage title="Precinct Passport" />} />
+            <Route path="/pipeline" element={<PipelinePage />} />
+            <Route path="/passport" element={<PassportPage />} />
             <Route path="/admin" element={<PlaceholderPage title="Admin Panel" />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

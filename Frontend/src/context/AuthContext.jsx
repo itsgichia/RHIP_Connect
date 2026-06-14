@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import api from '../hooks/useApi'
+import { firebaseLogin, useFirebaseAuth } from '../lib/authHelpers'
 
 const AuthContext = createContext(null)
 
@@ -13,7 +14,23 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     setLoading(true)
     try {
-      const { data } = await api.post('/auth/login', { email, password })
+      let data
+      if (useFirebaseAuth()) {
+        try {
+          data = await firebaseLogin(email, password)
+        } catch (firebaseErr) {
+          const code = firebaseErr?.code
+          if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
+            const res = await api.post('/auth/login', { email, password })
+            data = { ...res.data, email }
+          } else {
+            throw firebaseErr
+          }
+        }
+      } else {
+        const res = await api.post('/auth/login', { email, password })
+        data = { ...res.data, email }
+      }
       const userData = {
         id: data.user_id,
         name: data.name,

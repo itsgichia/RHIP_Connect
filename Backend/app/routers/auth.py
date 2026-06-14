@@ -15,7 +15,10 @@ from app.auth import (
 )
 from app.database import get_db
 from app.models import EmailToken, EmailTokenType, Institution, InstitutionType, Role, User
+from app.firebase_service import is_firebase_configured, verify_firebase_token
 from app.schemas import (
+    FirebaseLoginRequest,
+    FirebaseSignupRequest,
     ForgotPasswordRequest,
     LoginRequest,
     MessageResponse,
@@ -155,6 +158,86 @@ async def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get
         db.commit()
         await email_service.send_password_reset_email(user.name, user.email, token)
     return MessageResponse(message="If that email is registered, a reset link has been sent.")
+
+
+@router.post("/firebase/signup", response_model=MessageResponse)
+async def firebase_signup(body: FirebaseSignupRequest, db: Session = Depends(get_db)):
+    if not is_firebase_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Firebase authentication is not configured on the server.",
+        )
+    try:
+        decoded = verify_firebase_token(body.id_token)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token")
+
+    email = decoded.get("email", "").lower()
+    if not email:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Firebase account has no email")
+    if is_blocked_email(email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Personal email addresses are not accepted. Please use your institutional email.",
+        )
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    if body.role in (Role.CLINICIAN, Role.RESEARCHER) and not body.specialty_area:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Specialty area required")
+
+    institution = _get_or_create_institution(db, body.institution_name)
+    email_verified = decoded.get("email_verified", False)
+    user = User(
+        name=body.name,
+        email=email,
+        password_hash=hash_password(generate_token()),
+        role=body.role,
+        institution_id=institution.id,
+        specialty_area=body.specialty_area,
+        is_verified=email_verified,
+        is_active=email_verified,
+    )
+    db.add(user)
+    db.commit()
+    return MessageResponse(
+        message="Account created. Check your inbox to verify your email, then log in."
+    )
+
+
+@router.post("/firebase/login", response_model=TokenResponse)
+def firebase_login(body: FirebaseLoginRequest, db: Session = Depends(get_db)):
+    if not is_firebase_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Firebase authentication is not configured on the server.",
+        )
+    try:
+        decoded = verify_firebase_token(body.id_token)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token")
+
+    email = decoded.get("email", "").lower()
+    if not decoded.get("email_verified"):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Please verify your email first")
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No RHIP Connect profile found for this account. Please sign up first.",
+        )
+
+    user.is_verified = True
+    user.is_active = True
+    db.commit()
+
+    return TokenResponse(
+        access_token=create_access_token(user.id, user.role),
+        refresh_token=create_refresh_token(user.id),
+        role=user.role,
+        user_id=user.id,
+        name=user.name,
+    )
 
 
 @router.post("/reset-password", response_model=MessageResponse)

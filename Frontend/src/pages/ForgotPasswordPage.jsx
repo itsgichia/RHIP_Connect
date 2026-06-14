@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import api from '../hooks/useApi'
+import { firebaseForgotPassword, useFirebaseAuth } from '../lib/authHelpers'
 import PublicNavBar from '../components/layout/PublicNavBar'
 
 export default function ForgotPasswordPage() {
@@ -12,8 +14,14 @@ export default function ForgotPasswordPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      await api.post('/auth/forgot-password', { email })
+      if (useFirebaseAuth()) {
+        await firebaseForgotPassword(email)
+      } else {
+        await api.post('/auth/forgot-password', { email })
+      }
       setSent(true)
+    } catch (err) {
+      toast.error(err.message || 'Could not send reset email')
     } finally {
       setLoading(false)
     }

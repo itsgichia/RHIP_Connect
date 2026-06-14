@@ -5,9 +5,11 @@ from pydantic import BaseModel, EmailStr, Field
 
 from app.models import (
     ChallengeStatus,
+    EventType,
     KPICategory,
     NotificationType,
     Readiness,
+    RewardTierLevel,
     Role,
     ThreadStatus,
     Visibility,
@@ -56,6 +58,18 @@ class ForgotPasswordRequest(BaseModel):
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str = Field(min_length=8)
+
+
+class FirebaseSignupRequest(BaseModel):
+    id_token: str
+    name: str
+    role: Role
+    institution_name: str
+    specialty_area: Optional[str] = None
+
+
+class FirebaseLoginRequest(BaseModel):
+    id_token: str
 
 
 # Profile / Directory
@@ -284,6 +298,56 @@ class ThreadMessagesResponse(BaseModel):
     challenge_context: Optional[ChallengeContext] = None
     thread_status: ThreadStatus
     can_respond: bool = False
+
+
+# Passport
+class PassportScanRequest(BaseModel):
+    qr_code: str = Field(min_length=1)
+
+
+class PassportEntryResponse(BaseModel):
+    id: str
+    event_id: str
+    event_name: str
+    event_type: EventType
+    event_date: date
+    scanned_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class PassportScanResponse(BaseModel):
+    entry_logged: bool
+    event_name: str
+    current_tier: RewardTierLevel
+    events_attended: int
+    total_events_in_year: int
+    next_tier_at: Optional[int] = None
+    tier_upgraded: bool
+    already_scanned: bool = False
+
+
+class PassportMyResponse(BaseModel):
+    tier: RewardTierLevel
+    events_attended: int
+    total_events_in_year: int
+    entries: list[PassportEntryResponse]
+    next_reward: Optional[str] = None
+    past_gold: bool
+    year: int
+
+
+class PassportEventResponse(BaseModel):
+    id: str
+    name: str
+    date: date
+    type: EventType
+    qr_code: str
+    attended: bool
+
+
+class PassportEventsResponse(BaseModel):
+    events: list[PassportEventResponse]
 
 
 # User

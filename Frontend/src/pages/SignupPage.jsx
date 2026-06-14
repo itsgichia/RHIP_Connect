@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import api from '../hooks/useApi'
 import PublicNavBar from '../components/layout/PublicNavBar'
+import { firebaseSignup, useFirebaseAuth } from '../lib/authHelpers'
+import api from '../hooks/useApi'
 import { isBlockedEmail, BLOCKED_EMAIL_MESSAGE } from '../utils/blockedDomains'
 
 const SPECIALTY_AREAS = [
@@ -56,10 +57,18 @@ export default function SignupPage() {
         institution_name: form.institution_name,
         specialty_area: showSpecialty ? form.specialty_area : null,
       }
-      await api.post('/auth/signup', payload)
+      if (useFirebaseAuth()) {
+        await firebaseSignup(payload)
+      } else {
+        await api.post('/auth/signup', payload)
+      }
       setSuccess(true)
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Signup failed')
+      const message =
+        err.response?.data?.detail ||
+        err.message ||
+        'Signup failed'
+      toast.error(message)
     } finally {
       setLoading(false)
     }
