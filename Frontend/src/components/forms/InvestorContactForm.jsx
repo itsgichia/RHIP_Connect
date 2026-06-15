@@ -2,8 +2,13 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import api from '../../hooks/useApi'
 
-export default function InvestorContactForm() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
+export default function InvestorContactForm({ defaultValues = {} }) {
+  const [form, setForm] = useState({
+    name: defaultValues.name || '',
+    email: defaultValues.email || '',
+    phone: defaultValues.phone || '',
+    message: '',
+  })
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 

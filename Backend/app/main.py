@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import auth, challenges, directory, forms, impact, messages, notifications, passport, pipeline
+from app.routers import admin, auth, challenges, directory, forms, impact, investor, messages, notifications, passport, pipeline
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,6 +27,8 @@ app.include_router(messages.router, prefix=API_PREFIX)
 app.include_router(notifications.router, prefix=API_PREFIX)
 app.include_router(passport.router, prefix=API_PREFIX)
 app.include_router(passport.admin_router, prefix=API_PREFIX)
+app.include_router(admin.router, prefix=API_PREFIX)
+app.include_router(investor.router, prefix=API_PREFIX)
 
 
 @app.get("/health")

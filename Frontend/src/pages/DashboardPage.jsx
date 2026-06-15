@@ -30,9 +30,36 @@ export default function DashboardPage() {
           const proj = await api.get('/pipeline/projects?readiness=commercial')
           results.projects = proj.data.projects.slice(0, 3)
         }
+        if (user?.role === ROLES.INVESTOR) {
+          const { data } = await api.get('/investor/overview')
+          results.kpis = data.kpis.slice(0, 4)
+          results.investableCount = data.investable_count
+          results.hthOccupancy = data.hth_occupancy
+          results.topProjects = data.projects.slice(0, 3)
+        }
         if (user?.role === ROLES.ADMIN) {
-          const { data } = await api.get('/challenges')
-          results.pending = data.challenges.filter((c) => c.status === 'pending' || c.status === 'matching').length
+          const [challengesRes, usersRes, enquiriesRes, eventsRes] = await Promise.all([
+            api.get('/challenges'),
+            api.get('/admin/users'),
+            api.get('/admin/enquiries'),
+            api.get('/admin/events'),
+          ])
+          results.pending = challengesRes.data.challenges.filter(
+            (c) => c.status === 'pending' || c.status === 'matching'
+          ).length
+          const byRole = usersRes.data.reduce((acc, u) => {
+            if (u.is_active) acc[u.role] = (acc[u.role] || 0) + 1
+            return acc
+          }, {})
+          results.userCounts = byRole
+          results.enquiryCount = enquiriesRes.data.tenants.length + enquiriesRes.data.investors.length
+          const now = new Date()
+          const in30 = new Date(now)
+          in30.setDate(in30.getDate() + 30)
+          results.upcomingEvents = eventsRes.data.filter((ev) => {
+            const d = new Date(ev.date)
+            return d >= now && d <= in30
+          }).length
         }
         const kpiRes = await api.get('/impact/kpis/all').catch(() => null)
         if (kpiRes) results.kpiCount = kpiRes.data.length
@@ -128,11 +155,88 @@ export default function DashboardPage() {
           </>
         )}
 
+        {user?.role === ROLES.INVESTOR && (
+          <>
+            <div className="bg-rhip-dark rounded-2xl p-6 text-white md:col-span-2">
+              <h3 className="font-display text-lg font-semibold mb-2">Investor Portal</h3>
+              <p className="text-rhip-ice text-sm mb-4">
+                Explore precinct metrics, the investable pipeline, and HTH opportunities.
+              </p>
+              <Link to="/investor" className="text-rhip-teal text-sm hover:underline">
+                Open investor portal →
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-2">Investable Projects</h3>
+              <p className="font-display text-3xl font-bold text-rhip-teal">{stats.investableCount ?? 0}</p>
+              <Link to="/investor" className="text-sm text-rhip-teal hover:underline mt-2 inline-block">
+                View pipeline →
+              </Link>
+            </div>
+            {stats.hthOccupancy && (
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 className="font-semibold text-rhip-dark mb-2">HTH Occupancy</h3>
+                <p className="font-display text-3xl font-bold text-rhip-teal">{stats.hthOccupancy.display_value}</p>
+                <div className="h-2 bg-rhip-cardBg rounded-full overflow-hidden mt-3">
+                  <div
+                    className="h-full bg-rhip-teal rounded-full"
+                    style={{ width: `${stats.hthOccupancy.value}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-4">Key Metrics</h3>
+              <ul className="space-y-2">
+                {(stats.kpis || []).map((k) => (
+                  <li key={k.id} className="flex justify-between text-sm text-rhip-body">
+                    <span>{k.display_label}</span>
+                    <span className="font-medium text-rhip-teal">{k.display_value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-4">Top Pipeline Projects</h3>
+              <ul className="space-y-2">
+                {(stats.topProjects || []).map((p) => (
+                  <li key={p.id} className="text-sm text-rhip-body">{p.title}</li>
+                ))}
+                {(stats.topProjects || []).length === 0 && (
+                  <li className="text-sm text-rhip-muted">No projects available.</li>
+                )}
+              </ul>
+            </div>
+          </>
+        )}
+
         {user?.role === ROLES.ADMIN && (
           <>
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="font-semibold text-rhip-dark mb-2">Challenges Pending Matching</h3>
               <p className="font-display text-3xl font-bold text-rhip-teal">{stats.pending ?? 0}</p>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-2">Active Users by Role</h3>
+              <ul className="space-y-1 text-sm">
+                {Object.entries(stats.userCounts || {}).map(([role, count]) => (
+                  <li key={role} className="flex justify-between text-rhip-body">
+                    <span>{ROLE_LABELS[role] || role}</span>
+                    <span className="font-medium text-rhip-teal">{count}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-2">Enquiries</h3>
+              <p className="font-display text-3xl font-bold text-rhip-teal">{stats.enquiryCount ?? 0}</p>
+              <Link to="/admin" className="text-sm text-rhip-teal hover:underline mt-2 inline-block">
+                View enquiries →
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-rhip-dark mb-2">Upcoming Events (30 days)</h3>
+              <p className="font-display text-3xl font-bold text-rhip-teal">{stats.upcomingEvents ?? 0}</p>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="font-semibold text-rhip-dark mb-2">Total KPIs</h3>
@@ -149,6 +253,7 @@ export default function DashboardPage() {
           </>
         )}
 
+        {user?.role !== ROLES.INVESTOR && (
         <div className="bg-white rounded-2xl p-6 shadow-sm">
           <h3 className="font-semibold text-rhip-dark mb-4">Quick Navigation</h3>
           <div className="space-y-2 text-sm">
@@ -157,6 +262,7 @@ export default function DashboardPage() {
             <Link to="/pipeline" className="block text-rhip-teal hover:underline">Innovation Pipeline</Link>
           </div>
         </div>
+        )}
       </div>
     </div>
   )

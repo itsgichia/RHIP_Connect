@@ -1,4 +1,4 @@
-# Environment files (never commit secrets)
+# Environment files 
 .env
 .env.local
 .env.*.local
@@ -25,3 +25,5 @@ firebase-service-account.json
 
 # Local database (optional — uncomment if you don't want db in git)
 # *.db
+rhip_connect.db
+

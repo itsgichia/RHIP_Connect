@@ -30,6 +30,8 @@ def _allowed_visibilities(user: Optional[User]) -> list[Visibility]:
         return [Visibility.PUBLIC]
     if user.role == Role.ADMIN:
         return [Visibility.PUBLIC, Visibility.PRECINCT, Visibility.INTERNAL]
+    if user.role == Role.INVESTOR:
+        return [Visibility.PUBLIC]
     return [Visibility.PUBLIC, Visibility.PRECINCT]
 
 

@@ -34,6 +34,7 @@ INSTITUTION_MAP = {
     "SCHN": (InstitutionType.HOSPITAL, 20),
     "Black Dog Institute": (InstitutionType.MRI, None),
     "The George Institute": (InstitutionType.MRI, None),
+    "Pacific VC": (InstitutionType.INDUSTRY, None),
 }
 
 
@@ -89,6 +90,17 @@ def seed():
                 "title": "Partnership Manager",
                 "expertise_tags": [],
                 "bio": "Industry partnership lead at MedTech Corp.",
+            },
+            {
+                "name": "Sarah Chen",
+                "email": "sarah@pacificvc.com.au",
+                "password": "Investor1!",
+                "role": Role.INVESTOR,
+                "institution": "Pacific VC",
+                "specialty_area": None,
+                "title": "Investment Director",
+                "expertise_tags": [],
+                "bio": "Health and life sciences investor focused on precinct innovation.",
             },
         ]
 
@@ -217,6 +229,7 @@ def seed():
         print("  clinician@rhip.edu.au / DemoPass1!")
         print("  admin@rhip.edu.au / AdminPass1!")
         print("  james@medtechcorp.com.au / Industry1!")
+        print("  sarah@pacificvc.com.au / Investor1!")
         print(f"  {len(profiles_data)} researcher/clinician profiles created")
     finally:
         db.close()

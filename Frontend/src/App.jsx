@@ -15,15 +15,8 @@ import ChallengePage from './pages/ChallengePage'
 import MessagesPage from './pages/MessagesPage'
 import PipelinePage from './pages/PipelinePage'
 import PassportPage from './pages/PassportPage'
-
-function PlaceholderPage({ title }) {
-  return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm text-center">
-      <h1 className="font-display text-xl font-semibold text-rhip-dark">{title}</h1>
-      <p className="text-rhip-muted mt-2">Coming in Week 6–7</p>
-    </div>
-  )
-}
+import AdminPage from './pages/AdminPage'
+import InvestorPage from './pages/InvestorPage'
 
 export default function App() {
   return (
@@ -46,7 +39,8 @@ export default function App() {
             <Route path="/messages/:threadId" element={<MessagesPage />} />
             <Route path="/pipeline" element={<PipelinePage />} />
             <Route path="/passport" element={<PassportPage />} />
-            <Route path="/admin" element={<PlaceholderPage title="Admin Panel" />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/investor" element={<InvestorPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

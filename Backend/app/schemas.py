@@ -361,3 +361,71 @@ class UserResponse(BaseModel):
     is_active: bool
 
     model_config = {"from_attributes": True}
+
+
+# Admin
+class UserAdminResponse(UserResponse):
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class UserAdminUpdate(BaseModel):
+    role: Optional[Role] = None
+    is_active: Optional[bool] = None
+
+
+class EventCreate(BaseModel):
+    name: str = Field(min_length=1)
+    date: date
+    type: EventType
+
+
+class EventAdminResponse(BaseModel):
+    id: str
+    name: str
+    date: date
+    event_year: int
+    qr_code: str
+    type: EventType
+
+    model_config = {"from_attributes": True}
+
+
+class TenantEnquiryResponse(BaseModel):
+    id: str
+    company_name: str
+    contact_name: str
+    email: str
+    phone: str
+    company_type: str
+    desks_needed: int
+    preferred_start: Optional[date] = None
+    message: str
+    submitted_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class InvestorEnquiryResponse(BaseModel):
+    id: str
+    name: str
+    email: str
+    phone: str
+    message: str
+    submitted_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class EnquiriesListResponse(BaseModel):
+    tenants: list[TenantEnquiryResponse]
+    investors: list[InvestorEnquiryResponse]
+
+
+# Investor
+class InvestorOverviewResponse(BaseModel):
+    kpis: list[KPIResponse]
+    hth_occupancy: Optional[KPIResponse] = None
+    projects: list[ProjectResponse]
+    investable_count: int

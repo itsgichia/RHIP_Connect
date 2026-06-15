@@ -30,12 +30,20 @@ export function isAdmin(role) {
   return role === ROLES.ADMIN
 }
 
+export function isInvestor(role) {
+  return role === ROLES.INVESTOR
+}
+
 export function canInitiateChat(role) {
   return [ROLES.ADMIN, ROLES.CLINICIAN, ROLES.RESEARCHER].includes(role)
 }
 
 export function getNavLinks(role) {
   const links = [{ path: '/dashboard', label: 'Dashboard' }]
+  if (isInvestor(role)) {
+    links.push({ path: '/investor', label: 'Investor Portal' })
+    return links
+  }
   if (canViewDirectory(role)) links.push({ path: '/directory', label: 'Directory' })
   if (canPostChallenge(role) || role === ROLES.INDUSTRY) {
     links.push({ path: '/challenges', label: 'Challenges' })
