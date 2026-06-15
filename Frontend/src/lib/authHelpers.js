@@ -10,11 +10,26 @@ import { auth, isFirebaseConfigured } from './firebase'
 const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin
 
 export async function firebaseSignup(form) {
-  const credential = await createUserWithEmailAndPassword(auth, form.email, form.password)
-  await sendEmailVerification(credential.user, {
-    url: `${frontendUrl}/auth/login`,
-    handleCodeInApp: false,
-  })
+  let credential
+  try {
+    credential = await createUserWithEmailAndPassword(auth, form.email, form.password)
+    await sendEmailVerification(credential.user, {
+      url: `${frontendUrl}/auth/login`,
+      handleCodeInApp: false,
+    })
+  } catch (err) {
+    if (err?.code !== 'auth/email-already-in-use') {
+      throw err
+    }
+    // Firebase account exists (e.g. after a DB reseed) — sign in and recreate the local profile.
+    credential = await signInWithEmailAndPassword(auth, form.email, form.password)
+    if (!credential.user.emailVerified) {
+      await sendEmailVerification(credential.user, {
+        url: `${frontendUrl}/auth/login`,
+        handleCodeInApp: false,
+      })
+    }
+  }
   const idToken = await credential.user.getIdToken()
   await api.post('/auth/firebase/signup', {
     id_token: idToken,

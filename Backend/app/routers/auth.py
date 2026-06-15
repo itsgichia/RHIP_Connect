@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -30,6 +31,7 @@ from app.schemas import (
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+logger = logging.getLogger(__name__)
 
 
 def _get_or_create_institution(db: Session, name: str) -> Institution:
@@ -169,7 +171,8 @@ async def firebase_signup(body: FirebaseSignupRequest, db: Session = Depends(get
         )
     try:
         decoded = verify_firebase_token(body.id_token)
-    except Exception:
+    except Exception as exc:
+        logger.warning("Firebase token verification failed on signup: %s", exc)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token")
 
     email = decoded.get("email", "").lower()
@@ -213,7 +216,8 @@ def firebase_login(body: FirebaseLoginRequest, db: Session = Depends(get_db)):
         )
     try:
         decoded = verify_firebase_token(body.id_token)
-    except Exception:
+    except Exception as exc:
+        logger.warning("Firebase token verification failed on login: %s", exc)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token")
 
     email = decoded.get("email", "").lower()
@@ -224,7 +228,7 @@ def firebase_login(body: FirebaseLoginRequest, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No RHIP Connect profile found for this account. Please sign up first.",
+            detail="No platform profile found. Sign up again with the same email to restore your account.",
         )
 
     user.is_verified = True
