@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #2D3748;
+  background-color: #F5F9FA;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@media print {
+  .profile-page nav,
+  .profile-page a[href="/directory"] {
+    display: none !important;
+  }
+
+  .profile-page {
+    max-width: none;
+  }
+}

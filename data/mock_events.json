@@ -1,0 +1,110 @@
+[
+  {
+    "name": "RHIP Innovation Showcase 2026",
+    "date": "2026-03-15",
+    "type": "showcase",
+    "qr_code": "RHIP-SHOWCASE-2026"
+  },
+  {
+    "name": "Clinical Research Symposium",
+    "date": "2026-04-22",
+    "type": "conference",
+    "qr_code": "RHIP-CONF-2026-04"
+  },
+  {
+    "name": "Health Translation Workshop",
+    "date": "2026-05-10",
+    "type": "workshop",
+    "qr_code": "RHIP-WORKSHOP-2026-05"
+  },
+  {
+    "name": "Precinct Networking Evening",
+    "date": "2026-06-18",
+    "type": "networking",
+    "qr_code": "RHIP-NET-2026-06"
+  },
+  {
+    "name": "Mental Health Research Day",
+    "date": "2026-07-08",
+    "type": "conference",
+    "qr_code": "RHIP-MH-2026-07"
+  },
+  {
+    "name": "Industry Partnership Forum",
+    "date": "2026-08-14",
+    "type": "networking",
+    "qr_code": "RHIP-IND-2026-08"
+  },
+  {
+    "name": "Rare Diseases Summit",
+    "date": "2026-09-20",
+    "type": "conference",
+    "qr_code": "RHIP-RARE-2026-09"
+  },
+  {
+    "name": "Digital Health Hackathon",
+    "date": "2026-10-05",
+    "type": "workshop",
+    "qr_code": "RHIP-HACK-2026-10"
+  },
+  {
+    "name": "Annual RHIP Gala",
+    "date": "2026-11-28",
+    "type": "showcase",
+    "qr_code": "RHIP-GALA-2026-11"
+  },
+  {
+    "name": "Precision Medicine Frontiers",
+    "date": "2026-02-12",
+    "type": "conference",
+    "qr_code": "RHIP-PREC-2026-02"
+  },
+  {
+    "name": "Startup Pitch Night",
+    "date": "2026-03-28",
+    "type": "showcase",
+    "qr_code": "RHIP-PITCH-2026-03"
+  },
+  {
+    "name": "Community Health Open Day",
+    "date": "2026-04-05",
+    "type": "networking",
+    "qr_code": "RHIP-OPEN-2026-04"
+  },
+  {
+    "name": "AI in Clinical Practice Workshop",
+    "date": "2026-05-24",
+    "type": "workshop",
+    "qr_code": "RHIP-AI-2026-05"
+  },
+  {
+    "name": "Paediatric Research Colloquium",
+    "date": "2026-06-30",
+    "type": "conference",
+    "qr_code": "RHIP-PAED-2026-06"
+  },
+  {
+    "name": "Gene Therapy Innovation Day",
+    "date": "2026-08-22",
+    "type": "showcase",
+    "qr_code": "RHIP-GENE-2026-08"
+  },
+  {
+    "name": "Health Systems Leadership Forum",
+    "date": "2026-09-12",
+    "type": "networking",
+    "qr_code": "RHIP-LEAD-2026-09"
+  },
+  {
+    "name": "Neuroscience Discovery Symposium",
+    "date": "2026-10-18",
+    "type": "conference",
+    "qr_code": "RHIP-NEURO-2026-10"
+  },
+  {
+    "name": "End-of-Year Research Showcase",
+    "date": "2026-12-05",
+    "type": "showcase",
+    "qr_code": "RHIP-EOS-2026-12"
+  }
+]

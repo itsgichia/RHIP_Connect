@@ -31,17 +31,14 @@ RHIP_Connect/
 
 ## First-time setup
 
-### 1. Clone and create environment files
+### 1. Clone the repo
 
 ```bash
 git clone <your-repo-url>
 cd RHIP_Connect
-
-cp Backend/.env.example Backend/.env
-cp Frontend/.env.example Frontend/.env
 ```
 
-Edit both `.env` files with your own values (see [Environment variables](#environment-variables) below).
+Create `Backend/.env` and `Frontend/.env` with your own values (see [Environment variables](#environment-variables) below).
 
 ### 2. Firebase (required)
 
@@ -150,7 +147,7 @@ Open the app: [http://localhost:5173](http://localhost:5173)
 
 ### Backend (`Backend/.env`)
 
-Copy from `Backend/.env.example`. Key settings:
+Key settings for `Backend/.env`:
 
 | Variable | Description |
 |----------|-------------|
@@ -165,7 +162,7 @@ Copy from `Backend/.env.example`. Key settings:
 
 ### Frontend (`Frontend/.env`)
 
-Copy from `Frontend/.env.example`. Key settings:
+Key settings for `Frontend/.env`:
 
 | Variable | Description |
 |----------|-------------|

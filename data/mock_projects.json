@@ -1,0 +1,194 @@
+[
+  {
+    "title": "AI-Guided Depression Treatment Pathways",
+    "description": "Machine learning model to predict treatment response in major depression, enabling personalised antidepressant selection.",
+    "stage": 7,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Portable TMS Device for Home Use",
+    "description": "Developing a portable transcranial magnetic stimulation device for treatment-resistant depression in outpatient settings.",
+    "stage": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "feasibility",
+    "visibility": "public"
+  },
+  {
+    "title": "Digital Mental Health Monitoring App",
+    "description": "Smartphone app for continuous mood monitoring in bipolar disorder patients.",
+    "stage": 4,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "early",
+    "visibility": "precinct"
+  },
+  {
+    "title": "Ketamine Infusion Protocol Optimisation",
+    "description": "Clinical protocol development for subanaesthetic ketamine in treatment-resistant depression with real-time outcome tracking.",
+    "stage": 8,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "commercial",
+    "visibility": "public"
+  },
+  {
+    "title": "VR Exposure Therapy Platform",
+    "description": "Virtual reality platform for graded exposure therapy in anxiety and PTSD, integrated with clinician dashboards.",
+    "stage": 5,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "feasibility",
+    "visibility": "public"
+  },
+  {
+    "title": "Youth Early Psychosis Detection Tool",
+    "description": "Digital screening tool for early psychosis in adolescents, deployed across school and primary care settings.",
+    "stage": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Pharmacogenomic Cancer Panel",
+    "description": "Clinical-grade pharmacogenomic testing panel for personalised oncology treatment selection.",
+    "stage": 8,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "commercial",
+    "visibility": "public"
+  },
+  {
+    "title": "Liquid Biopsy Early Detection Platform",
+    "description": "Multi-cancer early detection platform using circulating tumour DNA analysis.",
+    "stage": 7,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "CAR-T Solid Tumour Platform",
+    "description": "Next-generation CAR-T cell therapy platform targeting solid tumour antigens.",
+    "stage": 5,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "feasibility",
+    "visibility": "precinct"
+  },
+  {
+    "title": "Polygenic Risk Score Clinical Portal",
+    "description": "Patient-facing portal delivering polygenic risk scores for cardiovascular and metabolic disease prevention.",
+    "stage": 6,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Tumour Organoid Drug Screening",
+    "description": "Patient-derived organoid platform for testing chemotherapy response before treatment begins.",
+    "stage": 7,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Wearable Cardiac Biomarker Sensor",
+    "description": "Implantable micro-sensor for continuous troponin and BNP monitoring in heart failure patients.",
+    "stage": 4,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "early",
+    "visibility": "precinct"
+  },
+  {
+    "title": "Rare Disease Gene Therapy Pipeline",
+    "description": "AAV-based gene therapy candidates for three rare paediatric genetic disorders.",
+    "stage": 5,
+    "specialty_area": "Rare Diseases",
+    "readiness": "feasibility",
+    "visibility": "public"
+  },
+  {
+    "title": "Neuromuscular Patient Registry Platform",
+    "description": "National registry and natural history study platform for neuromuscular disorders.",
+    "stage": 8,
+    "specialty_area": "Rare Diseases",
+    "readiness": "commercial",
+    "visibility": "public"
+  },
+  {
+    "title": "Newborn Metabolic Screening Expansion",
+    "description": "Expanded newborn screening panel covering 50 additional rare metabolic conditions.",
+    "stage": 7,
+    "specialty_area": "Rare Diseases",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Duchenne Muscular Dystrophy Trial Network",
+    "description": "Multi-site clinical trial network for novel exon-skipping therapies in Duchenne muscular dystrophy.",
+    "stage": 6,
+    "specialty_area": "Rare Diseases",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Fabry Disease Enzyme Replacement Programme",
+    "description": "Long-term outcomes study of enzyme replacement therapy in Fabry disease with biomarker tracking.",
+    "stage": 8,
+    "specialty_area": "Rare Diseases",
+    "readiness": "commercial",
+    "visibility": "public"
+  },
+  {
+    "title": "Epilepsy Genomics Diagnostic Hub",
+    "description": "Rapid whole-genome sequencing service for undiagnosed epilepsy syndromes in paediatric patients.",
+    "stage": 5,
+    "specialty_area": "Rare Diseases",
+    "readiness": "feasibility",
+    "visibility": "precinct"
+  },
+  {
+    "title": "Integrated Care Coordination System",
+    "description": "Digital platform connecting primary care, specialists, and community services for chronic disease management.",
+    "stage": 6,
+    "specialty_area": "Health Systems",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Clinical AI Decision Support Tool",
+    "description": "Real-time clinical decision support using federated learning across hospital networks.",
+    "stage": 7,
+    "specialty_area": "Health Systems",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Hospital-at-Home Digital Pathway",
+    "description": "Remote monitoring and virtual ward platform enabling acute care delivery in patients' homes.",
+    "stage": 5,
+    "specialty_area": "Health Systems",
+    "readiness": "feasibility",
+    "visibility": "public"
+  },
+  {
+    "title": "Emergency Department Triage Optimiser",
+    "description": "AI-powered triage system reducing wait times and improving patient flow in emergency departments.",
+    "stage": 6,
+    "specialty_area": "Health Systems",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Population Health Surveillance Dashboard",
+    "description": "Real-time epidemiological dashboard integrating hospital, GP, and pathology data across SESLHD.",
+    "stage": 7,
+    "specialty_area": "Health Systems",
+    "readiness": "clinical",
+    "visibility": "public"
+  },
+  {
+    "title": "Nursing Workflow Automation Suite",
+    "description": "Digital tools for medication administration, handover, and shift planning across ward environments.",
+    "stage": 4,
+    "specialty_area": "Health Systems",
+    "readiness": "early",
+    "visibility": "precinct"
+  }
+]

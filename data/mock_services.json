@@ -1,0 +1,262 @@
+[
+  {
+    "slug": "gastroenterology-and-hepatology",
+    "name": "Gastroenterology and Hepatology",
+    "summary": "Comprehensive consultative and diagnostic procedures in gastroenterology and liver disease.",
+    "description": "The Department of Gastroenterology and Hepatology at the Randwick Health Campus provides a comprehensive range of consultative and diagnostic procedures. Specialist diagnostic services include endoscopy and colonoscopy, endoscopic ultrasound, ERCP, capsule endoscopy, and Fibroscan. The department runs weekly outpatient clinics including general gastroenterology, inflammatory bowel disease, and advanced liver disease.",
+    "specialty": "Gastroenterology and Hepatology",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 2061",
+    "contact_email": "gastro@health.nsw.gov.au",
+    "contact_address": "Level 2, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "Referrals are accepted from GPs and specialists via NSW Health eReferral or fax. Urgent referrals should be marked accordingly and include recent pathology and imaging results.",
+    "patient_resources": [
+      {
+        "title": "Preparing for your colonoscopy",
+        "description": "Dietary instructions and bowel preparation guide for patients scheduled for colonoscopy.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Inflammatory Bowel Disease patient information",
+        "description": "Resources for patients living with Crohn's disease and ulcerative colitis.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Liver disease and Fibroscan information",
+        "description": "What to expect during a non-invasive liver stiffness scan.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "A/Prof Craig Haifer", "title": "Associate Professor", "role": "Head of Department", "phone": "02 9382 2061"},
+      {"name": "Dr Santosh Sanagapalli", "title": "Staff Specialist", "role": "Interventional Endoscopy", "phone": "02 9382 2061"},
+      {"name": "Dr Mei Lin", "title": "Consultant Gastroenterologist", "role": "Inflammatory Bowel Disease", "phone": "02 9382 2061"}
+    ]
+  },
+  {
+    "slug": "cardiology",
+    "name": "Cardiology",
+    "summary": "Comprehensive cardiac care including imaging, electrophysiology, and heart failure management.",
+    "description": "The Cardiology Department provides inpatient and outpatient services for patients with heart disease across the Randwick campus. Services include cardiac imaging, electrophysiology, interventional cardiology, heart failure clinics, and cardiac rehabilitation programmes in partnership with the Health Translation Hub.",
+    "specialty": "Cardiology",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 2175",
+    "contact_email": "cardiology@health.nsw.gov.au",
+    "contact_address": "Cardiology Outpatients, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "GP and specialist referrals accepted. Emergency cardiac presentations should attend the Prince of Wales Hospital Emergency Department.",
+    "patient_resources": [
+      {
+        "title": "Heart failure self-management guide",
+        "description": "Daily monitoring tips, medication information, and when to seek urgent care.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Cardiac rehabilitation programme",
+        "description": "Information about supervised exercise and education sessions after a cardiac event.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "A/Prof Cameron Holloway", "title": "Associate Professor", "role": "Clinical Director", "phone": "02 9382 2175"},
+      {"name": "A/Prof Dennis Kuchar", "title": "Associate Professor", "role": "Cardiac Electrophysiology", "phone": "02 9369 1494"}
+    ]
+  },
+  {
+    "slug": "mental-health",
+    "name": "Mental Health Services",
+    "summary": "Adult and youth mental health care including emergency, inpatient, and community services.",
+    "description": "Mental Health Services at the Randwick campus provide acute and community-based care for adults and young people. The service includes a psychiatric emergency centre, inpatient units, youth mental health programmes, and specialised clinics for treatment-resistant depression and mood disorders.",
+    "specialty": "Psychiatry",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 3888",
+    "contact_email": "mentalhealth@health.nsw.gov.au",
+    "contact_address": "Mental Health Services, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "Community referrals via GP or mental health triage. For crisis support, contact the NSW Mental Health Line on 1800 011 511.",
+    "patient_resources": [
+      {
+        "title": "Youth mental health services guide",
+        "description": "Information for young people and families accessing headspace and hospital youth programmes.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Treatment-resistant depression clinic",
+        "description": "Referral criteria and what to expect from neurostimulation therapies including TMS.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "Prof. Sarah Chen", "title": "Professor of Psychiatry", "role": "Treatment-Resistant Depression Clinic", "phone": "02 9382 3888"},
+      {"name": "Dr. James Morrison", "title": "Consultant Psychiatrist", "role": "Youth Mental Health", "phone": "02 9382 3888"},
+      {"name": "Dr. Alex Rivera", "title": "Consultant Psychiatrist", "role": "Adult Acute Services", "phone": "02 9382 3888"}
+    ]
+  },
+  {
+    "slug": "paediatrics",
+    "name": "Paediatric Services",
+    "summary": "Specialist medical and surgical care for children and adolescents at Sydney Children's Hospital.",
+    "description": "Sydney Children's Hospital Randwick provides world-class paediatric care across more than 30 specialty areas. As part of the Sydney Children's Hospitals Network, the service delivers emergency, inpatient, outpatient, and day-stay care for children from across NSW and beyond.",
+    "specialty": "Paediatrics",
+    "facility_slug": "sydney-childrens-hospital-randwick",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 1111",
+    "contact_email": "info@schn.health.nsw.gov.au",
+    "contact_address": "High Street, Randwick NSW 2031",
+    "referral_info": "Referrals from GPs and paediatricians via SCHN eReferral. Emergency presentations go directly to the Children's Hospital Emergency Department.",
+    "patient_resources": [
+      {
+        "title": "Your hospital stay — information for families",
+        "description": "What to bring, visiting hours, and support services available during your child's admission.",
+        "url": "https://www.schn.health.nsw.gov.au/"
+      },
+      {
+        "title": "Rare diseases and genetics programme",
+        "description": "Information about the precinct's multidisciplinary rare disease clinics.",
+        "url": "https://www.schn.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "Prof. Elena Vasquez", "title": "Professor of Paediatrics", "role": "Clinical Genetics", "phone": "02 9382 1111"},
+      {"name": "Dr. Priya Sharma", "title": "Staff Specialist", "role": "General Paediatrics", "phone": "02 9382 1111"}
+    ]
+  },
+  {
+    "slug": "emergency-medicine",
+    "name": "Emergency Medicine",
+    "summary": "24/7 emergency care for adults and children at the Randwick Health Campus.",
+    "description": "The Randwick Health Campus operates separate adult and paediatric emergency departments. Prince of Wales Hospital Emergency provides tertiary-level trauma and medical emergency care. Sydney Children's Hospital Emergency is dedicated to paediatric emergencies and is one of the busiest children's EDs in Australia.",
+    "specialty": "Emergency Medicine",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "000",
+    "contact_email": "",
+    "contact_address": "Barker Street & High Street, Randwick NSW 2031",
+    "referral_info": "For life-threatening emergencies call 000. For non-urgent advice contact Healthdirect on 1800 022 222.",
+    "patient_resources": [
+      {
+        "title": "When to visit the Emergency Department",
+        "description": "Guidance on when to attend ED versus your GP or after-hours service.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Children's Emergency Department guide",
+        "description": "What to expect when bringing your child to Sydney Children's Hospital Emergency.",
+        "url": "https://www.schn.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "Dr. Michael Torres", "title": "Director of Emergency Medicine", "role": "Adult ED", "phone": "02 9382 2222"},
+      {"name": "Dr. Lisa Nguyen", "title": "Director of Paediatric Emergency", "role": "Children's ED", "phone": "02 9382 1111"}
+    ]
+  },
+  {
+    "slug": "oncology",
+    "name": "Medical Oncology",
+    "summary": "Comprehensive cancer diagnosis, treatment, and supportive care services.",
+    "description": "The Medical Oncology service at Prince of Wales Hospital provides chemotherapy, immunotherapy, and coordinated multidisciplinary cancer care. The service works closely with radiation oncology, surgical oncology, and the precinct's research institutes to offer patients access to clinical trials.",
+    "specialty": "Medical Oncology",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 5111",
+    "contact_email": "oncology@health.nsw.gov.au",
+    "contact_address": "Oncology Day Unit, Level 3, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "Referrals accepted from GPs and specialists. Multidisciplinary team review is arranged for all new cancer diagnoses.",
+    "patient_resources": [
+      {
+        "title": "Cancer treatment — what to expect",
+        "description": "Overview of chemotherapy, side effect management, and supportive care services.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Clinical trials at Randwick",
+        "description": "Information about open cancer clinical trials available through the RHIP research network.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "A/Prof Anthony Joshua", "title": "Associate Professor", "role": "Medical Oncology", "phone": "02 9382 5111"},
+      {"name": "A/Prof Nada Hamad", "title": "Associate Professor", "role": "Haematology", "phone": "02 9382 5111"}
+    ]
+  },
+  {
+    "slug": "respiratory-medicine",
+    "name": "Respiratory and Sleep Medicine",
+    "summary": "Diagnosis and treatment of lung disease, sleep disorders, and lung transplantation.",
+    "description": "The Respiratory Medicine department provides comprehensive care for patients with asthma, COPD, interstitial lung disease, sleep apnoea, and advanced pulmonary conditions. The service includes a lung function laboratory and works closely with the precinct lung transplantation programme.",
+    "specialty": "Respiratory and Sleep Medicine",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 2175",
+    "contact_email": "respiratory@health.nsw.gov.au",
+    "contact_address": "Thoracic Medicine, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "GP and specialist referrals accepted via NSW Health eReferral. Sleep study referrals require completion of a sleep questionnaire.",
+    "patient_resources": [
+      {
+        "title": "Sleep apnoea — patient guide",
+        "description": "Information about CPAP therapy and sleep study preparation.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Lung function test preparation",
+        "description": "Instructions for patients attending the lung function laboratory.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "A/Prof Adrian Havryk", "title": "Associate Professor", "role": "Clinical Director", "phone": "02 9382 2175"}
+    ]
+  },
+  {
+    "slug": "nephrology",
+    "name": "Nephrology (Kidney Disorders)",
+    "summary": "Specialist care for chronic kidney disease, dialysis, and kidney transplantation.",
+    "description": "The Nephrology service at Prince of Wales Hospital manages the full spectrum of kidney disease from early chronic kidney disease through to dialysis and transplant coordination. Outpatient clinics, dialysis units, and multidisciplinary renal care teams support patients across South Eastern Sydney.",
+    "specialty": "Nephrology",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 2400",
+    "contact_email": "nephrology@health.nsw.gov.au",
+    "contact_address": "Renal Unit, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "Referrals from GPs and specialists. Urgent renal referrals should include recent creatinine, eGFR, and urinalysis results.",
+    "patient_resources": [
+      {
+        "title": "Living with chronic kidney disease",
+        "description": "Diet, medication, and monitoring guidance for CKD patients.",
+        "url": "https://www.health.nsw.gov.au/"
+      },
+      {
+        "title": "Dialysis — what to expect",
+        "description": "Information for patients starting haemodialysis or peritoneal dialysis.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "Dr Mei Lin", "title": "Consultant Nephrologist", "role": "General Nephrology", "phone": "02 9382 2400"}
+    ]
+  },
+  {
+    "slug": "rheumatology",
+    "name": "Rheumatology",
+    "summary": "Diagnosis and management of arthritis, autoimmune diseases, and musculoskeletal conditions.",
+    "description": "The Rheumatology department provides outpatient and infusion services for patients with inflammatory arthritis, lupus, vasculitis, and other autoimmune conditions. The service coordinates biologic therapy infusions and works with allied health for comprehensive musculoskeletal care.",
+    "specialty": "Rheumatology",
+    "facility_slug": "prince-of-wales-hospital",
+    "district_slug": "seslhd-randwick",
+    "contact_phone": "02 9382 2600",
+    "contact_email": "rheumatology@health.nsw.gov.au",
+    "contact_address": "Rheumatology Outpatients, Prince of Wales Hospital, Barker Street, Randwick NSW 2031",
+    "referral_info": "Referrals accepted from GPs and specialists. Please include inflammatory markers and relevant imaging with referral.",
+    "patient_resources": [
+      {
+        "title": "Understanding rheumatoid arthritis",
+        "description": "Treatment options, lifestyle advice, and monitoring for RA patients.",
+        "url": "https://www.health.nsw.gov.au/"
+      }
+    ],
+    "team": [
+      {"name": "Dr Anita Brooks", "title": "Staff Specialist", "role": "Rheumatology", "phone": "02 9382 2600"}
+    ]
+  }
+]

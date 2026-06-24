@@ -1,0 +1,23 @@
+# Web framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Database
+sqlalchemy>=2.0.25
+
+# Auth (JWT, passwords, Firebase)
+python-jose[cryptography]>=3.3.0
+bcrypt>=4.1.2
+firebase-admin>=6.4.0
+
+# HTTP client (Qwen / Ollama AI matching)
+httpx>=0.26.0
+
+# Config & validation
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+email-validator>=2.1.0
+
+# Email (Mailtrap / SMTP via fastapi-mail)
+fastapi-mail>=1.4.1
+aiofiles>=23.2.1
