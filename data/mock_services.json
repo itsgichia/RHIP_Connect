@@ -15,17 +15,17 @@
       {
         "title": "Preparing for your colonoscopy",
         "description": "Dietary instructions and bowel preparation guide for patients scheduled for colonoscopy.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.bowelcanceraustralia.org/bowel-cancer-prevention/screening/bowel-preparation"
       },
       {
         "title": "Inflammatory Bowel Disease patient information",
         "description": "Resources for patients living with Crohn's disease and ulcerative colitis.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://crohnsandcolitis.org.au/about-crohns-colitis/"
       },
       {
         "title": "Liver disease and Fibroscan information",
         "description": "What to expect during a non-invasive liver stiffness scan.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.gesa.org.au/resources/patient-resources/"
       }
     ],
     "team": [
@@ -50,12 +50,12 @@
       {
         "title": "Heart failure self-management guide",
         "description": "Daily monitoring tips, medication information, and when to seek urgent care.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.heartfoundation.org.au/for-professionals/heart-failure-resources-for-patients"
       },
       {
         "title": "Cardiac rehabilitation programme",
         "description": "Information about supervised exercise and education sessions after a cardiac event.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.heartfoundation.org.au/your-heart/support/cardiac-rehabilitation"
       }
     ],
     "team": [
@@ -79,12 +79,12 @@
       {
         "title": "Youth mental health services guide",
         "description": "Information for young people and families accessing headspace and hospital youth programmes.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://headspace.org.au/young-people/"
       },
       {
         "title": "Treatment-resistant depression clinic",
         "description": "Referral criteria and what to expect from neurostimulation therapies including TMS.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.blackdoginstitute.org.au/clinic/tms/"
       }
     ],
     "team": [
@@ -109,12 +109,12 @@
       {
         "title": "Your hospital stay — information for families",
         "description": "What to bring, visiting hours, and support services available during your child's admission.",
-        "url": "https://www.schn.health.nsw.gov.au/"
+        "url": "https://www.schn.health.nsw.gov.au/your-visit/preparing-for-your-stay"
       },
       {
         "title": "Rare diseases and genetics programme",
         "description": "Information about the precinct's multidisciplinary rare disease clinics.",
-        "url": "https://www.schn.health.nsw.gov.au/"
+        "url": "https://www.schn.health.nsw.gov.au/health-professionals/research-and-innovation/rare-diseases"
       }
     ],
     "team": [
@@ -131,19 +131,19 @@
     "facility_slug": "prince-of-wales-hospital",
     "district_slug": "seslhd-randwick",
     "contact_phone": "000",
-    "contact_email": "",
+    "contact_email": "emergency@health.nsw.gov.au",
     "contact_address": "Barker Street & High Street, Randwick NSW 2031",
     "referral_info": "For life-threatening emergencies call 000. For non-urgent advice contact Healthdirect on 1800 022 222.",
     "patient_resources": [
       {
         "title": "When to visit the Emergency Department",
         "description": "Guidance on when to attend ED versus your GP or after-hours service.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.healthdirect.gov.au/when-to-go-to-emergency"
       },
       {
         "title": "Children's Emergency Department guide",
         "description": "What to expect when bringing your child to Sydney Children's Hospital Emergency.",
-        "url": "https://www.schn.health.nsw.gov.au/"
+        "url": "https://www.schn.health.nsw.gov.au/your-visit/emergency-department"
       }
     ],
     "team": [
@@ -167,12 +167,12 @@
       {
         "title": "Cancer treatment — what to expect",
         "description": "Overview of chemotherapy, side effect management, and supportive care services.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.cancer.nsw.gov.au/cancer-information/living-with-cancer"
       },
       {
         "title": "Clinical trials at Randwick",
         "description": "Information about open cancer clinical trials available through the RHIP research network.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.cancer.nsw.gov.au/cancer-trial-involvement"
       }
     ],
     "team": [
@@ -196,12 +196,12 @@
       {
         "title": "Sleep apnoea — patient guide",
         "description": "Information about CPAP therapy and sleep study preparation.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://www.sleephealthfoundation.org.au/sleep-apnoea.html"
       },
       {
         "title": "Lung function test preparation",
         "description": "Instructions for patients attending the lung function laboratory.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://lungfoundation.com.au/patient-resources/"
       }
     ],
     "team": [
@@ -224,12 +224,12 @@
       {
         "title": "Living with chronic kidney disease",
         "description": "Diet, medication, and monitoring guidance for CKD patients.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://kidney.org.au/your-kidneys/ckd"
       },
       {
         "title": "Dialysis — what to expect",
         "description": "Information for patients starting haemodialysis or peritoneal dialysis.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://kidney.org.au/your-kidneys/treatment-options/dialysis"
       }
     ],
     "team": [
@@ -252,7 +252,7 @@
       {
         "title": "Understanding rheumatoid arthritis",
         "description": "Treatment options, lifestyle advice, and monitoring for RA patients.",
-        "url": "https://www.health.nsw.gov.au/"
+        "url": "https://arthritisaustralia.com.au/types-of-arthritis/rheumatoid-arthritis/"
       }
     ],
     "team": [

@@ -192,7 +192,58 @@ export default function CommunityPage() {
         </>
       )}
 
-      <footer className="bg-rhip-dark px-6 py-8 border-t border-white/10">
+      <footer className="bg-rhip-dark px-6 py-10 border-t border-white/10">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-sm mb-6">
+          <div>
+            <p className="font-display text-white font-semibold mb-2">Randwick Health Services</p>
+            <p className="text-rhip-muted text-xs leading-relaxed">
+              South Eastern Sydney Local Health District · Prince of Wales Hospital ·
+              Sydney Children&apos;s Hospital Randwick
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-white mb-2">Quick links</p>
+            <ul className="space-y-1.5">
+              <li>
+                <Link to="/community/services" className="text-rhip-ice hover:text-rhip-teal text-xs">
+                  All clinical services
+                </Link>
+              </li>
+              <li>
+                <Link to="/community/specialists" className="text-rhip-ice hover:text-rhip-teal text-xs">
+                  Find a specialist
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://www.seslhd.health.nsw.gov.au/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-rhip-ice hover:text-rhip-teal text-xs"
+                >
+                  SESLHD website
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.healthdirect.gov.au/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-rhip-ice hover:text-rhip-teal text-xs"
+                >
+                  Healthdirect Australia
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium text-white mb-2">Emergency</p>
+            <p className="text-rhip-ice text-xs">Life-threatening emergency: call <strong>000</strong></p>
+            <p className="text-rhip-muted text-xs mt-1">
+              Mental Health Line: 1800 011 511 · Healthdirect: 1800 022 222
+            </p>
+          </div>
+        </div>
         <p className="text-center text-rhip-muted text-xs">© 2026 RHIP Connect</p>
       </footer>
     </div>

@@ -21,17 +21,35 @@ const AUDIENCE_TABS = [
 ]
 
 const PARTNER_LINKS = [
-  { name: 'UNSW Sydney', href: 'https://www.unsw.edu.au/' },
-  { name: 'NSW Health', href: 'https://www.health.nsw.gov.au/' },
+  {
+    name: 'UNSW Sydney',
+    href: 'https://www.unsw.edu.au/medicine-health/our-locations/randwick-campus',
+  },
+  {
+    name: 'SESLHD',
+    href: 'https://www.seslhd.health.nsw.gov.au/',
+  },
+  {
+    name: 'Prince of Wales Hospital',
+    href: 'https://www.seslhd.health.nsw.gov.au/powh',
+  },
   {
     name: "Sydney Children's Hospital",
     href: 'https://www.schn.health.nsw.gov.au/sydney-childrens-hospital-randwick',
   },
-  { name: 'Neura', href: 'https://neura.edu.au/' },
-  { name: 'Black Dog Institute', href: 'https://blackdoginstitute.org.au/' },
-  { name: 'George Institute for Global Health', href: 'https://georgeinstitute.org.au/' },
-  { name: 'Childrens Cancer Institute', href: 'https://www.childrenscancer.org.au/' },
+  { name: 'Neura', href: 'https://www.neura.edu.au/' },
+  { name: 'Black Dog Institute', href: 'https://www.blackdoginstitute.org.au/' },
+  { name: 'George Institute for Global Health', href: 'https://www.georgeinstitute.org.au/' },
+  { name: "Children's Cancer Institute", href: 'https://www.childrenscancer.org.au/' },
+]
 
+const FOOTER_LINKS = [
+  { label: 'Community health services', to: '/community' },
+  { label: 'Clinical services', to: '/community/services' },
+  { label: 'Find a specialist', to: '/community/specialists' },
+  { label: 'Expertise directory', to: '/auth/login?redirect=/directory' },
+  { label: 'Randwick Health Precinct', href: 'https://www.health.nsw.gov.au/research/Pages/randwick-health-innovation-precinct.aspx' },
+  { label: 'Health Translation Hub', href: 'https://www.health.nsw.gov.au/research/Pages/health-translation-hub.aspx' },
 ]
 
 function AnimatedCounter({ value }) {
@@ -306,9 +324,60 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-sm">
           <div>
             <p className="font-display text-white font-semibold text-lg mb-1">RHIP Connect</p>
-            <p className="text-rhip-ice">The future of lifelong health</p>
+            <p className="text-rhip-ice mb-3">The future of lifelong health</p>
+            <p className="text-rhip-muted text-xs leading-relaxed">
+              Randwick Health &amp; Innovation Precinct · Prince of Wales Hospital ·
+              Sydney Children&apos;s Hospital · UNSW Randwick Campus
+            </p>
           </div>
-          
+          <div>
+            <p className="font-medium text-white mb-3">Explore</p>
+            <ul className="space-y-2">
+              {FOOTER_LINKS.map((link) => (
+                <li key={link.label}>
+                  {link.to ? (
+                    <Link to={link.to} className="text-rhip-ice hover:text-rhip-teal transition-colors">
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-rhip-ice hover:text-rhip-teal transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium text-white mb-3">Contact</p>
+            <ul className="space-y-2 text-rhip-ice">
+              <li>
+                <button
+                  type="button"
+                  onClick={() => scrollTo('contact')}
+                  className="hover:text-rhip-teal transition-colors text-left"
+                >
+                  Partner &amp; investor enquiries
+                </button>
+              </li>
+              <li>Randwick NSW 2031</li>
+              <li>
+                <a
+                  href="https://www.health.nsw.gov.au/research/Pages/randwick-health-innovation-precinct.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-rhip-teal transition-colors"
+                >
+                  NSW Health — Randwick Precinct
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <p className="text-center text-rhip-muted text-xs mt-8">
           © 2026 RHIP Connect

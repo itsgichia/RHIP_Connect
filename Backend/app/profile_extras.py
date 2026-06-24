@@ -21,6 +21,21 @@ NEWS_TEMPLATES = [
     "Precinct researchers publish breakthrough in {topic}",
 ]
 
+INSTITUTION_NEWS_URLS = {
+    "UNSW Sydney": "https://www.unsw.edu.au/news",
+    "Black Dog Institute": "https://www.blackdoginstitute.org.au/news",
+    "The George Institute": "https://www.georgeinstitute.org.au/news-and-media",
+    "SCHN": "https://www.schn.health.nsw.gov.au/news",
+    "SESLHD": "https://www.seslhd.health.nsw.gov.au/news",
+}
+
+SPECIALTY_NEWS_URLS = {
+    "Mental Health & Neuroscience": "https://www.blackdoginstitute.org.au/news",
+    "Personalised Medicine": "https://www.cancer.nsw.gov.au/cancer-information",
+    "Rare Diseases": "https://www.schn.health.nsw.gov.au/health-professionals/research-and-innovation/rare-diseases",
+    "Health Systems": "https://www.health.nsw.gov.au/research/Pages/randwick-health-innovation-precinct.aspx",
+}
+
 
 def _stable_index(key: str, modulo: int) -> int:
     return sum(ord(c) for c in key) % modulo
@@ -47,6 +62,10 @@ def _generate_extras(profile: dict) -> dict:
                 "year": 2017 + (idx + i * 2) % 9,
             })
 
+    news_url = INSTITUTION_NEWS_URLS.get(
+        institution, SPECIALTY_NEWS_URLS.get(specialty, "https://www.unsw.edu.au/news")
+    )
+
     news = []
     for i, template in enumerate(NEWS_TEMPLATES[:3]):
         topic = tags[i % len(tags)] if tags else specialty
@@ -60,6 +79,7 @@ def _generate_extras(profile: dict) -> dict:
                 f"Research led by {name} highlights progress in {topic.lower()} "
                 f"within {specialty.lower()} at {institution}."
             ),
+            "url": news_url,
         })
 
     awards = []

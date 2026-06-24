@@ -16,7 +16,7 @@ const TABS = [
 ]
 
 const BENEFITS = [
-  'Access to a pipeline of 15+ investable projects',
+  'Access to a pipeline of 24+ investable projects',
   'Co-location in the Health Translation Hub',
   'Direct clinical trial partnerships',
   'IP licensing opportunities',
