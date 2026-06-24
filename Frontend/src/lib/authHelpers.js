@@ -9,14 +9,23 @@ import { auth, isFirebaseConfigured } from './firebase'
 
 const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin
 
+const verificationActionSettings = {
+  url: `${frontendUrl}/auth/login`,
+  handleCodeInApp: false,
+}
+
+async function sendFirebaseVerification(user) {
+  if (user.emailVerified) {
+    throw new Error('Your email is already verified. You can log in.')
+  }
+  await sendEmailVerification(user, verificationActionSettings)
+}
+
 export async function firebaseSignup(form) {
   let credential
   try {
     credential = await createUserWithEmailAndPassword(auth, form.email, form.password)
-    await sendEmailVerification(credential.user, {
-      url: `${frontendUrl}/auth/login`,
-      handleCodeInApp: false,
-    })
+    await sendFirebaseVerification(credential.user)
   } catch (err) {
     if (err?.code !== 'auth/email-already-in-use') {
       throw err
@@ -24,10 +33,7 @@ export async function firebaseSignup(form) {
     // Firebase account exists (e.g. after a DB reseed) — sign in and recreate the local profile.
     credential = await signInWithEmailAndPassword(auth, form.email, form.password)
     if (!credential.user.emailVerified) {
-      await sendEmailVerification(credential.user, {
-        url: `${frontendUrl}/auth/login`,
-        handleCodeInApp: false,
-      })
+      await sendFirebaseVerification(credential.user)
     }
   }
   const idToken = await credential.user.getIdToken()
@@ -51,10 +57,24 @@ export async function firebaseLogin(email, password) {
 }
 
 export async function firebaseForgotPassword(email) {
-  await sendPasswordResetEmail(auth, email, {
-    url: `${frontendUrl}/auth/login`,
-    handleCodeInApp: false,
-  })
+  await sendPasswordResetEmail(auth, email, verificationActionSettings)
+}
+
+export async function firebaseResendVerification(email, password) {
+  let user = auth?.currentUser
+  if (!user || user.email?.toLowerCase() !== email.toLowerCase()) {
+    const credential = await signInWithEmailAndPassword(auth, email, password)
+    user = credential.user
+  }
+  await sendFirebaseVerification(user)
+}
+
+export async function resendVerificationEmail({ email, password }) {
+  if (useFirebaseAuth()) {
+    await firebaseResendVerification(email, password)
+    return
+  }
+  await api.post('/auth/resend-verification', { email })
 }
 
 export function useFirebaseAuth() {

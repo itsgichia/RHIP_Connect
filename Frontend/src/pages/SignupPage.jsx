@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import PublicNavBar from '../components/layout/PublicNavBar'
-import { firebaseSignup, useFirebaseAuth } from '../lib/authHelpers'
+import { firebaseSignup, resendVerificationEmail, useFirebaseAuth } from '../lib/authHelpers'
 import api from '../hooks/useApi'
 import { isBlockedEmail, BLOCKED_EMAIL_MESSAGE } from '../utils/blockedDomains'
 
@@ -26,6 +26,7 @@ export default function SignupPage() {
   const [emailError, setEmailError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [resendLoading, setResendLoading] = useState(false)
 
   const showSpecialty = form.role === 'clinician' || form.role === 'researcher'
 
@@ -74,6 +75,24 @@ export default function SignupPage() {
     }
   }
 
+  const handleResend = async () => {
+    setResendLoading(true)
+    try {
+      await resendVerificationEmail({ email: form.email, password: form.password })
+      toast.success('Verification email sent. Check your inbox and spam folder.')
+    } catch (err) {
+      const message =
+        err.response?.data?.detail ||
+        (err?.code === 'auth/too-many-requests'
+          ? 'Too many attempts. Please wait a few minutes before trying again.'
+          : err.message) ||
+        'Could not resend verification email'
+      toast.error(message)
+    } finally {
+      setResendLoading(false)
+    }
+  }
+
   if (success) {
     return (
       <div className="min-h-screen bg-rhip-lightBg">
@@ -87,7 +106,18 @@ export default function SignupPage() {
             <p className="text-rhip-muted">
               We&apos;ve sent a verification email to <strong>{form.email}</strong>.
             </p>
-            <Link to="/auth/login" className="inline-block mt-6 text-rhip-teal hover:underline">
+            <p className="text-sm text-rhip-muted mt-2">
+              Check your spam folder if you don&apos;t see it within a few minutes.
+            </p>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={resendLoading}
+              className="mt-6 w-full py-3 border border-rhip-teal text-rhip-teal rounded-xl font-medium hover:bg-rhip-lightTeal transition-colors disabled:opacity-50"
+            >
+              {resendLoading ? 'Sending...' : 'Resend verification email'}
+            </button>
+            <Link to="/auth/login" className="inline-block mt-4 text-rhip-teal hover:underline">
               Back to login
             </Link>
           </div>

@@ -145,6 +145,25 @@ def refresh(body: RefreshRequest, db: Session = Depends(get_db)):
     return RefreshResponse(access_token=create_access_token(user.id, user.role))
 
 
+@router.post("/resend-verification", response_model=MessageResponse)
+async def resend_verification(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == body.email.lower()).first()
+    if user and not user.is_verified:
+        token = generate_token()
+        email_token = EmailToken(
+            user_id=user.id,
+            token=token,
+            type=EmailTokenType.VERIFY,
+            expires_at=datetime.utcnow() + timedelta(hours=24),
+        )
+        db.add(email_token)
+        db.commit()
+        await email_service.send_verification_email(user.name, user.email, token)
+    return MessageResponse(
+        message="If that email is registered and unverified, a verification link has been sent."
+    )
+
+
 @router.post("/forgot-password", response_model=MessageResponse)
 async def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email.lower()).first()

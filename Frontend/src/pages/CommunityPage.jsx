@@ -165,7 +165,7 @@ export default function CommunityPage() {
                 </h2>
                 <p className="text-rhip-ice text-sm leading-relaxed mb-6">
                   Search our directory of specialists practising at Randwick campus facilities.
-                  Filter by name, specialty, or department — similar to a hospital specialist finder.
+                  Filter by name, specialty, or department.
                 </p>
                 <Link
                   to="/community/specialists"
