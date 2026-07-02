@@ -3,8 +3,13 @@ from sqlalchemy.orm import Session
 
 from app import email_service
 from app.database import get_db
-from app.models import InvestorEnquiry, TenantEnquiry
-from app.schemas import InvestorEnquiryCreate, MessageResponse, TenantEnquiryCreate
+from app.models import GovernmentBriefing, InvestorEnquiry, TenantEnquiry
+from app.schemas import (
+    GovernmentBriefingCreate,
+    InvestorEnquiryCreate,
+    MessageResponse,
+    TenantEnquiryCreate,
+)
 
 router = APIRouter(prefix="/forms", tags=["forms"])
 
@@ -43,3 +48,24 @@ async def investor_contact(body: InvestorEnquiryCreate, db: Session = Depends(ge
     db.refresh(enquiry)
     await email_service.send_investor_enquiry_notification(enquiry)
     return MessageResponse(message="Message received. RHIP will be in touch soon.")
+
+
+@router.post("/government-briefing", response_model=MessageResponse)
+async def government_briefing(body: GovernmentBriefingCreate, db: Session = Depends(get_db)):
+    briefing = GovernmentBriefing(
+        organisation=body.organisation,
+        contact_name=body.contact_name,
+        email=body.email,
+        phone=body.phone,
+        purpose=body.purpose,
+        topics=body.topics,
+        preferred_format=body.preferred_format,
+        message=body.message,
+    )
+    db.add(briefing)
+    db.commit()
+    db.refresh(briefing)
+    await email_service.send_government_briefing_notification(briefing)
+    return MessageResponse(
+        message="Briefing request received. RHIP will respond within 5 business days."
+    )

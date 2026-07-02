@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import admin, admin_community, auth, challenges, community, directory, forms, impact, investor, messages, notifications, passport, pipeline
+from app.routers import admin, admin_community, auth, challenges, community, directory, forms, government, impact, investor, messages, notifications, passport, pipeline
 
 Base.metadata.create_all(bind=engine)
 
@@ -31,6 +31,7 @@ app.include_router(passport.admin_router, prefix=API_PREFIX)
 app.include_router(admin.router, prefix=API_PREFIX)
 app.include_router(admin_community.router, prefix=API_PREFIX)
 app.include_router(investor.router, prefix=API_PREFIX)
+app.include_router(government.router, prefix=API_PREFIX)
 
 
 @app.get("/health")

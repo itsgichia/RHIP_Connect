@@ -101,6 +101,38 @@ async def send_investor_enquiry_notification(enquiry) -> None:
     await _send_email(ADMIN_EMAIL, f"New Investor Contact — {enquiry.name}", body)
 
 
+async def send_project_investment_notification(project, investor, investment) -> None:
+    body = f"""
+    <h3>New Project Investment Expression of Interest</h3>
+    <p><strong>Project:</strong> {project.title}</p>
+    <p><strong>Investor:</strong> {investor.name} ({investor.email})</p>
+    <p><strong>Amount (AUD):</strong> {investment.amount:,.0f}</p>
+    <p><strong>Message:</strong> {investment.message or "—"}</p>
+    """
+    await _send_email(
+        ADMIN_EMAIL,
+        f"Investment EOI — {project.title} — {investor.name}",
+        body,
+    )
+
+
+async def send_government_briefing_notification(briefing) -> None:
+    body = f"""
+    <h3>New Government Briefing Request — {briefing.organisation}</h3>
+    <p><strong>Contact:</strong> {briefing.contact_name} ({briefing.email})</p>
+    <p><strong>Phone:</strong> {briefing.phone}</p>
+    <p><strong>Purpose:</strong> {briefing.purpose}</p>
+    <p><strong>Preferred format:</strong> {briefing.preferred_format}</p>
+    <p><strong>Topics of interest:</strong> {briefing.topics or "—"}</p>
+    <p><strong>Additional details:</strong> {briefing.message or "—"}</p>
+    """
+    await _send_email(
+        ADMIN_EMAIL,
+        f"Government Briefing Request — {briefing.organisation}",
+        body,
+    )
+
+
 async def send_match_notification_email(
     researcher,
     challenge,

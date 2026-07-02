@@ -25,6 +25,12 @@ export default function PublicNavBar({ hideLogin = false }) {
         >
           Community
         </Link>
+        <Link
+          to="/government"
+          className="text-rhip-ice text-sm font-medium hover:text-white transition-colors hidden sm:inline"
+        >
+          Government
+        </Link>
       </div>
       <button
         onClick={scrollToHTH}

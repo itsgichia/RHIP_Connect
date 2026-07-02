@@ -277,6 +277,26 @@ class Project(Base):
     )
     readiness: Mapped[Readiness] = mapped_column(Enum(Readiness), nullable=False)
     visibility: Mapped[Visibility] = mapped_column(Enum(Visibility), nullable=False)
+    funding_goal: Mapped[float] = mapped_column(Float, default=0)
+    funding_raised: Mapped[float] = mapped_column(Float, default=0)
+    started_at: Mapped[date | None] = mapped_column(Date, nullable=True)
+    funding_breakdown: Mapped[list] = mapped_column(JSON, default=list)
+
+    investments: Mapped[list["ProjectInvestment"]] = relationship(back_populates="project")
+
+
+class ProjectInvestment(Base):
+    __tablename__ = "project_investments"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    project_id: Mapped[str] = mapped_column(String(36), ForeignKey("projects.id"), nullable=False)
+    investor_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
+    amount: Mapped[float] = mapped_column(Float, nullable=False)
+    message: Mapped[str] = mapped_column(Text, default="")
+    submitted_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    project: Mapped["Project"] = relationship(back_populates="investments")
+    investor: Mapped["User"] = relationship()
 
 
 class Event(Base):
@@ -357,6 +377,21 @@ class InvestorEnquiry(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[str] = mapped_column(String(64), nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
+    submitted_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class GovernmentBriefing(Base):
+    __tablename__ = "government_briefings"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    organisation: Mapped[str] = mapped_column(String(255), nullable=False)
+    contact_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), nullable=False)
+    phone: Mapped[str] = mapped_column(String(64), nullable=False)
+    purpose: Mapped[str] = mapped_column(String(128), nullable=False)
+    topics: Mapped[str] = mapped_column(Text, default="")
+    preferred_format: Mapped[str] = mapped_column(String(64), nullable=False)
+    message: Mapped[str] = mapped_column(Text, default="")
     submitted_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 

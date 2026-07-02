@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { isInvestor } from '../utils/roles'
 import StatCard from '../components/ui/StatCard'
 import ProjectCard from '../components/ui/ProjectCard'
+import ProjectDetailModal from '../components/ui/ProjectDetailModal'
 import InvestorContactForm from '../components/forms/InvestorContactForm'
 
 const TABS = [
@@ -135,16 +136,22 @@ function MetricsTab({ kpis }) {
   )
 }
 
-function PipelineTab({ projects }) {
+function PipelineTab({ projects, onProjectUpdate }) {
   const [readiness, setReadiness] = useState('all')
+  const [selectedProjectId, setSelectedProjectId] = useState(null)
   const filtered = readiness === 'all'
     ? projects
     : projects.filter((p) => p.readiness === readiness)
 
+  const handleInvested = (projectId, amount) => {
+    onProjectUpdate?.(projectId, amount)
+  }
+
   return (
     <div>
       <p className="text-sm text-rhip-muted mb-4">
-        Public innovation projects at feasibility stage and beyond — the investable pipeline.
+        Public innovation projects at feasibility stage and beyond — click a project to view funding
+        details and express investment interest.
       </p>
       <div className="flex flex-wrap gap-2 mb-6">
         {[
@@ -169,7 +176,7 @@ function PipelineTab({ projects }) {
       </div>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filtered.map((p) => (
-          <ProjectCard key={p.id} project={p} />
+          <ProjectCard key={p.id} project={p} onClick={() => setSelectedProjectId(p.id)} />
         ))}
         {filtered.length === 0 && (
           <p className="text-rhip-muted col-span-full text-center py-12">
@@ -177,6 +184,14 @@ function PipelineTab({ projects }) {
           </p>
         )}
       </div>
+
+      {selectedProjectId && (
+        <ProjectDetailModal
+          projectId={selectedProjectId}
+          onClose={() => setSelectedProjectId(null)}
+          onInvested={handleInvested}
+        />
+      )}
     </div>
   )
 }
@@ -269,6 +284,20 @@ export default function InvestorPage() {
     if (isInvestor(user?.role)) loadData()
   }, [user, loadData])
 
+  const handleProjectInvested = (projectId, amount) => {
+    setData((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        projects: prev.projects.map((p) => {
+          if (p.id !== projectId) return p
+          const raised = (p.funding_raised || 0) + amount
+          return { ...p, funding_raised: raised }
+        }),
+      }
+    })
+  }
+
   if (!isInvestor(user?.role)) {
     return <Navigate to="/dashboard" replace />
   }
@@ -303,7 +332,9 @@ export default function InvestorPage() {
 
       {tab === 'overview' && <OverviewTab data={data} onViewPipeline={() => setTab('pipeline')} />}
       {tab === 'metrics' && <MetricsTab kpis={data.kpis} />}
-      {tab === 'pipeline' && <PipelineTab projects={data.projects} />}
+      {tab === 'pipeline' && (
+        <PipelineTab projects={data.projects} onProjectUpdate={handleProjectInvested} />
+      )}
       {tab === 'hth' && <HthTab hthOccupancy={data.hth_occupancy} />}
       {tab === 'contact' && <ContactTab user={user} />}
     </div>

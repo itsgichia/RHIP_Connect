@@ -1,14 +1,28 @@
+from datetime import date
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.auth import get_current_user, get_optional_user, require_roles
+from app.auth import get_optional_user, require_roles
 from app.database import get_db
-from app.models import Project, Readiness, Role, User, Visibility
-from app.schemas import ProjectCreate, ProjectListResponse, ProjectResponse
+from app.models import Project, ProjectInvestment, Readiness, Role, User, Visibility
+from app.schemas import (
+    FundingBreakdownItem,
+    ProjectCreate,
+    ProjectDetailResponse,
+    ProjectListResponse,
+    ProjectResponse,
+)
 
 router = APIRouter(prefix="/pipeline", tags=["pipeline"])
+
+
+def _months_since(start: Optional[date]) -> int:
+    if not start:
+        return 0
+    today = date.today()
+    return max(0, (today.year - start.year) * 12 + today.month - start.month)
 
 
 def _project_to_response(project: Project, db: Session) -> ProjectResponse:
@@ -22,6 +36,31 @@ def _project_to_response(project: Project, db: Session) -> ProjectResponse:
         readiness=project.readiness,
         visibility=project.visibility,
         lead_researcher_name=lead.name if lead else None,
+        funding_goal=project.funding_goal or 0,
+        funding_raised=project.funding_raised or 0,
+        started_at=project.started_at,
+    )
+
+
+def _project_to_detail(project: Project, db: Session) -> ProjectDetailResponse:
+    base = _project_to_response(project, db)
+    goal = project.funding_goal or 0
+    raised = project.funding_raised or 0
+    investor_count = (
+        db.query(ProjectInvestment)
+        .filter(ProjectInvestment.project_id == project.id)
+        .count()
+    )
+    breakdown = [
+        FundingBreakdownItem.model_validate(item)
+        for item in (project.funding_breakdown or [])
+    ]
+    return ProjectDetailResponse(
+        **base.model_dump(),
+        funding_breakdown=breakdown,
+        duration_months=_months_since(project.started_at),
+        funding_progress_pct=round((raised / goal) * 100, 1) if goal > 0 else 0,
+        investor_count=investor_count,
     )
 
 

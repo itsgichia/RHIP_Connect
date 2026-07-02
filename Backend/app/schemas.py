@@ -191,6 +191,12 @@ class KPIUpdate(BaseModel):
 
 
 # Pipeline
+class FundingBreakdownItem(BaseModel):
+    label: str
+    amount: float
+    description: str = ""
+
+
 class ProjectResponse(BaseModel):
     id: str
     title: str
@@ -200,8 +206,18 @@ class ProjectResponse(BaseModel):
     readiness: Readiness
     visibility: Visibility
     lead_researcher_name: Optional[str] = None
+    funding_goal: float = 0
+    funding_raised: float = 0
+    started_at: Optional[date] = None
 
     model_config = {"from_attributes": True}
+
+
+class ProjectDetailResponse(ProjectResponse):
+    funding_breakdown: list[FundingBreakdownItem] = Field(default_factory=list)
+    duration_months: int = 0
+    funding_progress_pct: float = 0
+    investor_count: int = 0
 
 
 class ProjectListResponse(BaseModel):
@@ -234,6 +250,22 @@ class InvestorEnquiryCreate(BaseModel):
     email: EmailStr
     phone: str
     message: str
+
+
+class ProjectInvestmentCreate(BaseModel):
+    amount: float = Field(gt=0)
+    message: str = ""
+
+
+class GovernmentBriefingCreate(BaseModel):
+    organisation: str
+    contact_name: str
+    email: EmailStr
+    phone: str
+    purpose: str
+    topics: str = ""
+    preferred_format: str
+    message: str = ""
 
 
 # Notifications
@@ -464,6 +496,47 @@ class InvestorOverviewResponse(BaseModel):
     hth_occupancy: Optional[KPIResponse] = None
     projects: list[ProjectResponse]
     investable_count: int
+
+
+# Government / public impact
+class KPIBreakdownItem(BaseModel):
+    label: str
+    value: float
+    display_value: str
+    description: str = ""
+
+
+class KPITrendPoint(BaseModel):
+    year: int
+    value: float
+    display_value: str
+
+
+class KPIDetailResponse(BaseModel):
+    kpi: KPIResponse
+    summary: str
+    breakdown: list[KPIBreakdownItem] = Field(default_factory=list)
+    trend: list[KPITrendPoint] = Field(default_factory=list)
+
+
+class GovernmentProjectResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+    stage: int
+    specialty_area: str
+    readiness: Readiness
+    lead_researcher_name: Optional[str] = None
+    started_at: Optional[date] = None
+    duration_months: int = 0
+    translation_status: str = ""
+
+
+class GovernmentOverviewResponse(BaseModel):
+    kpis: list[KPIResponse]
+    projects: list[GovernmentProjectResponse]
+    translation_count: int
+    period: str = "2026"
 
 
 # Community / Public health services

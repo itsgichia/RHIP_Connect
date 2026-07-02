@@ -50,6 +50,41 @@ def _load_json(filename: str) -> list:
         return json.load(f)
 
 
+def _project_funding(stage: int, index: int) -> tuple[float, float, date, list]:
+    """Return funding_goal, funding_raised, started_at, and breakdown for a project."""
+    base_goals = {
+        4: 750_000,
+        5: 1_200_000,
+        6: 2_000_000,
+        7: 3_500_000,
+        8: 5_000_000,
+        9: 8_000_000,
+        10: 12_000_000,
+    }
+    goal = base_goals.get(stage, 1_000_000) * (1 + (index % 5) * 0.12)
+    progress_ratios = [0.18, 0.32, 0.45, 0.58, 0.71, 0.84]
+    raised = goal * progress_ratios[index % len(progress_ratios)]
+    years_active = max(1, stage - 2 + (index % 3))
+    started = date(2026, 6, 25).replace(year=2026 - years_active)
+
+    categories = [
+        ("Research & Development", 0.35, "Core R&D, prototyping, and validation studies"),
+        ("Clinical Trials", 0.25, "Patient recruitment, trial sites, and monitoring"),
+        ("Personnel", 0.20, "Research staff, clinicians, and project management"),
+        ("Equipment & Infrastructure", 0.12, "Lab equipment, devices, and facility costs"),
+        ("Commercialisation", 0.08, "Regulatory, IP, and go-to-market activities"),
+    ]
+    breakdown = [
+        {
+            "label": label,
+            "amount": round(raised * share),
+            "description": desc,
+        }
+        for label, share, desc in categories
+    ]
+    return goal, raised, started, breakdown
+
+
 def seed():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
@@ -183,6 +218,7 @@ def seed():
         researchers = db.query(User).filter(User.role == Role.RESEARCHER).all()
         for i, proj in enumerate(projects_data):
             lead = researchers[i % len(researchers)]
+            goal, raised, started, breakdown = _project_funding(proj["stage"], i)
             db.add(Project(
                 title=proj["title"],
                 description=proj["description"],
@@ -191,6 +227,10 @@ def seed():
                 readiness=Readiness(proj["readiness"]),
                 visibility=Visibility(proj["visibility"]),
                 lead_researcher_id=lead.id,
+                funding_goal=goal,
+                funding_raised=raised,
+                started_at=started,
+                funding_breakdown=breakdown,
             ))
 
         events_data = _load_json("mock_events.json")

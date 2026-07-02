@@ -23,6 +23,7 @@ import CommunityServicesPage from './pages/CommunityServicesPage'
 import CommunityServiceDetailPage from './pages/CommunityServiceDetailPage'
 import CommunitySpecialistsPage from './pages/CommunitySpecialistsPage'
 import CommunitySpecialistDetailPage from './pages/CommunitySpecialistDetailPage'
+import GovernmentPage from './pages/GovernmentPage'
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/community/services/:slug" element={<CommunityServiceDetailPage />} />
           <Route path="/community/specialists" element={<CommunitySpecialistsPage />} />
           <Route path="/community/specialists/:slug" element={<CommunitySpecialistDetailPage />} />
+          <Route path="/government" element={<GovernmentPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/auth/signup" element={<SignupPage />} />
           <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />

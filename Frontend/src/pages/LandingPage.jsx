@@ -45,6 +45,7 @@ const PARTNER_LINKS = [
 
 const FOOTER_LINKS = [
   { label: 'Community health services', to: '/community' },
+  { label: 'Government impact dashboard', to: '/government' },
   { label: 'Clinical services', to: '/community/services' },
   { label: 'Find a specialist', to: '/community/specialists' },
   { label: 'Expertise directory', to: '/auth/login?redirect=/directory' },
@@ -196,6 +197,16 @@ export default function LandingPage() {
                 className="inline-flex px-6 py-3 bg-rhip-teal text-white rounded-full font-medium hover:bg-rhip-seafoam transition-colors"
               >
                 Explore Randwick health services →
+              </Link>
+            </div>
+          )}
+          {audience === 'government' && (
+            <div className="text-center mt-8">
+              <Link
+                to="/government"
+                className="inline-flex px-6 py-3 bg-rhip-teal text-white rounded-full font-medium hover:bg-rhip-seafoam transition-colors"
+              >
+                Explore impact dashboard →
               </Link>
             </div>
           )}
