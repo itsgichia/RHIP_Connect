@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import admin, admin_community, auth, challenges, community, directory, forms, government, impact, investor, messages, notifications, passport, pipeline
+from app.routers import admin, admin_community, auth, challenges, community, directory, forms, government, impact, investor, messages, notifications, orcid, passport, pipeline
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,6 +23,7 @@ app.include_router(community.router, prefix=API_PREFIX)
 app.include_router(pipeline.router, prefix=API_PREFIX)
 app.include_router(forms.router, prefix=API_PREFIX)
 app.include_router(directory.router, prefix=API_PREFIX)
+app.include_router(orcid.router, prefix=API_PREFIX)
 app.include_router(challenges.router, prefix=API_PREFIX)
 app.include_router(messages.router, prefix=API_PREFIX)
 app.include_router(notifications.router, prefix=API_PREFIX)

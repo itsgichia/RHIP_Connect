@@ -23,7 +23,7 @@ const AUDIENCE_TABS = [
 const PARTNER_LINKS = [
   {
     name: 'UNSW Sydney',
-    href: 'https://www.unsw.edu.au/medicine-health/our-locations/randwick-campus',
+    href: 'https://www.unsw.edu.au',
   },
   {
     name: 'SESLHD',
@@ -31,7 +31,7 @@ const PARTNER_LINKS = [
   },
   {
     name: 'Prince of Wales Hospital',
-    href: 'https://www.seslhd.health.nsw.gov.au/powh',
+    href: 'https://www.seslhd.health.nsw.gov.au/prince-of-wales-hospital',
   },
   {
     name: "Sydney Children's Hospital",
@@ -40,7 +40,7 @@ const PARTNER_LINKS = [
   { name: 'Neura', href: 'https://www.neura.edu.au/' },
   { name: 'Black Dog Institute', href: 'https://www.blackdoginstitute.org.au/' },
   { name: 'George Institute for Global Health', href: 'https://www.georgeinstitute.org.au/' },
-  { name: "Children's Cancer Institute", href: 'https://www.childrenscancer.org.au/' },
+  { name: "Children's Cancer Institute", href: 'https://www.ccia.org.au' },
 ]
 
 const FOOTER_LINKS = [

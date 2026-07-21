@@ -153,6 +153,34 @@ export default function ProfilePage() {
             ))}
           </div>
         )}
+
+        {/* ORCID info */}
+        {(profile.orcid_id || profile.is_current_unsw) && (
+          <div className="flex flex-wrap items-center gap-3 mt-4">
+            {profile.is_current_unsw && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-rhip-teal/10 text-rhip-teal text-xs font-medium rounded-full border border-rhip-teal/30">
+                ✓ Currently at UNSW
+              </span>
+            )}
+            {profile.current_affiliation && (
+              <span className="text-sm text-rhip-muted">{profile.current_affiliation}</span>
+            )}
+            {profile.orcid_id && (
+              <a
+                href={`https://orcid.org/${profile.orcid_id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-rhip-teal hover:underline"
+                title="View ORCID record"
+              >
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-sm bg-[#A6CE39] text-white text-[9px] font-bold leading-none">
+                  iD
+                </span>
+                {profile.orcid_id}
+              </a>
+            )}
+          </div>
+        )}
       </header>
 
       <ProfileSummaryBar profile={profile} firstName={firstName} />

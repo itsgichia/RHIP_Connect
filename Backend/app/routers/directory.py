@@ -97,6 +97,9 @@ def get_profile(
         bio=profile.bio,
         is_public=profile.is_public,
         is_own_profile=profile.user_id == current_user.id,
+        orcid_id=profile.orcid_id,                       # ← tambah
+        current_affiliation=profile.current_affiliation, # ← tambah
+        is_current_unsw=profile.is_current_unsw,         # ← tambah
         patents=profile.patents or [],
         news=profile.news or [],
         awards=profile.awards or [],

@@ -172,6 +172,12 @@ class Profile(Base):
     awards: Mapped[list] = mapped_column(JSON, default=list)
     is_public: Mapped[bool] = mapped_column(Boolean, default=True)
 
+    # --- ORCID integration ---
+    orcid_id: Mapped[str | None] = mapped_column(String(19), unique=True, nullable=True)
+    current_affiliation: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    is_current_unsw: Mapped[bool] = mapped_column(Boolean, default=False)
+    orcid_synced_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
     user: Mapped["User"] = relationship(back_populates="profile")
     institution_name: Mapped[str | None] = None  # populated in API responses
 

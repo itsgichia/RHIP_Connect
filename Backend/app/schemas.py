@@ -109,6 +109,9 @@ class ProfileDetail(ProfileSummary):
     bio: str
     is_public: bool
     is_own_profile: bool = False
+    orcid_id: Optional[str] = None              # ← tambah
+    current_affiliation: Optional[str] = None   # ← tambah
+    is_current_unsw: bool = False               # ← tambah
     patents: list[ProfilePatent] = Field(default_factory=list)
     news: list[ProfileNewsItem] = Field(default_factory=list)
     awards: list[ProfileAward] = Field(default_factory=list)
