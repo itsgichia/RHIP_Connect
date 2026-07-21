@@ -5,6 +5,7 @@ from datetime import date, datetime
 from app.auth import hash_password
 from app.database import Base, SessionLocal, engine
 from app.profile_extras import build_profile_extras
+from app.services.orcid_service import get_access_token, sync_profile_from_orcid
 from app.models import (
     ClinicalService,
     CommunitySpecialist,
@@ -176,6 +177,16 @@ def seed():
                 ))
 
         profiles_data = _load_json("mock_profiles.json")
+
+        # Fetch an ORCID access token once — only if any profile requests an import.
+        orcid_token = None
+        if any(p.get("orcid_id") for p in profiles_data):
+            try:
+                orcid_token = get_access_token()
+            except Exception as e:
+                print(f"  ⚠ ORCID token unavailable — skipping ORCID import ({e})")
+
+        orcid_imported = 0
         for p in profiles_data:
             inst_name = p.get("institution", "UNSW Sydney")
             if inst_name not in institutions:
@@ -198,7 +209,7 @@ def seed():
             db.add(user)
             db.flush()
             extras = build_profile_extras(p)
-            db.add(Profile(
+            profile = Profile(
                 user_id=user.id,
                 name=p["name"],
                 title=p["title"],
@@ -211,7 +222,17 @@ def seed():
                 news=extras["news"],
                 awards=extras["awards"],
                 is_public=True,
-            ))
+            )
+            db.add(profile)
+
+            # If this mock profile has an ORCID iD, pull real data from ORCID.
+            if p.get("orcid_id") and orcid_token:
+                try:
+                    sync_profile_from_orcid(profile, p["orcid_id"], token=orcid_token)
+                    orcid_imported += 1
+                    print(f"  ✓ ORCID imported for {p['name']} ({p['orcid_id']})")
+                except Exception as e:
+                    print(f"  ⚠ ORCID import failed for {p['name']}: {e}")
 
         admin = db.query(User).filter(User.email == "admin@rhip.edu.au").first()
         projects_data = _load_json("mock_projects.json")
@@ -383,6 +404,7 @@ def seed():
         print("  james@medtechcorp.com.au / Industry1!")
         print("  sarah@pacificvc.com.au / Investor1!")
         print(f"  {len(profiles_data)} researcher/clinician profiles created")
+        print(f"  {orcid_imported} profiles enriched from ORCID")
         print(f"  {len(_load_json('mock_services.json'))} clinical services seeded")
         print(f"  {len(_load_json('mock_specialists.json'))} community specialists seeded")
     finally:

@@ -4,16 +4,34 @@
     "email": "sarah.chen@unsw.edu.au",
     "title": "Professor of Psychiatry",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Treatment-resistant depression", "TMS", "Ketamine therapy", "Neurostimulation", "Clinical trials"],
+    "expertise_tags": [
+      "Treatment-resistant depression",
+      "TMS",
+      "Ketamine therapy",
+      "Neurostimulation",
+      "Clinical trials"
+    ],
     "bio": "Prof. Sarah Chen is a leading psychiatrist and neuroscientist at UNSW Sydney and the Randwick Health & Innovation Precinct. Her work focuses on treatment-resistant depression and neurostimulation therapies, including transcranial magnetic stimulation (TMS) and ketamine-based approaches.\n\nShe leads the Precinct's Treatment-Resistant Depression Clinic at Prince of Wales Hospital and has established one of Australia's largest clinical trial programmes in neurostimulation. Her research bridges mechanistic neuroscience with real-world clinical outcomes.\n\nProf. Chen has published over 140 peer-reviewed articles and holds several patents related to neurostimulation device protocols and patient monitoring systems.",
     "publications": 142,
     "active_projects": 4,
     "institution": "UNSW Sydney",
     "role": "researcher",
     "patents": [
-      {"title": "Adaptive TMS dosing protocol for treatment-resistant depression", "number": "AU2019203847", "year": 2021},
-      {"title": "Patient monitoring system for ketamine infusion therapy", "number": "AU2018105621", "year": 2019},
-      {"title": "Combined neurostimulation and pharmacotherapy treatment method", "number": "AU2017102345", "year": 2018}
+      {
+        "title": "Adaptive TMS dosing protocol for treatment-resistant depression",
+        "number": "AU2019203847",
+        "year": 2021
+      },
+      {
+        "title": "Patient monitoring system for ketamine infusion therapy",
+        "number": "AU2018105621",
+        "year": 2019
+      },
+      {
+        "title": "Combined neurostimulation and pharmacotherapy treatment method",
+        "number": "AU2017102345",
+        "year": 2018
+      }
     ],
     "news": [
       {
@@ -36,9 +54,21 @@
       }
     ],
     "awards": [
-      {"title": "NHMRC Leadership Fellow", "year": 2023, "organisation": "NHMRC"},
-      {"title": "UNSW Excellence in Research Award", "year": 2021, "organisation": "UNSW Sydney"},
-      {"title": "Royal Australian and New Zealand College of Psychiatrists Research Prize", "year": 2019, "organisation": "RANZCP"}
+      {
+        "title": "NHMRC Leadership Fellow",
+        "year": 2023,
+        "organisation": "NHMRC"
+      },
+      {
+        "title": "UNSW Excellence in Research Award",
+        "year": 2021,
+        "organisation": "UNSW Sydney"
+      },
+      {
+        "title": "Royal Australian and New Zealand College of Psychiatrists Research Prize",
+        "year": 2019,
+        "organisation": "RANZCP"
+      }
     ]
   },
   {
@@ -46,7 +76,13 @@
     "email": "rachel.huang@blackdoginstitute.org.au",
     "title": "Senior Research Fellow",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Digital mental health", "Bipolar disorder", "Depression monitoring", "mHealth", "Wearables"],
+    "expertise_tags": [
+      "Digital mental health",
+      "Bipolar disorder",
+      "Depression monitoring",
+      "mHealth",
+      "Wearables"
+    ],
     "bio": "Develops digital mental health tools for bipolar and depression monitoring in clinical settings.",
     "publications": 67,
     "active_projects": 3,
@@ -58,7 +94,13 @@
     "email": "maya.patel@unsw.edu.au",
     "title": "Associate Professor",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Comorbidity", "Anxiety disorders", "PTSD", "Integrated care", "Youth mental health"],
+    "expertise_tags": [
+      "Comorbidity",
+      "Anxiety disorders",
+      "PTSD",
+      "Integrated care",
+      "Youth mental health"
+    ],
     "bio": "Expert in comorbid mental health conditions and integrated care pathways for complex presentations.",
     "publications": 89,
     "active_projects": 2,
@@ -70,7 +112,12 @@
     "email": "james.morrison@health.nsw.gov.au",
     "title": "Consultant Psychiatrist",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Psychopharmacology", "Youth psychiatry", "Antidepressants", "Clinical practice"],
+    "expertise_tags": [
+      "Psychopharmacology",
+      "Youth psychiatry",
+      "Antidepressants",
+      "Clinical practice"
+    ],
     "bio": "Clinical lead for youth mental health services at Prince of Wales Hospital.",
     "publications": 34,
     "active_projects": 1,
@@ -82,7 +129,12 @@
     "email": "elena.vasquez@unsw.edu.au",
     "title": "Professor of Genomics",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Pharmacogenomics", "Precision oncology", "Genomic medicine", "Biomarkers"],
+    "expertise_tags": [
+      "Pharmacogenomics",
+      "Precision oncology",
+      "Genomic medicine",
+      "Biomarkers"
+    ],
     "bio": "Pioneering pharmacogenomic approaches to personalised cancer treatment.",
     "publications": 198,
     "active_projects": 5,
@@ -94,7 +146,12 @@
     "email": "tom.nguyen@georgeinstitute.org",
     "title": "Research Director",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Cardiovascular genomics", "Polygenic risk", "Population health", "Data science"],
+    "expertise_tags": [
+      "Cardiovascular genomics",
+      "Polygenic risk",
+      "Population health",
+      "Data science"
+    ],
     "bio": "Leads cardiovascular genomics research using large-scale population datasets.",
     "publications": 112,
     "active_projects": 3,
@@ -106,7 +163,12 @@
     "email": "lisa.park@health.nsw.gov.au",
     "title": "Clinical Geneticist",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Clinical genetics", "Rare variants", "Patient counselling", "Genomic testing"],
+    "expertise_tags": [
+      "Clinical genetics",
+      "Rare variants",
+      "Patient counselling",
+      "Genomic testing"
+    ],
     "bio": "Provides clinical genomic testing and counselling at Sydney Children's Hospital.",
     "publications": 45,
     "active_projects": 2,
@@ -118,7 +180,12 @@
     "email": "david.kim@unsw.edu.au",
     "title": "Professor of Immunology",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Immunotherapy", "CAR-T cells", "Cancer immunology", "Translational research"],
+    "expertise_tags": [
+      "Immunotherapy",
+      "CAR-T cells",
+      "Cancer immunology",
+      "Translational research"
+    ],
     "bio": "Develops next-generation CAR-T immunotherapies for solid tumours.",
     "publications": 156,
     "active_projects": 4,
@@ -130,7 +197,12 @@
     "email": "amara.okafor@unsw.edu.au",
     "title": "Clinical Geneticist",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Rare genetic disorders", "Whole genome sequencing", "Gene therapy", "Pediatric genetics"],
+    "expertise_tags": [
+      "Rare genetic disorders",
+      "Whole genome sequencing",
+      "Gene therapy",
+      "Pediatric genetics"
+    ],
     "bio": "Specialises in diagnosing and treating rare genetic disorders in children.",
     "publications": 78,
     "active_projects": 3,
@@ -142,7 +214,12 @@
     "email": "michael.zhang@schn.health.nsw.gov.au",
     "title": "Head of Genetics",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Muscular dystrophy", "Neuromuscular disorders", "Clinical trials", "Patient registries"],
+    "expertise_tags": [
+      "Muscular dystrophy",
+      "Neuromuscular disorders",
+      "Clinical trials",
+      "Patient registries"
+    ],
     "bio": "Leads neuromuscular genetics research and clinical trial programmes.",
     "publications": 134,
     "active_projects": 5,
@@ -154,7 +231,12 @@
     "email": "sophie.laurent@unsw.edu.au",
     "title": "Research Fellow",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Lysosomal storage disorders", "Enzyme replacement", "Newborn screening", "Biobanking"],
+    "expertise_tags": [
+      "Lysosomal storage disorders",
+      "Enzyme replacement",
+      "Newborn screening",
+      "Biobanking"
+    ],
     "bio": "Research on lysosomal storage disorders and newborn screening programmes.",
     "publications": 42,
     "active_projects": 2,
@@ -166,7 +248,12 @@
     "email": "raj.sharma@health.nsw.gov.au",
     "title": "Consultant Paediatrician",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Metabolic disorders", "Clinical care", "Multidisciplinary teams", "Family support"],
+    "expertise_tags": [
+      "Metabolic disorders",
+      "Clinical care",
+      "Multidisciplinary teams",
+      "Family support"
+    ],
     "bio": "Clinical lead for metabolic and rare disease clinics at Randwick.",
     "publications": 28,
     "active_projects": 1,
@@ -174,14 +261,19 @@
     "role": "clinician"
   },
   {
-    "name": "Prof. Helen Wright",
-    "email": "helen.wright@unsw.edu.au",
-    "title": "Professor of Health Systems",
+    "name": "Prof. Louisa Jorm",
+    "email": "l.jorm@unsw.edu.au",
+    "title": "Professor",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Health policy", "Digital health systems", "Implementation science", "Health economics"],
-    "bio": "Research on health system transformation and digital health implementation.",
-    "publications": 167,
-    "active_projects": 4,
+    "orcid_id": "0000-0003-0390-661X",
+    "expertise_tags": [
+      "Health data science",
+      "Big data",
+      "Population health"
+    ],
+    "bio": "Founding Director of the Centre for Big Data Research in Health at UNSW Sydney.",
+    "publications": 100,
+    "active_projects": 3,
     "institution": "UNSW Sydney",
     "role": "researcher"
   },
@@ -190,7 +282,12 @@
     "email": "chris.taylor@georgeinstitute.org",
     "title": "Health Systems Lead",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Primary care", "Integrated care models", "Health informatics", "Quality improvement"],
+    "expertise_tags": [
+      "Primary care",
+      "Integrated care models",
+      "Health informatics",
+      "Quality improvement"
+    ],
     "bio": "Designs integrated care models for chronic disease management.",
     "publications": 93,
     "active_projects": 3,
@@ -202,7 +299,12 @@
     "email": "nina.kowalski@health.nsw.gov.au",
     "title": "Director of Nursing Innovation",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Nursing informatics", "Workflow optimisation", "Patient safety", "Change management"],
+    "expertise_tags": [
+      "Nursing informatics",
+      "Workflow optimisation",
+      "Patient safety",
+      "Change management"
+    ],
     "bio": "Leads nursing innovation and workflow optimisation across SESLHD hospitals.",
     "publications": 31,
     "active_projects": 2,
@@ -214,7 +316,12 @@
     "email": "wei.lin@unsw.edu.au",
     "title": "Associate Professor",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["AI in healthcare", "Clinical decision support", "Machine learning", "Ethics"],
+    "expertise_tags": [
+      "AI in healthcare",
+      "Clinical decision support",
+      "Machine learning",
+      "Ethics"
+    ],
     "bio": "Develops AI-powered clinical decision support tools with focus on ethics and safety.",
     "publications": 76,
     "active_projects": 3,
@@ -226,7 +333,12 @@
     "email": "emma.foster@unsw.edu.au",
     "title": "Research Fellow",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Sleep disorders", "Circadian rhythms", "Insomnia", "CBT-I"],
+    "expertise_tags": [
+      "Sleep disorders",
+      "Circadian rhythms",
+      "Insomnia",
+      "CBT-I"
+    ],
     "bio": "Research on sleep-circadian interactions in mood disorders.",
     "publications": 38,
     "active_projects": 2,
@@ -238,7 +350,12 @@
     "email": "oliver.grant@blackdoginstitute.org.au",
     "title": "Clinical Psychologist",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Suicide prevention", "Crisis intervention", "Digital therapeutics", "eHealth"],
+    "expertise_tags": [
+      "Suicide prevention",
+      "Crisis intervention",
+      "Digital therapeutics",
+      "eHealth"
+    ],
     "bio": "Develops digital suicide prevention and crisis intervention tools.",
     "publications": 52,
     "active_projects": 2,
@@ -250,7 +367,12 @@
     "email": "anita.desai@unsw.edu.au",
     "title": "Professor of Epidemiology",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Population health", "Epidemiology", "Health surveillance", "Pandemic preparedness"],
+    "expertise_tags": [
+      "Population health",
+      "Epidemiology",
+      "Health surveillance",
+      "Pandemic preparedness"
+    ],
     "bio": "Leads population health surveillance and pandemic preparedness research.",
     "publications": 201,
     "active_projects": 4,
@@ -262,7 +384,12 @@
     "email": "ben.clarke@unsw.edu.au",
     "title": "Senior Lecturer",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Liquid biopsy", "Circulating tumour DNA", "Early detection", "Oncology"],
+    "expertise_tags": [
+      "Liquid biopsy",
+      "Circulating tumour DNA",
+      "Early detection",
+      "Oncology"
+    ],
     "bio": "Develops liquid biopsy technologies for early cancer detection.",
     "publications": 64,
     "active_projects": 3,
@@ -274,7 +401,12 @@
     "email": "fiona.walsh@health.nsw.gov.au",
     "title": "Director of Research",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Clinical research governance", "Trial design", "Regulatory affairs", "Ethics"],
+    "expertise_tags": [
+      "Clinical research governance",
+      "Trial design",
+      "Regulatory affairs",
+      "Ethics"
+    ],
     "bio": "Oversees clinical research governance across SESLHD research programmes.",
     "publications": 41,
     "active_projects": 2,
@@ -286,7 +418,12 @@
     "email": "kevin.liu@unsw.edu.au",
     "title": "Research Fellow",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Neuroimaging", "fMRI", "Brain connectivity", "Schizophrenia"],
+    "expertise_tags": [
+      "Neuroimaging",
+      "fMRI",
+      "Brain connectivity",
+      "Schizophrenia"
+    ],
     "bio": "Uses neuroimaging to study brain connectivity in psychotic disorders.",
     "publications": 47,
     "active_projects": 2,
@@ -298,7 +435,12 @@
     "email": "grace.mitchell@schn.health.nsw.gov.au",
     "title": "Paediatric Neurologist",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Epilepsy", "Developmental disorders", "Neurogenetics", "Precision neurology"],
+    "expertise_tags": [
+      "Epilepsy",
+      "Developmental disorders",
+      "Neurogenetics",
+      "Precision neurology"
+    ],
     "bio": "Clinical and research focus on neurogenetic epilepsy syndromes.",
     "publications": 55,
     "active_projects": 3,
@@ -310,7 +452,12 @@
     "email": "robert.hayes@unsw.edu.au",
     "title": "Professor of Biomedical Engineering",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Medical devices", "Implantable sensors", "Biomaterials", "Regulatory science"],
+    "expertise_tags": [
+      "Medical devices",
+      "Implantable sensors",
+      "Biomaterials",
+      "Regulatory science"
+    ],
     "bio": "Designs implantable sensors for continuous health monitoring.",
     "publications": 178,
     "active_projects": 5,
@@ -322,7 +469,12 @@
     "email": "priya.nair@georgeinstitute.org",
     "title": "Epidemiologist",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Global health", "Health equity", "Low-resource settings", "mHealth"],
+    "expertise_tags": [
+      "Global health",
+      "Health equity",
+      "Low-resource settings",
+      "mHealth"
+    ],
     "bio": "Research on health equity and mHealth solutions in low-resource settings.",
     "publications": 72,
     "active_projects": 3,
@@ -334,7 +486,12 @@
     "email": "hannah.brooks@unsw.edu.au",
     "title": "Senior Research Fellow",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Eating disorders", "Body image", "Digital interventions", "Adolescent psychiatry"],
+    "expertise_tags": [
+      "Eating disorders",
+      "Body image",
+      "Digital interventions",
+      "Adolescent psychiatry"
+    ],
     "bio": "Develops digital interventions for eating disorders and body image concerns in young adults.",
     "publications": 58,
     "active_projects": 2,
@@ -346,7 +503,12 @@
     "email": "marcus.webb@health.nsw.gov.au",
     "title": "Consultant Neurologist",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Dementia", "Cognitive decline", "Neurodegeneration", "Memory clinics"],
+    "expertise_tags": [
+      "Dementia",
+      "Cognitive decline",
+      "Neurodegeneration",
+      "Memory clinics"
+    ],
     "bio": "Leads memory clinic services and dementia research at Prince of Wales Hospital.",
     "publications": 91,
     "active_projects": 3,
@@ -358,7 +520,12 @@
     "email": "yuki.tanaka@blackdoginstitute.org.au",
     "title": "Associate Professor",
     "specialty_area": "Mental Health & Neuroscience",
-    "expertise_tags": ["Addiction psychiatry", "Substance use", "Harm reduction", "Dual diagnosis"],
+    "expertise_tags": [
+      "Addiction psychiatry",
+      "Substance use",
+      "Harm reduction",
+      "Dual diagnosis"
+    ],
     "bio": "Research on integrated treatment approaches for co-occurring substance use and mental illness.",
     "publications": 83,
     "active_projects": 2,
@@ -370,7 +537,12 @@
     "email": "carlos.mendez@unsw.edu.au",
     "title": "Research Fellow",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Proteomics", "Biomarker discovery", "Mass spectrometry", "Multi-omics"],
+    "expertise_tags": [
+      "Proteomics",
+      "Biomarker discovery",
+      "Mass spectrometry",
+      "Multi-omics"
+    ],
     "bio": "Uses proteomics and multi-omics approaches to discover novel cancer biomarkers.",
     "publications": 49,
     "active_projects": 2,
@@ -382,7 +554,12 @@
     "email": "isabelle.fontaine@schn.health.nsw.gov.au",
     "title": "Paediatric Oncologist",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Paediatric oncology", "Precision therapy", "Clinical trials", "Survivorship"],
+    "expertise_tags": [
+      "Paediatric oncology",
+      "Precision therapy",
+      "Clinical trials",
+      "Survivorship"
+    ],
     "bio": "Leads precision oncology trials for childhood cancers at Sydney Children's Hospital.",
     "publications": 67,
     "active_projects": 4,
@@ -394,7 +571,11 @@
     "email": "andrew.walsh@unsw.edu.au",
     "title": "Professor of Medical Oncology",
     "specialty_area": "Personalised Medicine",
-    "expertise_tags": ["Immunotherapy combinations", "Biomarker-guided trials", "Translational oncology"],
+    "expertise_tags": [
+      "Immunotherapy combinations",
+      "Biomarker-guided trials",
+      "Translational oncology"
+    ],
     "bio": "Designs biomarker-guided combination immunotherapy trials for advanced cancers.",
     "publications": 187,
     "active_projects": 5,
@@ -406,7 +587,12 @@
     "email": "leila.hassan@unsw.edu.au",
     "title": "Clinical Genetic Counsellor",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Genetic counselling", "Family communication", "Carrier screening", "Ethics"],
+    "expertise_tags": [
+      "Genetic counselling",
+      "Family communication",
+      "Carrier screening",
+      "Ethics"
+    ],
     "bio": "Provides genetic counselling for families affected by rare inherited conditions.",
     "publications": 22,
     "active_projects": 1,
@@ -418,7 +604,12 @@
     "email": "thomas.berg@schn.health.nsw.gov.au",
     "title": "Paediatric Rheumatologist",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["Autoimmune disorders", "Juvenile arthritis", "Rare immunodeficiencies", "Biologics"],
+    "expertise_tags": [
+      "Autoimmune disorders",
+      "Juvenile arthritis",
+      "Rare immunodeficiencies",
+      "Biologics"
+    ],
     "bio": "Clinical trials lead for rare paediatric autoimmune and autoinflammatory conditions.",
     "publications": 44,
     "active_projects": 3,
@@ -430,7 +621,12 @@
     "email": "mei.chen@unsw.edu.au",
     "title": "Research Fellow",
     "specialty_area": "Rare Diseases",
-    "expertise_tags": ["CRISPR gene editing", "In vitro models", "Cell therapy", "Regulatory pathways"],
+    "expertise_tags": [
+      "CRISPR gene editing",
+      "In vitro models",
+      "Cell therapy",
+      "Regulatory pathways"
+    ],
     "bio": "Develops CRISPR-based therapies and in vitro disease models for rare genetic disorders.",
     "publications": 36,
     "active_projects": 2,
@@ -442,7 +638,12 @@
     "email": "sam.obrien@georgeinstitute.org",
     "title": "Health Informatics Lead",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Electronic health records", "Interoperability", "Data standards", "FHIR"],
+    "expertise_tags": [
+      "Electronic health records",
+      "Interoperability",
+      "Data standards",
+      "FHIR"
+    ],
     "bio": "Architects interoperable health data systems across hospital and primary care networks.",
     "publications": 54,
     "active_projects": 3,
@@ -454,7 +655,12 @@
     "email": "aisha.rahman@health.nsw.gov.au",
     "title": "Director of Emergency Medicine",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Emergency medicine", "Patient flow", "Quality metrics", "Clinical governance"],
+    "expertise_tags": [
+      "Emergency medicine",
+      "Patient flow",
+      "Quality metrics",
+      "Clinical governance"
+    ],
     "bio": "Leads emergency department quality improvement and patient flow initiatives across SESLHD.",
     "publications": 39,
     "active_projects": 2,
@@ -466,10 +672,780 @@
     "email": "daniel.frost@unsw.edu.au",
     "title": "Professor of Health Economics",
     "specialty_area": "Health Systems",
-    "expertise_tags": ["Cost-effectiveness", "Health technology assessment", "Value-based care", "Modelling"],
+    "expertise_tags": [
+      "Cost-effectiveness",
+      "Health technology assessment",
+      "Value-based care",
+      "Modelling"
+    ],
     "bio": "Evaluates cost-effectiveness of new health technologies and models value-based care delivery.",
     "publications": 143,
     "active_projects": 4,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Garth Pearce",
+    "email": "garth.pearce@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-7759-5001",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Derwin Lau",
+    "email": "derwin.lau@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-8714-4079",
+    "expertise_tags": [
+      "hybrid solar cell",
+      "lithium ion battery",
+      "silicon anode ",
+      "photovoltaics ",
+      "silicon solar cell "
+    ],
+    "bio": "UNSW researcher. Current affiliation: University of New South Wales.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Limin Mao",
+    "email": "limin.mao@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0003-0995-5789",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Gavan McNally",
+    "email": "gavan.mcnally@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-9061-6463",
+    "expertise_tags": [
+      "Behavioral Neuroscience",
+      "Learning",
+      "Motivation "
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Jonathan Yue Huang",
+    "email": "jonathan.yue.huang@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-1729-3052",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Emery Schubert",
+    "email": "emery.schubert@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-6541-8083",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Yiran Li",
+    "email": "yiran.li@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-9371-2207",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ziheng Liu",
+    "email": "ziheng.liu@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-3532-2208",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Sally Nathan",
+    "email": "sally.nathan@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-1960-1063",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Mark Whitty",
+    "email": "mark.whitty@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-3860-9458",
+    "expertise_tags": [
+      "robotics",
+      "path planning",
+      "digital viticulture",
+      "agricultural robotics"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ji Zhang",
+    "email": "ji.zhang@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-9976-5948",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Brett Hayes",
+    "email": "brett.hayes@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0003-1415-0088",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "James Dunn",
+    "email": "james.dunn@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-6964-909X",
+    "expertise_tags": [
+      "Psychology",
+      "Face Recognition"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Steven Lui",
+    "email": "steven.lui@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-3441-5381",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "rodica ramer",
+    "email": "rodica.ramer@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-4045-5267",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "James Connor",
+    "email": "james.connor@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0003-4847-2608",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Eric Tze Kuan Lim",
+    "email": "eric.tze.kuan.lim@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0003-3317-8406",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Richard Vickery",
+    "email": "richard.vickery@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-2968-7358",
+    "expertise_tags": [
+      "tactile",
+      "sensory",
+      "prosthesis",
+      "neural coding",
+      "neuroscience"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "William Craft",
+    "email": "william.craft@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-5333-5611",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Danyang Wang",
+    "email": "danyang.wang@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-7883-8001",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ludmila Stern",
+    "email": "ludmila.stern@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-7330-9477",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Pei-Chieh Hsiao",
+    "email": "pei-chieh.hsiao@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-6949-7308",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Maree Higgins",
+    "email": "maree.higgins@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-3785-0960",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Tianruo Guo",
+    "email": "tianruo.guo@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-6348-6771",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Australia.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ashraful  Azam",
+    "email": "ashraful..azam@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-7141-3772",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Jenna Zhao",
+    "email": "jenna.zhao@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-9691-164X",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: University of New South Wales.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Nicholas Konstandaras",
+    "email": "nicholas.konstandaras@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0003-2824-4632",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: University of New South Wales.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Simit Raval",
+    "email": "simit.raval@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-0421-0940",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Australia.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Mark Oliver Diesendorf",
+    "email": "mark.oliver.diesendorf@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-2292-3565",
+    "expertise_tags": [
+      "Energy technology assessment; energy policy; renewable energy; sustainable development",
+      "ecological economics"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Hasti Iranmanesh",
+    "email": "hasti.iranmanesh@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-6838-2207",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Natalia Castaño-Rodríguez",
+    "email": "natalia.castaño-rodríguez@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-8819-8872",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Jasneet Parmar",
+    "email": "jasneet.parmar@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-0285-8698",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Andrew Kapos",
+    "email": "andrew.kapos@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-9096-9485",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: University of New South Wales.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Imreet Singh Shergill",
+    "email": "imreet.singh.shergill@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0000-1779-1564",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "John Reizes",
+    "email": "john.reizes@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-4169-9028",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Wenyu Fu",
+    "email": "wenyu.fu@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0006-0470-0372",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Zhaocheng Huang",
+    "email": "zhaocheng.huang@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-7915-6790",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Michael Salter",
+    "email": "michael.salter@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0001-6446-9498",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Michael Dawes",
+    "email": "michael.dawes@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-4346-2518",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Andrew Yuk Tsun Wong",
+    "email": "andrew.yuk.tsun.wong@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0000-2467-2627",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Peibo Li",
+    "email": "peibo.li@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0001-0201-3564",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Nayuta Yoshioka",
+    "email": "nayuta.yoshioka@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-6371-0566",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Eliza Northrop",
+    "email": "eliza.northrop@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-2873-1150",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ruoxin Hua",
+    "email": "ruoxin.hua@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0002-8575-9851",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ka Chun Joshua Yu",
+    "email": "ka.chun.joshua.yu@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0000-5343-1654",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ayesha Jehangir",
+    "email": "ayesha.jehangir@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-5814-0482",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ralf Loeffler",
+    "email": "ralf.loeffler@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-0482-5486",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Apurba Upreti",
+    "email": "apurba.upreti@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0009-0003-5741-1396",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Jacqueline Ku",
+    "email": "jacqueline.ku@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0002-7666-5186",
+    "expertise_tags": [
+      "Research"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Yu-Cheng Lin",
+    "email": "yu-cheng.lin@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Health Systems",
+    "orcid_id": "0000-0003-2148-1870",
+    "expertise_tags": [
+      "Property investment, Property Finance, Property Portfolio Analysis"
+    ],
+    "bio": "UNSW researcher. Current affiliation: UNSW Sydney.",
+    "publications": 0,
+    "active_projects": 1,
     "institution": "UNSW Sydney",
     "role": "researcher"
   }
