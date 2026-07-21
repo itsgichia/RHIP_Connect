@@ -391,6 +391,34 @@ export default function ProfilePage() {
                   <dd className="text-rhip-body">{tags.join(', ')}</dd>
                 </div>
               )}
+              {(profile.orcid_id || profile.current_affiliation) && (
+                <div>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-rhip-muted mb-1">
+                    Links &amp; identifiers
+                  </dt>
+                  <dd className="text-rhip-body space-y-1">
+                    {profile.current_affiliation && (
+                      <p className="text-rhip-muted">
+                        Current affiliation: {profile.current_affiliation}
+                      </p>
+                    )}
+                    {profile.orcid_id && (
+                      <a
+                        href={`https://orcid.org/${profile.orcid_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-rhip-teal hover:underline"
+                        title="View ORCID record"
+                      >
+                        <span className="inline-flex items-center justify-center w-4 h-4 rounded-sm bg-[#A6CE39] text-white text-[9px] font-bold leading-none">
+                          iD
+                        </span>
+                        ORCID: {profile.orcid_id}
+                      </a>
+                    )}
+                  </dd>
+                </div>
+              )}
             </dl>
           </ProfileSection>
         </div>
