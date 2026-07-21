@@ -5,6 +5,12 @@ import PublicNavBar from '../components/layout/PublicNavBar'
 import { firebaseSignup, resendVerificationEmail, useFirebaseAuth } from '../lib/authHelpers'
 import api from '../hooks/useApi'
 import { isBlockedEmail, BLOCKED_EMAIL_MESSAGE } from '../utils/blockedDomains'
+import {
+  CAREER_LEVEL_LABELS,
+  CAREER_LEVELS,
+  IDENTITY_FACET_LABELS,
+  IDENTITY_FACETS,
+} from '../utils/roles'
 
 const SPECIALTY_AREAS = [
   'Mental Health & Neuroscience',
@@ -13,13 +19,24 @@ const SPECIALTY_AREAS = [
   'Health Systems',
 ]
 
+const FACET_OPTIONS = [
+  IDENTITY_FACETS.CLINICIAN,
+  IDENTITY_FACETS.RESEARCHER,
+  IDENTITY_FACETS.PROFESSIONAL_TECHNICAL,
+  IDENTITY_FACETS.POLICY,
+]
+
 export default function SignupPage() {
   const [form, setForm] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'clinician',
+    accountType: 'member', // member | industry
+    identity_facets: [IDENTITY_FACETS.CLINICIAN],
+    primary_lens: IDENTITY_FACETS.CLINICIAN,
+    career_level: CAREER_LEVELS.MID,
+    professional_title: '',
     institution_name: '',
     specialty_area: '',
   })
@@ -28,7 +45,21 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
 
-  const showSpecialty = form.role === 'clinician' || form.role === 'researcher'
+  const isMember = form.accountType === 'member'
+  const showSpecialty = isMember
+  const showProfessionalTitle = form.identity_facets.includes(IDENTITY_FACETS.PROFESSIONAL_TECHNICAL)
+
+  const toggleFacet = (facet) => {
+    setForm((prev) => {
+      const has = prev.identity_facets.includes(facet)
+      let next = has
+        ? prev.identity_facets.filter((f) => f !== facet)
+        : [...prev.identity_facets, facet]
+      if (next.length === 0) next = [facet]
+      const primary_lens = next.includes(prev.primary_lens) ? prev.primary_lens : next[0]
+      return { ...prev, identity_facets: next, primary_lens }
+    })
+  }
 
   const handleEmailBlur = () => {
     if (form.email && isBlockedEmail(form.email)) {
@@ -48,15 +79,27 @@ export default function SignupPage() {
       setEmailError(BLOCKED_EMAIL_MESSAGE)
       return
     }
+    if (isMember && form.identity_facets.length === 0) {
+      toast.error('Select at least one identity')
+      return
+    }
+    if (showProfessionalTitle && !form.professional_title.trim()) {
+      toast.error('Add your professional title (e.g. biostatistician, lab tech)')
+      return
+    }
     setLoading(true)
     try {
       const payload = {
         name: form.name,
         email: form.email,
         password: form.password,
-        role: form.role,
         institution_name: form.institution_name,
         specialty_area: showSpecialty ? form.specialty_area : null,
+        role: isMember ? null : 'industry',
+        identity_facets: isMember ? form.identity_facets : [],
+        primary_lens: isMember ? form.primary_lens : null,
+        career_level: isMember ? form.career_level : null,
+        professional_title: showProfessionalTitle ? form.professional_title.trim() : null,
       }
       if (useFirebaseAuth()) {
         await firebaseSignup(payload)
@@ -69,7 +112,7 @@ export default function SignupPage() {
         err.response?.data?.detail ||
         err.message ||
         'Signup failed'
-      toast.error(message)
+      toast.error(typeof message === 'string' ? message : 'Signup failed')
     } finally {
       setLoading(false)
     }
@@ -131,7 +174,10 @@ export default function SignupPage() {
       <PublicNavBar hideLogin />
       <div className="flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8">
-          <h1 className="font-display text-2xl font-semibold text-rhip-dark mb-6">Create Account</h1>
+          <h1 className="font-display text-2xl font-semibold text-rhip-dark mb-2">Create Account</h1>
+          <p className="text-sm text-rhip-muted mb-6">
+            Tell us how you work, and we&apos;ll create a profile for you. 
+          </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Full name</label>
@@ -175,18 +221,97 @@ export default function SignupPage() {
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1">Role</label>
-              <select
-                value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
-              >
-                <option value="clinician">Clinician</option>
-                <option value="researcher">Researcher</option>
-                <option value="industry">Industry Partner</option>
-              </select>
+              <label className="block text-sm font-medium mb-2">I am joining as</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, accountType: 'member' })}
+                  className={`flex-1 px-3 py-2 rounded-xl text-sm border ${
+                    isMember
+                      ? 'border-rhip-teal bg-rhip-lightTeal text-rhip-teal'
+                      : 'border-gray-200 text-rhip-muted'
+                  }`}
+                >
+                  Precinct member
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, accountType: 'industry' })}
+                  className={`flex-1 px-3 py-2 rounded-xl text-sm border ${
+                    !isMember
+                      ? 'border-rhip-teal bg-rhip-lightTeal text-rhip-teal'
+                      : 'border-gray-200 text-rhip-muted'
+                  }`}
+                >
+                  Industry partner
+                </button>
+              </div>
             </div>
+
+            {isMember && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Identities (select all that apply)</label>
+                  <div className="space-y-2">
+                    {FACET_OPTIONS.map((facet) => (
+                      <label key={facet} className="flex items-center gap-2 text-sm text-rhip-body">
+                        <input
+                          type="checkbox"
+                          checked={form.identity_facets.includes(facet)}
+                          onChange={() => toggleFacet(facet)}
+                          className="rounded border-gray-300 text-rhip-teal focus:ring-rhip-teal"
+                        />
+                        {IDENTITY_FACET_LABELS[facet]}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Primary focus (for your homepage view)</label>
+                  <select
+                    value={form.primary_lens}
+                    onChange={(e) => setForm({ ...form, primary_lens: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
+                  >
+                    {form.identity_facets.map((f) => (
+                      <option key={f} value={f}>{IDENTITY_FACET_LABELS[f]}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Career level</label>
+                  <select
+                    value={form.career_level}
+                    onChange={(e) => setForm({ ...form, career_level: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
+                  >
+                    {Object.values(CAREER_LEVELS).map((level) => (
+                      <option key={level} value={level}>{CAREER_LEVEL_LABELS[level]}</option>
+                    ))}
+                  </select>
+                  {form.career_level === CAREER_LEVELS.STUDENT && (
+                    <p className="text-xs text-rhip-muted mt-1">
+                      HDR / postgraduate students use the researcher identity with this career level.
+                    </p>
+                  )}
+                </div>
+                {showProfessionalTitle && (
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Professional title</label>
+                    <input
+                      value={form.professional_title}
+                      onChange={(e) => setForm({ ...form, professional_title: e.target.value })}
+                      placeholder="e.g. Biostatistician, Lab technician, Registry manager"
+                      required
+                      className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
             <div>
               <label className="block text-sm font-medium mb-1">Institution name</label>
               <input

@@ -2,18 +2,7 @@ import { useEffect, useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import api from '../../hooks/useApi'
 import { formatDuration, formatStartDate } from '../../utils/formatters'
-
-const READINESS_COLORS = {
-  early: 'bg-gray-100 text-gray-600',
-  feasibility: 'bg-rhip-lightTeal text-rhip-teal',
-  clinical: 'bg-rhip-seafoam/15 text-rhip-seafoam',
-  commercial: 'bg-rhip-coral/10 text-rhip-coral',
-}
-
-const STAGE_LABELS = {
-  1: 'Need', 2: 'Idea', 3: 'PoC', 4: 'Feasibility', 5: 'Proof of Value',
-  6: 'Initial Trials', 7: 'Validation', 8: 'Approval', 9: 'Clinical Use', 10: 'Standard of Care',
-}
+import { trlBadgeClass, trlFullLabel, trlShortLabel } from '../../utils/trl'
 
 export default function GovernmentProjectModal({ projectId, onClose }) {
   const [project, setProject] = useState(null)
@@ -55,11 +44,11 @@ export default function GovernmentProjectModal({ projectId, onClose }) {
             ) : project ? (
               <>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${READINESS_COLORS[project.readiness] || READINESS_COLORS.early}`}>
-                    {project.readiness}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${trlBadgeClass(project.trl)}`}>
+                    {trlShortLabel(project.trl)}
                   </span>
                   <span className="text-xs text-rhip-muted">
-                    Stage {project.stage}: {STAGE_LABELS[project.stage]}
+                    {project.trl_label || trlFullLabel(project.trl)}
                   </span>
                 </div>
                 <h2 className="font-display text-xl font-semibold text-rhip-dark">{project.title}</h2>

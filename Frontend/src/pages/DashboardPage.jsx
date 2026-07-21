@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import api from '../hooks/useApi'
 import { useAuth } from '../context/AuthContext'
 import { useNotifications } from '../context/NotificationContext'
-import { ROLE_LABELS, ROLES } from '../utils/roles'
+import { canViewPipeline, ROLE_LABELS, ROLES } from '../utils/roles'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -15,14 +15,17 @@ export default function DashboardPage() {
       const results = {}
       try {
         if (user?.role === ROLES.CLINICIAN || user?.role === ROLES.RESEARCHER) {
-          const { data } = await api.get('/challenges')
-          const mine = user.role === ROLES.RESEARCHER
-            ? data.challenges.filter((c) => c.status === 'matched').slice(0, 5)
-            : data.challenges.filter((c) => c.posted_by?.name === user.name).slice(0, 5)
-          results.challenges = mine
-          const threads = await api.get('/threads')
-          results.pendingConnections = threads.data.threads.filter((t) => t.pending_response).length
-          results.activeThreads = threads.data.threads.filter((t) => t.status === 'active').length
+          const [mineRes, matchesRes, threadsRes] = await Promise.all([
+            api.get('/challenges', { params: { mine: true } }),
+            api.get('/challenges/matched-for-me'),
+            api.get('/threads'),
+          ])
+          results.myChallenges = mineRes.data.challenges.slice(0, 3)
+          results.incomingMatches = matchesRes.data.matches
+            .slice(0, 3)
+            .map((m) => ({ ...m.challenge, matchScore: m.score }))
+          results.pendingConnections = threadsRes.data.threads.filter((t) => t.pending_response).length
+          results.activeThreads = threadsRes.data.threads.filter((t) => t.status === 'active').length
         }
         if (user?.role === ROLES.INDUSTRY) {
           const proj = await api.get('/pipeline/projects?readiness=commercial')
@@ -80,29 +83,65 @@ export default function DashboardPage() {
         {(user?.role === ROLES.CLINICIAN || user?.role === ROLES.RESEARCHER) && (
           <>
             <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <h3 className="font-semibold text-rhip-dark mb-4">
-                {user?.role === ROLES.RESEARCHER ? 'Matched Challenges' : 'Recent Challenges'}
-              </h3>
-              {(stats.challenges || []).length > 0 ? (
-                <ul className="space-y-2">
-                  {stats.challenges.map((c) => (
-                    <li key={c.id} className="text-sm">
-                      <Link to="/challenges" className="text-rhip-teal hover:underline">{c.title}</Link>
-                      <span className="text-rhip-muted ml-2">({c.status})</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-rhip-muted">No challenges yet.</p>
-              )}
-              {user?.role === ROLES.CLINICIAN && (
-                <Link
-                  to="/challenges"
-                  className="inline-block mt-4 px-4 py-2 bg-rhip-teal text-white rounded-xl text-sm font-medium hover:bg-rhip-seafoam"
-                >
-                  Post a Challenge
-                </Link>
-              )}
+              <h3 className="font-semibold text-rhip-dark mb-4">Challenge Board</h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-xs font-medium text-rhip-muted uppercase tracking-wide mb-2">
+                    Posted by you
+                  </p>
+                  {(stats.myChallenges || []).length > 0 ? (
+                    <ul className="space-y-2">
+                      {stats.myChallenges.map((c) => (
+                        <li key={c.id} className="text-sm">
+                          <Link
+                            to={`/challenges?challenge=${c.id}`}
+                            className="text-rhip-teal hover:underline"
+                          >
+                            {c.title}
+                          </Link>
+                          <span className="text-rhip-muted ml-2 capitalize">({c.status})</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-rhip-muted">No challenges posted yet.</p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-rhip-muted uppercase tracking-wide mb-2">
+                    Matched to you
+                  </p>
+                  {(stats.incomingMatches || []).length > 0 ? (
+                    <ul className="space-y-2">
+                      {stats.incomingMatches.map((c) => (
+                        <li key={c.id} className="text-sm">
+                          <Link
+                            to={`/challenges?challenge=${c.id}`}
+                            className="text-rhip-teal hover:underline"
+                          >
+                            {c.title}
+                          </Link>
+                          {c.matchScore != null && (
+                            <span className="text-rhip-muted ml-2">
+                              ({Math.round(c.matchScore * 100)}% match)
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-rhip-muted">
+                      No incoming matches yet — you&apos;ll be notified when a challenge fits your profile.
+                    </p>
+                  )}
+                </div>
+              </div>
+              <Link
+                to="/challenges"
+                className="inline-block mt-4 px-4 py-2 bg-rhip-teal text-white rounded-xl text-sm font-medium hover:bg-rhip-seafoam"
+              >
+                Open Challenge Board
+              </Link>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="font-semibold text-rhip-dark mb-2">Connection Requests</h3>
@@ -236,6 +275,7 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="font-semibold text-rhip-dark mb-4">Quick Links</h3>
               <div className="space-y-2 text-sm">
+                <Link to="/map" className="block text-rhip-teal hover:underline">Knowledge Map</Link>
                 <Link to="/messages" className="block text-rhip-teal hover:underline">Messages</Link>
                 <Link to="/admin" className="block text-rhip-teal hover:underline">Admin Panel</Link>
               </div>
@@ -248,10 +288,13 @@ export default function DashboardPage() {
           <h3 className="font-semibold text-rhip-dark mb-4">Quick Navigation</h3>
           <div className="space-y-2 text-sm">
             <Link to="/directory" className="block text-rhip-teal hover:underline">Expertise Directory</Link>
+            <Link to="/map" className="block text-rhip-teal hover:underline">Knowledge Map</Link>
             {user?.role !== ROLES.INDUSTRY && (
               <Link to="/challenges" className="block text-rhip-teal hover:underline">Challenge Board</Link>
             )}
-            <Link to="/pipeline" className="block text-rhip-teal hover:underline">Innovation Pipeline</Link>
+            {canViewPipeline(user?.role) && (
+              <Link to="/pipeline" className="block text-rhip-teal hover:underline">Innovation Pipeline</Link>
+            )}
           </div>
         </div>
         )}

@@ -3,192 +3,600 @@
     "title": "AI-Guided Depression Treatment Pathways",
     "description": "Machine learning model to predict treatment response in major depression, enabling personalised antidepressant selection.",
     "stage": 7,
+    "trl": 7,
     "specialty_area": "Mental Health & Neuroscience",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1840,
+      "time_saved_days": 42,
+      "cost_reduced_aud": 2100000,
+      "evidence_note": "Prospective clinic pilot + licensed pathway adoption",
+      "evidence_level": "validated"
+    },
+    "lead_email": "c.loo@unsw.edu.au",
+    "clinical_partner_email": "clinician@rhip.edu.au"
   },
   {
     "title": "Portable TMS Device for Home Use",
     "description": "Developing a portable transcranial magnetic stimulation device for treatment-resistant depression in outpatient settings.",
     "stage": 6,
+    "trl": 5,
     "specialty_area": "Mental Health & Neuroscience",
     "readiness": "feasibility",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 539,
+      "time_saved_days": 16,
+      "cost_reduced_aud": 628000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    },
+    "lead_email": "c.loo@unsw.edu.au",
+    "clinical_partner_email": "james.morrison@health.nsw.gov.au"
   },
   {
     "title": "Digital Mental Health Monitoring App",
     "description": "Smartphone app for continuous mood monitoring in bipolar disorder patients.",
     "stage": 4,
+    "trl": 3,
     "specialty_area": "Mental Health & Neuroscience",
     "readiness": "early",
-    "visibility": "precinct"
+    "visibility": "precinct",
+    "impact": {
+      "patients_helped": 262,
+      "time_saved_days": 8,
+      "cost_reduced_aud": 306000,
+      "evidence_note": "Modelled precinct impact based on specialty benchmarks and current TRL",
+      "evidence_level": "projected"
+    },
+    "lead_email": "j.newby@unsw.edu.au",
+    "clinical_partner_email": "sarah.okonjo@health.nsw.gov.au"
   },
   {
     "title": "Ketamine Infusion Protocol Optimisation",
     "description": "Clinical protocol development for subanaesthetic ketamine in treatment-resistant depression with real-time outcome tracking.",
     "stage": 8,
+    "trl": 8,
     "specialty_area": "Mental Health & Neuroscience",
     "readiness": "commercial",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1482,
+      "time_saved_days": 43,
+      "cost_reduced_aud": 1729000,
+      "evidence_note": "Translation-ready outcomes with documented service or commercial use",
+      "evidence_level": "validated"
+    },
+    "lead_email": "c.loo@unsw.edu.au",
+    "clinical_partner_email": "clinician@rhip.edu.au"
   },
   {
     "title": "VR Exposure Therapy Platform",
     "description": "Virtual reality platform for graded exposure therapy in anxiety and PTSD, integrated with clinician dashboards.",
     "stage": 5,
+    "trl": 4,
     "specialty_area": "Mental Health & Neuroscience",
     "readiness": "feasibility",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 526,
+      "time_saved_days": 15,
+      "cost_reduced_aud": 613000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    }
   },
   {
     "title": "Youth Early Psychosis Detection Tool",
     "description": "Digital screening tool for early psychosis in adolescents, deployed across school and primary care settings.",
     "stage": 6,
+    "trl": 6,
     "specialty_area": "Mental Health & Neuroscience",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 3100,
+      "time_saved_days": 65,
+      "cost_reduced_aud": 1800000,
+      "evidence_note": "School and GP pilots; referral-to-assessment time reduced",
+      "evidence_level": "validated"
+    },
+    "lead_email": "a.wernerseidler@unsw.edu.au",
+    "clinical_partner_email": "james.morrison@health.nsw.gov.au"
   },
   {
     "title": "Pharmacogenomic Cancer Panel",
     "description": "Clinical-grade pharmacogenomic testing panel for personalised oncology treatment selection.",
     "stage": 8,
+    "trl": 8,
     "specialty_area": "Personalised Medicine",
     "readiness": "commercial",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1026,
+      "time_saved_days": 32,
+      "cost_reduced_aud": 2508000,
+      "evidence_note": "Translation-ready outcomes with documented service or commercial use",
+      "evidence_level": "validated"
+    },
+    "lead_email": "m.haber@ccia.org.au",
+    "clinical_partner_email": "anthony.joshua@health.nsw.gov.au"
   },
   {
     "title": "Liquid Biopsy Early Detection Platform",
     "description": "Multi-cancer early detection platform using circulating tumour DNA analysis.",
     "stage": 7,
+    "trl": 7,
     "specialty_area": "Personalised Medicine",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 920,
+      "time_saved_days": 28,
+      "cost_reduced_aud": 3400000,
+      "evidence_note": "Prospective cohort; TRL 7 operational prototype",
+      "evidence_level": "validated"
+    },
+    "lead_email": "d.ziegler@unsw.edu.au",
+    "clinical_partner_email": "nada.hamad@health.nsw.gov.au"
   },
   {
     "title": "CAR-T Solid Tumour Platform",
     "description": "Next-generation CAR-T cell therapy platform targeting solid tumour antigens.",
     "stage": 5,
+    "trl": 4,
     "specialty_area": "Personalised Medicine",
     "readiness": "feasibility",
-    "visibility": "precinct"
+    "visibility": "precinct",
+    "impact": {
+      "patients_helped": 380,
+      "time_saved_days": 12,
+      "cost_reduced_aud": 928000,
+      "evidence_note": "Modelled precinct impact based on specialty benchmarks and current TRL",
+      "evidence_level": "projected"
+    },
+    "lead_email": "g.marshall@ccia.org.au",
+    "clinical_partner_email": "isabelle.fontaine@schn.health.nsw.gov.au"
   },
   {
     "title": "Polygenic Risk Score Clinical Portal",
     "description": "Patient-facing portal delivering polygenic risk scores for cardiovascular and metabolic disease prevention.",
     "stage": 6,
+    "trl": 6,
     "specialty_area": "Personalised Medicine",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 795,
+      "time_saved_days": 25,
+      "cost_reduced_aud": 1944000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    },
+    "lead_email": "a.patel@georgeinstitute.org.au",
+    "clinical_partner_email": "helen.cho@health.nsw.gov.au"
   },
   {
     "title": "Tumour Organoid Drug Screening",
     "description": "Patient-derived organoid platform for testing chemotherapy response before treatment begins.",
     "stage": 7,
+    "trl": 7,
     "specialty_area": "Personalised Medicine",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 757,
+      "time_saved_days": 24,
+      "cost_reduced_aud": 1849000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    }
   },
   {
     "title": "Wearable Cardiac Biomarker Sensor",
     "description": "Implantable micro-sensor for continuous troponin and BNP monitoring in heart failure patients.",
     "stage": 4,
+    "trl": 3,
     "specialty_area": "Personalised Medicine",
     "readiness": "early",
-    "visibility": "precinct"
+    "visibility": "precinct",
+    "impact": {
+      "patients_helped": 189,
+      "time_saved_days": 6,
+      "cost_reduced_aud": 462000,
+      "evidence_note": "Modelled precinct impact based on specialty benchmarks and current TRL",
+      "evidence_level": "projected"
+    }
   },
   {
     "title": "Rare Disease Gene Therapy Pipeline",
     "description": "AAV-based gene therapy candidates for three rare paediatric genetic disorders.",
     "stage": 5,
+    "trl": 5,
     "specialty_area": "Rare Diseases",
     "readiness": "feasibility",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 210,
+      "time_saved_days": 23,
+      "cost_reduced_aud": 842000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    },
+    "lead_email": "m.kavanagh@unsw.edu.au",
+    "clinical_partner_email": "raj.sharma@health.nsw.gov.au"
   },
   {
     "title": "Neuromuscular Patient Registry Platform",
     "description": "National registry and natural history study platform for neuromuscular disorders.",
     "stage": 8,
+    "trl": 8,
     "specialty_area": "Rare Diseases",
     "readiness": "commercial",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 556,
+      "time_saved_days": 62,
+      "cost_reduced_aud": 2223000,
+      "evidence_note": "Translation-ready outcomes with documented service or commercial use",
+      "evidence_level": "validated"
+    },
+    "lead_email": "c.sue@neura.edu.au",
+    "clinical_partner_email": "michael.zhang@schn.health.nsw.gov.au"
   },
   {
     "title": "Newborn Metabolic Screening Expansion",
     "description": "Expanded newborn screening panel covering 50 additional rare metabolic conditions.",
     "stage": 7,
+    "trl": 7,
     "specialty_area": "Rare Diseases",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 444,
+      "time_saved_days": 49,
+      "cost_reduced_aud": 1776000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    },
+    "lead_email": "a.jaffe@unsw.edu.au",
+    "clinical_partner_email": "priya.sharma@schn.health.nsw.gov.au"
   },
   {
     "title": "Duchenne Muscular Dystrophy Trial Network",
     "description": "Multi-site clinical trial network for novel exon-skipping therapies in Duchenne muscular dystrophy.",
     "stage": 6,
+    "trl": 6,
     "specialty_area": "Rare Diseases",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 339,
+      "time_saved_days": 38,
+      "cost_reduced_aud": 1355000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    },
+    "lead_email": "g.marshall@ccia.org.au",
+    "clinical_partner_email": "grace.mitchell@schn.health.nsw.gov.au"
   },
   {
     "title": "Fabry Disease Enzyme Replacement Programme",
     "description": "Long-term outcomes study of enzyme replacement therapy in Fabry disease with biomarker tracking.",
     "stage": 8,
+    "trl": 8,
     "specialty_area": "Rare Diseases",
     "readiness": "commercial",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 513,
+      "time_saved_days": 57,
+      "cost_reduced_aud": 2052000,
+      "evidence_note": "Translation-ready outcomes with documented service or commercial use",
+      "evidence_level": "validated"
+    }
   },
   {
     "title": "Epilepsy Genomics Diagnostic Hub",
     "description": "Rapid whole-genome sequencing service for undiagnosed epilepsy syndromes in paediatric patients.",
     "stage": 5,
+    "trl": 5,
     "specialty_area": "Rare Diseases",
     "readiness": "feasibility",
-    "visibility": "precinct"
+    "visibility": "precinct",
+    "impact": {
+      "patients_helped": 210,
+      "time_saved_days": 23,
+      "cost_reduced_aud": 842000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    },
+    "lead_email": "c.sue@neura.edu.au",
+    "clinical_partner_email": "rebecca.tan@schn.health.nsw.gov.au"
   },
   {
     "title": "Integrated Care Coordination System",
     "description": "Digital platform connecting primary care, specialists, and community services for chronic disease management.",
     "stage": 6,
+    "trl": 6,
     "specialty_area": "Health Systems",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 2127,
+      "time_saved_days": 17,
+      "cost_reduced_aud": 1361000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    },
+    "lead_email": "b.neal@georgeinstitute.org.au",
+    "clinical_partner_email": "nina.kowalski@health.nsw.gov.au"
   },
   {
     "title": "Clinical AI Decision Support Tool",
     "description": "Real-time clinical decision support using federated learning across hospital networks.",
     "stage": 7,
+    "trl": 7,
     "specialty_area": "Health Systems",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 2467,
+      "time_saved_days": 20,
+      "cost_reduced_aud": 1579000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    },
+    "lead_email": "l.jorm@unsw.edu.au",
+    "clinical_partner_email": "aisha.rahman@health.nsw.gov.au"
   },
   {
     "title": "Hospital-at-Home Digital Pathway",
     "description": "Remote monitoring and virtual ward platform enabling acute care delivery in patients' homes.",
     "stage": 5,
+    "trl": 5,
     "specialty_area": "Health Systems",
     "readiness": "feasibility",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1075,
+      "time_saved_days": 9,
+      "cost_reduced_aud": 688000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    },
+    "lead_email": "l.jorm@unsw.edu.au",
+    "clinical_partner_email": "omar.haddad@health.nsw.gov.au"
   },
   {
     "title": "Emergency Department Triage Optimiser",
     "description": "AI-powered triage system reducing wait times and improving patient flow in emergency departments.",
     "stage": 6,
+    "trl": 6,
     "specialty_area": "Health Systems",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1964,
+      "time_saved_days": 16,
+      "cost_reduced_aud": 1257000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    },
+    "lead_email": "a.rodgers@georgeinstitute.org.au",
+    "clinical_partner_email": "michael.torres@health.nsw.gov.au"
   },
   {
     "title": "Population Health Surveillance Dashboard",
     "description": "Real-time epidemiological dashboard integrating hospital, GP, and pathology data across SESLHD.",
     "stage": 7,
+    "trl": 7,
     "specialty_area": "Health Systems",
     "readiness": "clinical",
-    "visibility": "public"
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 2284,
+      "time_saved_days": 18,
+      "cost_reduced_aud": 1462000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    }
   },
   {
     "title": "Nursing Workflow Automation Suite",
     "description": "Digital tools for medication administration, handover, and shift planning across ward environments.",
     "stage": 4,
+    "trl": 3,
     "specialty_area": "Health Systems",
     "readiness": "early",
-    "visibility": "precinct"
+    "visibility": "precinct",
+    "impact": {
+      "patients_helped": 569,
+      "time_saved_days": 5,
+      "cost_reduced_aud": 364000,
+      "evidence_note": "Modelled precinct impact based on specialty benchmarks and current TRL",
+      "evidence_level": "projected"
+    }
+  },
+  {
+    "title": "Childhood Cancer Survivorship & Mental Health Hub",
+    "description": "Integrated psycho-oncology and digital mental health pathway for paediatric cancer survivors linking CCI, SCH, and Black Dog Institute.",
+    "stage": 6,
+    "trl": 6,
+    "specialty_area": "Rare Diseases",
+    "readiness": "clinical",
+    "visibility": "public",
+    "lead_email": "c.wakefield@unsw.edu.au",
+    "clinical_partner_email": "sarah.okonjo@health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 680,
+      "time_saved_days": 28,
+      "cost_reduced_aud": 920000,
+      "evidence_note": "Multi-site survivorship clinic pilots across SCH and POWH",
+      "evidence_level": "clinical"
+    }
+  },
+  {
+    "title": "Genomic Psychiatry Diagnostic Network",
+    "description": "Cross-disciplinary clinic combining psychiatric genetics, neuroimaging, and rare neurodevelopmental diagnostics for complex presentations.",
+    "stage": 5,
+    "trl": 5,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "feasibility",
+    "visibility": "public",
+    "lead_email": "p.mitchell@unsw.edu.au",
+    "clinical_partner_email": "rebecca.tan@schn.health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 240,
+      "time_saved_days": 35,
+      "cost_reduced_aud": 710000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    }
+  },
+  {
+    "title": "Cardio-Metabolic Depression Care Pathway",
+    "description": "Shared care model for depression in heart failure and diabetes, combining cardiology, endocrinology, and psychiatry at Prince of Wales Hospital.",
+    "stage": 7,
+    "trl": 7,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public",
+    "lead_email": "a.patel@georgeinstitute.org.au",
+    "clinical_partner_email": "cameron.holloway@health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 1240,
+      "time_saved_days": 22,
+      "cost_reduced_aud": 1580000,
+      "evidence_note": "Prospective clinic pilot + licensed pathway adoption",
+      "evidence_level": "validated"
+    }
+  },
+  {
+    "title": "Neuro-Oncology Precision Board",
+    "description": "Multidisciplinary molecular tumour board for paediatric brain tumours joining oncology, neurology, genomics, and drug discovery teams.",
+    "stage": 7,
+    "trl": 7,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public",
+    "lead_email": "d.ziegler@unsw.edu.au",
+    "clinical_partner_email": "isabelle.fontaine@schn.health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 310,
+      "time_saved_days": 40,
+      "cost_reduced_aud": 1120000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    }
+  },
+  {
+    "title": "Mitochondrial Disease Rapid Genomics Clinic",
+    "description": "Neurology\u2013genetics rapid WGS pathway for suspected mitochondrial disease with family counselling and trial matching.",
+    "stage": 6,
+    "trl": 6,
+    "specialty_area": "Rare Diseases",
+    "readiness": "clinical",
+    "visibility": "public",
+    "lead_email": "c.sue@neura.edu.au",
+    "clinical_partner_email": "grace.mitchell@schn.health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 185,
+      "time_saved_days": 55,
+      "cost_reduced_aud": 890000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    }
+  },
+  {
+    "title": "ED-to-Community Youth Mental Health Bridge",
+    "description": "Digital triage and warm-handover from paediatric and adult EDs into Black Dog and SESLHD youth mental health services.",
+    "stage": 5,
+    "trl": 5,
+    "specialty_area": "Health Systems",
+    "readiness": "feasibility",
+    "visibility": "public",
+    "lead_email": "a.wernerseidler@unsw.edu.au",
+    "clinical_partner_email": "lisa.nguyen@schn.health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 2100,
+      "time_saved_days": 12,
+      "cost_reduced_aud": 640000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    }
+  },
+  {
+    "title": "Kidney\u2013Cancer Shared Biomarker Platform",
+    "description": "Shared multi-omics biomarker discovery across nephrology and oncology trials, linking George Institute methods with POWH clinics.",
+    "stage": 4,
+    "trl": 4,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "early",
+    "visibility": "precinct",
+    "lead_email": "v.perkovic@unsw.edu.au",
+    "clinical_partner_email": "anthony.joshua@health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 420,
+      "time_saved_days": 18,
+      "cost_reduced_aud": 780000,
+      "evidence_note": "Modelled precinct impact based on specialty benchmarks and current TRL",
+      "evidence_level": "projected"
+    }
+  },
+  {
+    "title": "Hospital-at-Home for Complex Rare Disease",
+    "description": "Virtual ward model for children and adults with rare metabolic and neuromuscular conditions, combining remote monitoring with specialist outreach.",
+    "stage": 5,
+    "trl": 5,
+    "specialty_area": "Health Systems",
+    "readiness": "feasibility",
+    "visibility": "public",
+    "lead_email": "l.jorm@unsw.edu.au",
+    "clinical_partner_email": "omar.haddad@health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 360,
+      "time_saved_days": 30,
+      "cost_reduced_aud": 950000,
+      "evidence_note": "Early pilot / feasibility estimates from precinct partners",
+      "evidence_level": "pilot"
+    }
+  },
+  {
+    "title": "Sleep, Mood and Autonomic Disorder Clinic",
+    "description": "Cross-disciplinary clinic for insomnia, depression, and autonomic dysfunction combining respiratory sleep medicine with neuroscience.",
+    "stage": 6,
+    "trl": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "readiness": "clinical",
+    "visibility": "public",
+    "lead_email": "v.macefield@unsw.edu.au",
+    "clinical_partner_email": "adrian.havryk@health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 540,
+      "time_saved_days": 16,
+      "cost_reduced_aud": 610000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    }
+  },
+  {
+    "title": "IBD\u2013Microbiome Precision Therapy Network",
+    "description": "Precision IBD pathway combining microbiome profiling, pharmacogenomics, and gastroenterology trials at Prince of Wales Hospital.",
+    "stage": 6,
+    "trl": 6,
+    "specialty_area": "Personalised Medicine",
+    "readiness": "clinical",
+    "visibility": "public",
+    "lead_email": "j.mattick@unsw.edu.au",
+    "clinical_partner_email": "craig.haifer@health.nsw.gov.au",
+    "impact": {
+      "patients_helped": 720,
+      "time_saved_days": 20,
+      "cost_reduced_aud": 880000,
+      "evidence_note": "Clinical validation metrics from active studies or service pilots",
+      "evidence_level": "clinical"
+    }
   }
 ]

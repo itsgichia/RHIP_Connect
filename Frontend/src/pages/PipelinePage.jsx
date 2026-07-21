@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import api from '../hooks/useApi'
 import ProjectCard from '../components/ui/ProjectCard'
+import PipelineProjectModal from '../components/ui/PipelineProjectModal'
+import { SPECIALTY_AREAS } from '../utils/specialties'
 
 const STAGES = [
   { num: 1, label: 'Need' },
@@ -17,10 +19,7 @@ const STAGES = [
 
 const SPECIALTIES = [
   { key: 'all', label: 'All' },
-  { key: 'Mental Health', label: 'Mental Health' },
-  { key: 'Personalised Medicine', label: 'Personalised Medicine' },
-  { key: 'Rare Diseases', label: 'Rare Diseases' },
-  { key: 'Health Systems', label: 'Health Systems' },
+  ...SPECIALTY_AREAS.map((area) => ({ key: area, label: area })),
 ]
 
 export default function PipelinePage() {
@@ -28,18 +27,16 @@ export default function PipelinePage() {
   const [loading, setLoading] = useState(true)
   const [stage, setStage] = useState(null)
   const [specialty, setSpecialty] = useState('all')
+  const [selectedProjectId, setSelectedProjectId] = useState(null)
 
   const fetchProjects = useCallback(async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams()
       if (stage) params.set('stage', String(stage))
+      if (specialty !== 'all') params.set('specialty', specialty)
       const { data } = await api.get(`/pipeline/projects?${params}`)
-      let list = data.projects
-      if (specialty !== 'all') {
-        list = list.filter((p) => p.specialty_area.includes(specialty))
-      }
-      setProjects(list)
+      setProjects(data.projects)
     } finally {
       setLoading(false)
     }
@@ -108,7 +105,12 @@ export default function PipelinePage() {
       ) : (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {projects.map((p) => (
-            <ProjectCard key={p.id} project={p} />
+            <ProjectCard
+              key={p.id}
+              project={p}
+              onClick={() => setSelectedProjectId(p.id)}
+              showStage
+            />
           ))}
           {projects.length === 0 && (
             <p className="text-rhip-muted col-span-full text-center py-12">
@@ -116,6 +118,13 @@ export default function PipelinePage() {
             </p>
           )}
         </div>
+      )}
+
+      {selectedProjectId && (
+        <PipelineProjectModal
+          projectId={selectedProjectId}
+          onClose={() => setSelectedProjectId(null)}
+        />
       )}
     </div>
   )

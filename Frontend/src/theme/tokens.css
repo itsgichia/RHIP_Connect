@@ -1,0 +1,47 @@
+/**
+ * RHIP Connect design tokens
+ * Source: Figma Make — Design System for RHIP Connect
+ * https://www.figma.com/make/DECRZtGQuPILjR0ZtmjgPD/Design-System-for-RHIP-Connect
+ */
+:root {
+  /* Brand palette (from Figma App.tsx + theme.css) */
+  --rhip-dark: #0d2137;
+  --rhip-navy: #1a3a5c;
+  --rhip-teal: #028090;
+  --rhip-teal-hover: #026b78;
+  --rhip-seafoam: #00a896;
+  --rhip-lightTeal: #e8f7f8;
+  --rhip-coral: #d85a30;
+  --rhip-amber: #e67e22;
+  --rhip-white: #ffffff;
+  --rhip-body: #2d3748;
+  --rhip-muted: #718096;
+  --rhip-lightBg: #f5f9fa;
+  --rhip-cardBg: #ebf4f5;
+  --rhip-ice: #cadcfc;
+
+  /* Semantic (shadcn theme.css) */
+  --rhip-border: rgba(2, 128, 144, 0.18);
+  --rhip-border-subtle: rgba(202, 220, 252, 0.1);
+  --rhip-ring: #028090;
+  --rhip-sidebar-border: rgba(202, 220, 252, 0.1);
+  --rhip-on-dark-muted: rgba(202, 220, 252, 0.7);
+
+  /* Gradients */
+  --rhip-hero-gradient: linear-gradient(135deg, #0d2137 0%, #1a3a5c 60%, #0a4a5c 100%);
+
+  /* Elevation */
+  --rhip-shadow-sm: 0 1px 2px rgb(13 33 55 / 0.06);
+  --rhip-shadow-md: 0 4px 16px rgb(13 33 55 / 0.08);
+  --rhip-shadow-lg: 0 12px 40px rgb(13 33 55 / 0.12);
+
+  /* Radius */
+  --rhip-radius-sm: 0.5rem;
+  --rhip-radius-md: 0.75rem;
+  --rhip-radius-lg: 1rem;
+  --rhip-radius-xl: 1.25rem;
+
+  /* Typography */
+  --rhip-font-sans: 'Inter', system-ui, sans-serif;
+  --rhip-font-display: 'Lora', Georgia, serif;
+}

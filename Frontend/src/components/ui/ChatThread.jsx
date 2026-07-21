@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import api from '../../hooks/useApi'
 import { useNotifications } from '../../context/NotificationContext'
 import MessageTime from './MessageTime'
+
+const MESSAGE_POLL_MS = 3000
 
 export default function ChatThread({
   threadId,
@@ -17,22 +19,26 @@ export default function ChatThread({
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const bottomRef = useRef(null)
+  const onStatusChangeRef = useRef(onStatusChange)
+  onStatusChangeRef.current = onStatusChange
 
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async ({ silent = false } = {}) => {
     if (!threadId) return
-    setLoading(true)
+    if (!silent) setLoading(true)
     try {
       const { data } = await api.get(`/threads/${threadId}/messages`)
       setMessages(data.messages)
-      onStatusChange?.(data.thread_status, data.can_respond)
+      onStatusChangeRef.current?.(data.thread_status, data.can_respond)
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
-  }
+  }, [threadId])
 
   useEffect(() => {
     loadMessages()
-  }, [threadId])
+    const interval = setInterval(() => loadMessages({ silent: true }), MESSAGE_POLL_MS)
+    return () => clearInterval(interval)
+  }, [loadMessages])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

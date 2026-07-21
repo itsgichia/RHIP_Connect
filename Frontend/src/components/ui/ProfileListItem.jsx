@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { parseProfileName } from '../../utils/profile'
+import RoleBadge from './RoleBadge'
+import { CAREER_LEVEL_LABELS } from '../../utils/roles'
 
 export default function ProfileListItem({ profile }) {
   const { honorific, displayName } = parseProfileName(profile.name)
@@ -31,8 +33,23 @@ export default function ProfileListItem({ profile }) {
 
           <p className="text-sm text-rhip-body mb-0.5">{profile.title}</p>
           {profile.institution_name && (
-            <p className="text-sm text-rhip-muted mb-3">{profile.institution_name}</p>
+            <p className="text-sm text-rhip-muted mb-2">{profile.institution_name}</p>
           )}
+
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <RoleBadge facets={profile.identity_facets} />
+            {profile.career_level && (
+              <span
+                className={
+                  profile.career_level === 'student'
+                    ? 'text-xs px-2 py-0.5 rounded-full border border-rhip-teal/30 bg-rhip-lightTeal/40 text-rhip-teal'
+                    : 'text-xs text-rhip-muted'
+                }
+              >
+                {CAREER_LEVEL_LABELS[profile.career_level] || profile.career_level}
+              </span>
+            )}
+          </div>
 
           <div className="flex flex-wrap gap-1.5 mb-3">
             <span className="px-2.5 py-0.5 bg-rhip-dark text-white text-xs rounded-full">

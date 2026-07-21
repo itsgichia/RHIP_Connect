@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
 from app.models import (
+    ChallengeKind,
     ChallengeStatus,
     EventType,
     KPICategory,
@@ -21,7 +22,11 @@ class SignupRequest(BaseModel):
     name: str
     email: EmailStr
     password: str = Field(min_length=8)
-    role: Role
+    role: Optional[Role] = None
+    identity_facets: list[str] = Field(default_factory=list)
+    primary_lens: Optional[str] = None
+    career_level: Optional[str] = None
+    professional_title: Optional[str] = None
     institution_name: str
     specialty_area: Optional[str] = None
 
@@ -31,12 +36,28 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class InstitutionalLoginRequest(BaseModel):
+    """Demo institutional SSO: email-only for existing users; identity fields for new accounts."""
+    email: EmailStr
+    name: Optional[str] = None
+    role: Optional[Role] = None
+    identity_facets: list[str] = Field(default_factory=list)
+    primary_lens: Optional[str] = None
+    career_level: Optional[str] = None
+    professional_title: Optional[str] = None
+    specialty_area: Optional[str] = None
+
+
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     role: Role
     user_id: str
     name: str
+    identity_facets: list[str] = Field(default_factory=list)
+    primary_lens: Optional[str] = None
+    career_level: Optional[str] = None
+    profile_id: Optional[str] = None
 
 
 class RefreshRequest(BaseModel):
@@ -63,7 +84,11 @@ class ResetPasswordRequest(BaseModel):
 class FirebaseSignupRequest(BaseModel):
     id_token: str
     name: str
-    role: Role
+    role: Optional[Role] = None
+    identity_facets: list[str] = Field(default_factory=list)
+    primary_lens: Optional[str] = None
+    career_level: Optional[str] = None
+    professional_title: Optional[str] = None
     institution_name: str
     specialty_area: Optional[str] = None
 
@@ -92,15 +117,33 @@ class ProfileAward(BaseModel):
     organisation: str
 
 
+class PublicationResponse(BaseModel):
+    id: str
+    pmid: Optional[str] = None
+    title: str
+    journal: str = ""
+    year: Optional[int] = None
+    authors: list[str] = Field(default_factory=list)
+    doi: Optional[str] = None
+    url: Optional[str] = None
+
+    model_config = {"from_attributes": True}
+
+
 class ProfileSummary(BaseModel):
     id: str
     name: str
     title: str
     specialty_area: str
     expertise_tags: list[str]
+    skills: list[str] = Field(default_factory=list)
     publications: int
     active_projects: int
     institution_name: Optional[str] = None
+    identity_facets: list[str] = Field(default_factory=list)
+    primary_lens: Optional[str] = None
+    career_level: Optional[str] = None
+    professional_title: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -112,7 +155,27 @@ class ProfileDetail(ProfileSummary):
     patents: list[ProfilePatent] = Field(default_factory=list)
     news: list[ProfileNewsItem] = Field(default_factory=list)
     awards: list[ProfileAward] = Field(default_factory=list)
+    scholarly_works: list[PublicationResponse] = Field(default_factory=list)
     projects: list["ProjectResponse"] = Field(default_factory=list)
+
+
+class ProfileUpdate(BaseModel):
+    is_public: Optional[bool] = None
+    identity_facets: Optional[list[str]] = None
+    primary_lens: Optional[str] = None
+    career_level: Optional[str] = None
+    professional_title: Optional[str] = None
+    title: Optional[str] = None
+    specialty_area: Optional[str] = None
+    bio: Optional[str] = None
+    expertise_tags: Optional[list[str]] = None
+    skills: Optional[list[str]] = None
+
+
+class KeywordSuggestionsResponse(BaseModel):
+    expertise_tags: list[str] = Field(default_factory=list)
+    skills: list[str] = Field(default_factory=list)
+    source: str = "publications"
 
 
 class DirectorySearchResponse(BaseModel):
@@ -126,6 +189,7 @@ class ChallengeCreate(BaseModel):
     title: str
     description: str = Field(min_length=50)
     specialty_area: Optional[str] = None
+    challenge_kind: ChallengeKind = ChallengeKind.EITHER
 
 
 class ChallengePosterSnippet(BaseModel):
@@ -141,6 +205,7 @@ class ChallengeResponse(BaseModel):
     title: str
     description: str
     specialty_area: str
+    challenge_kind: ChallengeKind = ChallengeKind.EITHER
     status: ChallengeStatus
     created_at: datetime
     posted_by: Optional[ChallengePosterSnippet] = None
@@ -167,6 +232,19 @@ class AIMatchResponse(BaseModel):
 class ChallengeMatchesResponse(BaseModel):
     matches: list[AIMatchResponse]
     challenge_status: ChallengeStatus
+
+
+class ResearcherMatchItem(BaseModel):
+    match_id: str
+    score: float
+    reasoning: str
+    rank: int
+    challenge: ChallengeResponse
+    thread_id: Optional[str] = None
+
+
+class ResearcherMatchListResponse(BaseModel):
+    matches: list[ResearcherMatchItem]
 
 
 # KPIs
@@ -204,6 +282,8 @@ class ProjectResponse(BaseModel):
     stage: int
     specialty_area: str
     readiness: Readiness
+    trl: int = Field(ge=1, le=9)
+    trl_label: str = ""
     visibility: Visibility
     lead_researcher_name: Optional[str] = None
     funding_goal: float = 0
@@ -229,7 +309,8 @@ class ProjectCreate(BaseModel):
     description: str
     stage: int = Field(ge=1, le=10)
     specialty_area: str
-    readiness: Readiness
+    trl: int = Field(ge=1, le=9)
+    readiness: Optional[Readiness] = None
     visibility: Visibility
 
 
@@ -491,11 +572,48 @@ class EnquiriesListResponse(BaseModel):
 
 
 # Investor
+class RoiComponent(BaseModel):
+    key: str
+    label: str
+    points: float
+    max_points: float
+    detail: str = ""
+
+
+class ImpactLink(BaseModel):
+    source: str = "project"
+    story_id: Optional[str] = None
+    patients_helped: int = 0
+    time_saved_days: int = 0
+    cost_reduced_aud: float = 0
+    evidence_level: str = "pilot"
+    evidence_note: str = ""
+
+
+class InvestorProjectResponse(ProjectResponse):
+    indicative_score: float = 0
+    indicative_band: str = "developing"
+    illustrative_multiple: float = 1.0
+    roi_components: list[RoiComponent] = Field(default_factory=list)
+    impact_link: Optional[ImpactLink] = None
+    roi_disclaimer: str = ""
+
+
+class InvestorProjectDetailResponse(ProjectDetailResponse):
+    indicative_score: float = 0
+    indicative_band: str = "developing"
+    illustrative_multiple: float = 1.0
+    roi_components: list[RoiComponent] = Field(default_factory=list)
+    impact_link: Optional[ImpactLink] = None
+    roi_disclaimer: str = ""
+
+
 class InvestorOverviewResponse(BaseModel):
     kpis: list[KPIResponse]
     hth_occupancy: Optional[KPIResponse] = None
-    projects: list[ProjectResponse]
+    projects: list[InvestorProjectResponse]
     investable_count: int
+    roi_disclaimer: str = ""
 
 
 # Government / public impact
@@ -526,6 +644,8 @@ class GovernmentProjectResponse(BaseModel):
     stage: int
     specialty_area: str
     readiness: Readiness
+    trl: int = Field(ge=1, le=9)
+    trl_label: str = ""
     lead_researcher_name: Optional[str] = None
     started_at: Optional[date] = None
     duration_months: int = 0

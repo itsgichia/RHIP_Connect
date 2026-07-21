@@ -97,7 +97,7 @@ This creates `Backend/rhip_connect.db` and loads demo users, profiles, projects,
 AI challenge matching uses Qwen locally. Skip this step and set `USE_MOCK_AI=true` in `Backend/.env` if you do not have Ollama installed.
 
 ```bash
-ollama pull qwen2.5:7b    # one-time download
+ollama pull qwen2.5:3b    # one-time download (lighter; use qwen2.5:7b if you have more RAM)
 ollama serve              # leave running (or use the Ollama desktop app)
 ```
 
@@ -153,7 +153,7 @@ Key settings for `Backend/.env`:
 |----------|-------------|
 | `SECRET_KEY` | JWT signing key — generate with `python3 -c "import secrets; print(secrets.token_urlsafe(64))"` |
 | `DATABASE_URL` | SQLite path, e.g. `sqlite:///./rhip_connect.db` |
-| `QWEN_URL` / `QWEN_MODEL` | Ollama endpoint and model (default: `http://localhost:11434`, `qwen2.5:7b`) |
+| `QWEN_URL` / `QWEN_MODEL` | Ollama endpoint and model (default: `http://localhost:11434`, `qwen2.5:3b`) |
 | `USE_MOCK_AI` | Set to `true` to use rule-based matching instead of Ollama |
 | `FIREBASE_SERVICE_ACCOUNT_PATH` | Path to Firebase service account JSON (required for Firebase auth) |
 | `FRONTEND_URL` | Frontend origin used in platform notification email links |

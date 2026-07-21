@@ -11,8 +11,31 @@ const SPECIALTY_AREAS = [
   'Health Systems',
 ]
 
+const CHALLENGE_KINDS = [
+  {
+    value: 'capability',
+    label: 'Capability / role',
+    hint: 'Looking for a person with a skill (e.g. biostatistician, data visualisation)',
+  },
+  {
+    value: 'knowledge',
+    label: 'Knowledge / expertise',
+    hint: 'Looking for topic expertise (e.g. TMS, rare disease genetics)',
+  },
+  {
+    value: 'either',
+    label: 'Either',
+    hint: 'Match on skills and expertise; role words in the title still boost capability matches',
+  },
+]
+
 export default function ChallengeForm({ onCreated }) {
-  const [form, setForm] = useState({ title: '', description: '', specialty_area: ALL_SPECIALTIES })
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    specialty_area: ALL_SPECIALTIES,
+    challenge_kind: 'either',
+  })
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
@@ -24,9 +47,14 @@ export default function ChallengeForm({ onCreated }) {
     setLoading(true)
     try {
       const { data } = await api.post('/challenges', form)
-      toast.success('Challenge posted! AI matching in progress...')
+      toast.success('Challenge posted! Matching in progress...')
       onCreated?.(data.id)
-      setForm({ title: '', description: '', specialty_area: ALL_SPECIALTIES })
+      setForm({
+        title: '',
+        description: '',
+        specialty_area: ALL_SPECIALTIES,
+        challenge_kind: 'either',
+      })
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Failed to post challenge')
     } finally {
@@ -44,6 +72,34 @@ export default function ChallengeForm({ onCreated }) {
           required
           className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
         />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-1">What are you looking for?</label>
+        <div className="space-y-2">
+          {CHALLENGE_KINDS.map((kind) => (
+            <label
+              key={kind.value}
+              className={`flex gap-3 p-3 rounded-xl border cursor-pointer ${
+                form.challenge_kind === kind.value
+                  ? 'border-rhip-teal bg-rhip-lightTeal/40'
+                  : 'border-gray-100'
+              }`}
+            >
+              <input
+                type="radio"
+                name="challenge_kind"
+                value={kind.value}
+                checked={form.challenge_kind === kind.value}
+                onChange={() => setForm({ ...form, challenge_kind: kind.value })}
+                className="mt-1 text-rhip-teal focus:ring-rhip-teal"
+              />
+              <span>
+                <span className="block text-sm font-medium text-rhip-dark">{kind.label}</span>
+                <span className="block text-xs text-rhip-muted mt-0.5">{kind.hint}</span>
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Description</label>
@@ -70,7 +126,7 @@ export default function ChallengeForm({ onCreated }) {
           ))}
         </select>
         <p className="text-xs text-rhip-muted mt-1">
-          Leave on &quot;All specialties&quot; to search the whole precinct, or narrow to one area.
+          Capability searches still include professional/technical staff across specialties.
         </p>
       </div>
       <button

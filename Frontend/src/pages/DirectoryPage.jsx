@@ -1,14 +1,23 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { Link, useSearchParams } from 'react-router-dom'
+import { MagnifyingGlassIcon, MapIcon } from '@heroicons/react/24/outline'
 import api from '../hooks/useApi'
 import ProfileListItem from '../components/ui/ProfileListItem'
+import { SPECIALTY_AREAS } from '../utils/specialties'
+import {
+  CAREER_LEVEL_LABELS,
+  CAREER_LEVELS,
+  IDENTITY_FACET_LABELS,
+  IDENTITY_FACETS,
+} from '../utils/roles'
 
-const SPECIALTY_AREAS = [
-  'Mental Health & Neuroscience',
-  'Personalised Medicine',
-  'Rare Diseases',
-  'Health Systems',
+const PAGE_SIZE = 12
+
+const FACET_FILTERS = [
+  IDENTITY_FACETS.CLINICIAN,
+  IDENTITY_FACETS.RESEARCHER,
+  IDENTITY_FACETS.PROFESSIONAL_TECHNICAL,
+  IDENTITY_FACETS.POLICY,
 ]
 
 export default function DirectoryPage() {
@@ -17,10 +26,16 @@ export default function DirectoryPage() {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [searchInput, setSearchInput] = useState(searchParams.get('query') || '')
+  const [suggested, setSuggested] = useState([])
 
   const query = searchParams.get('query') || ''
   const specialty = searchParams.get('specialty') || ''
   const institution = searchParams.get('institution') || ''
+  const facetsParam = searchParams.get('facets') || ''
+  const careerLevel = searchParams.get('career_level') || ''
+  const selectedFacets = facetsParam ? facetsParam.split(',').filter(Boolean) : []
+  const page = Math.max(1, Number(searchParams.get('page') || 1))
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
   const fetchProfiles = useCallback(async () => {
     setLoading(true)
@@ -29,45 +44,77 @@ export default function DirectoryPage() {
       if (query) params.set('query', query)
       if (specialty) params.set('specialty', specialty)
       if (institution) params.set('institution', institution)
+      if (facetsParam) params.set('facets', facetsParam)
+      if (careerLevel) params.set('career_level', careerLevel)
+      params.set('page', String(page))
+      params.set('limit', String(PAGE_SIZE))
       const { data } = await api.get(`/directory/search?${params}`)
       setProfiles(data.profiles)
       setTotal(data.total)
     } finally {
       setLoading(false)
     }
-  }, [query, specialty, institution])
+  }, [query, specialty, institution, facetsParam, careerLevel, page])
 
   useEffect(() => {
     fetchProfiles()
   }, [fetchProfiles])
 
   useEffect(() => {
+    api
+      .get('/directory/me/suggestions?limit=4')
+      .then((res) => setSuggested(res.data.profiles || []))
+      .catch(() => setSuggested([]))
+  }, [])
+
+  useEffect(() => {
     setSearchInput(query)
   }, [query])
 
-  const updateParam = (key, value) => {
+  const updateParam = (key, value, resetPage = false) => {
     const next = new URLSearchParams(searchParams)
     if (value) next.set(key, value)
     else next.delete(key)
+    if (resetPage) next.delete('page')
     setSearchParams(next)
+  }
+
+  const toggleFacetFilter = (facet) => {
+    const next = selectedFacets.includes(facet)
+      ? selectedFacets.filter((f) => f !== facet)
+      : [...selectedFacets, facet]
+    updateParam('facets', next.join(','), true)
+  }
+
+  const goToPage = (nextPage) => {
+    const clamped = Math.min(Math.max(1, nextPage), totalPages)
+    updateParam('page', clamped === 1 ? '' : String(clamped))
   }
 
   const handleSearch = (e) => {
     e.preventDefault()
-    updateParam('query', searchInput.trim())
+    updateParam('query', searchInput.trim(), true)
   }
+
+  const hasFilters = query || specialty || institution || facetsParam || careerLevel || page > 1
 
   return (
     <div className="max-w-4xl">
-      {/* Hero / search header */}
       <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8">
         <div className="bg-rhip-dark px-6 md:px-10 py-8 md:py-10 text-center">
           <h1 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">
             Find an Expert
           </h1>
           <p className="text-rhip-ice text-sm md:text-base max-w-xl mx-auto">
-            Search the RHIP research community by name, expertise, specialty, or institution.
+            Search by expertise, specialty, identity (e.g. clinician + researcher), or career level.
           </p>
+          <Link
+            to="/map"
+            className="inline-flex items-center gap-2 mt-4 text-sm text-rhip-ice/90 hover:text-white transition-colors"
+          >
+            <MapIcon className="w-4 h-4" />
+            Explore the Knowledge Map
+          </Link>
         </div>
 
         <form onSubmit={handleSearch} className="px-6 md:px-10 py-6 border-b border-gray-100">
@@ -86,7 +133,7 @@ export default function DirectoryPage() {
         <div className="px-6 md:px-10 py-5 flex flex-wrap gap-3 items-center">
           <select
             value={specialty}
-            onChange={(e) => updateParam('specialty', e.target.value)}
+            onChange={(e) => updateParam('specialty', e.target.value, true)}
             className="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal bg-white"
           >
             <option value="">All specialties</option>
@@ -94,14 +141,24 @@ export default function DirectoryPage() {
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
+          <select
+            value={careerLevel}
+            onChange={(e) => updateParam('career_level', e.target.value, true)}
+            className="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal bg-white"
+          >
+            <option value="">All career levels</option>
+            {Object.values(CAREER_LEVELS).map((level) => (
+              <option key={level} value={level}>{CAREER_LEVEL_LABELS[level]}</option>
+            ))}
+          </select>
           <input
             type="text"
             placeholder="Filter by institution"
             value={institution}
-            onChange={(e) => updateParam('institution', e.target.value)}
+            onChange={(e) => updateParam('institution', e.target.value, true)}
             className="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal flex-1 min-w-[180px]"
           />
-          {(query || specialty || institution) && (
+          {hasFilters && (
             <button
               type="button"
               onClick={() => {
@@ -114,13 +171,33 @@ export default function DirectoryPage() {
             </button>
           )}
         </div>
+
+        <div className="px-6 md:px-10 pb-5 flex flex-wrap gap-2">
+          <span className="text-xs text-rhip-muted self-center mr-1">Identities (AND):</span>
+          {FACET_FILTERS.map((facet) => {
+            const active = selectedFacets.includes(facet)
+            return (
+              <button
+                key={facet}
+                type="button"
+                onClick={() => toggleFacetFilter(facet)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  active
+                    ? 'bg-rhip-dark text-white'
+                    : 'bg-white text-rhip-body border border-gray-200 hover:border-rhip-teal/40'
+                }`}
+              >
+                {IDENTITY_FACET_LABELS[facet]}
+              </button>
+            )
+          })}
+        </div>
       </section>
 
-      {/* Specialty quick filters */}
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           type="button"
-          onClick={() => updateParam('specialty', '')}
+          onClick={() => updateParam('specialty', '', true)}
           className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
             !specialty
               ? 'bg-rhip-dark text-white'
@@ -133,7 +210,7 @@ export default function DirectoryPage() {
           <button
             key={s}
             type="button"
-            onClick={() => updateParam('specialty', specialty === s ? '' : s)}
+            onClick={() => updateParam('specialty', specialty === s ? '' : s, true)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
               specialty === s
                 ? 'bg-rhip-dark text-white'
@@ -145,29 +222,55 @@ export default function DirectoryPage() {
         ))}
       </div>
 
-      <p className="text-sm text-rhip-muted mb-4">
-        {loading ? 'Searching...' : `${total} ${total === 1 ? 'profile' : 'profiles'} found`}
-      </p>
+      {suggested.length > 0 && !hasFilters && (
+        <section className="mb-8">
+          <h2 className="font-display text-lg font-semibold text-rhip-dark mb-3">
+            Suggested from your institution
+          </h2>
+          <div className="space-y-3">
+            {suggested.map((p) => (
+              <ProfileListItem key={`sug-${p.id}`} profile={p} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl h-36 animate-pulse border border-gray-100" />
-          ))}
-        </div>
+        <p className="text-rhip-muted">Loading...</p>
       ) : profiles.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 p-10 text-center">
-          <p className="text-rhip-body font-medium mb-1">No profiles found</p>
-          <p className="text-sm text-rhip-muted">
-            Try adjusting your search terms or clearing the filters.
-          </p>
-        </div>
+        <p className="text-rhip-muted">No profiles match these filters.</p>
       ) : (
-        <div className="space-y-3">
-          {profiles.map((p) => (
-            <ProfileListItem key={p.id} profile={p} />
-          ))}
-        </div>
+        <>
+          <p className="text-sm text-rhip-muted mb-4">{total} result{total === 1 ? '' : 's'}</p>
+          <div className="space-y-3">
+            {profiles.map((p) => (
+              <ProfileListItem key={p.id} profile={p} />
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <button
+                type="button"
+                disabled={page <= 1}
+                onClick={() => goToPage(page - 1)}
+                className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-40"
+              >
+                Previous
+              </button>
+              <span className="text-sm text-rhip-muted">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                type="button"
+                disabled={page >= totalPages}
+                onClick={() => goToPage(page + 1)}
+                className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

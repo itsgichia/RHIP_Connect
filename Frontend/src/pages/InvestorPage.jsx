@@ -7,11 +7,14 @@ import StatCard from '../components/ui/StatCard'
 import ProjectCard from '../components/ui/ProjectCard'
 import ProjectDetailModal from '../components/ui/ProjectDetailModal'
 import InvestorContactForm from '../components/forms/InvestorContactForm'
+import TranslationJourney from '../components/ui/TranslationJourney'
+import { TRL_FILTERS, matchesTrlFilter } from '../utils/trl'
 
 const TABS = [
   { key: 'overview', label: 'Overview' },
   { key: 'metrics', label: 'Metrics' },
   { key: 'pipeline', label: 'Pipeline' },
+  { key: 'stories', label: 'Success Stories' },
   { key: 'hth', label: 'Health Translation Hub' },
   { key: 'contact', label: 'Contact' },
 ]
@@ -40,7 +43,7 @@ function TabButton({ active, onClick, children }) {
   )
 }
 
-function OverviewTab({ data, onViewPipeline }) {
+function OverviewTab({ data, onViewPipeline, onViewStories }) {
   const { kpis, hth_occupancy, investable_count } = data
   const highlights = kpis.filter((k) =>
     ['active_innovation_projects', 'hth_occupancy', 'spinouts', 'industry_partnerships'].includes(k.metric_name)
@@ -48,7 +51,7 @@ function OverviewTab({ data, onViewPipeline }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-rhip-dark rounded-2xl p-8 text-white">
+      <div className="bg-rhip-dark rounded-2xl p-8 text-white border border-rhip-sidebar-border">
         <h2 className="font-display text-2xl font-semibold mb-2">Welcome to RHIP Connect</h2>
         <p className="text-rhip-ice max-w-2xl">
           Explore the Randwick Health &amp; Innovation Precinct — clinical scale, research capability,
@@ -65,19 +68,35 @@ function OverviewTab({ data, onViewPipeline }) {
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white rounded-2xl p-6 shadow-sm">
           <h3 className="font-semibold text-rhip-dark mb-2">Investable Projects</h3>
           <p className="font-display text-4xl font-bold text-rhip-teal mb-2">{investable_count}</p>
           <p className="text-sm text-rhip-muted mb-4">
-            Public-stage innovation projects from feasibility through approval.
+            Ranked by indicative outlook score — TRL, readiness, capital progress, and impact
+            evidence. Open a project for the full breakdown.
           </p>
           <button
             type="button"
             onClick={onViewPipeline}
             className="text-sm text-rhip-teal hover:underline"
           >
-            Browse pipeline →
+            Browse by outlook →
+          </button>
+        </div>
+
+        <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <h3 className="font-semibold text-rhip-dark mb-2">Success Stories</h3>
+          <p className="text-sm text-rhip-muted mb-4">
+            Translation journeys with patients helped, time saved, cost reduced, and TRL progress —
+            proof that precinct projects move from challenge to impact.
+          </p>
+          <button
+            type="button"
+            onClick={onViewStories}
+            className="text-sm text-rhip-teal hover:underline"
+          >
+            View impact stories →
           </button>
         </div>
 
@@ -136,12 +155,23 @@ function MetricsTab({ kpis }) {
   )
 }
 
-function PipelineTab({ projects, onProjectUpdate }) {
-  const [readiness, setReadiness] = useState('all')
+function PipelineTab({ projects, onProjectUpdate, roiDisclaimer }) {
+  const [trlFilter, setTrlFilter] = useState('all')
+  const [sortBy, setSortBy] = useState('score')
   const [selectedProjectId, setSelectedProjectId] = useState(null)
-  const filtered = readiness === 'all'
-    ? projects
-    : projects.filter((p) => p.readiness === readiness)
+
+  const filtered = projects
+    .filter((p) => matchesTrlFilter(p.trl, trlFilter))
+    .slice()
+    .sort((a, b) => {
+      if (sortBy === 'trl') return (b.trl || 0) - (a.trl || 0)
+      if (sortBy === 'funding') {
+        const ap = a.funding_goal > 0 ? a.funding_raised / a.funding_goal : 0
+        const bp = b.funding_goal > 0 ? b.funding_raised / b.funding_goal : 0
+        return bp - ap
+      }
+      return (b.indicative_score || 0) - (a.indicative_score || 0)
+    })
 
   const handleInvested = (projectId, amount) => {
     onProjectUpdate?.(projectId, amount)
@@ -149,34 +179,77 @@ function PipelineTab({ projects, onProjectUpdate }) {
 
   return (
     <div>
-      <p className="text-sm text-rhip-muted mb-4">
-        Public innovation projects at feasibility stage and beyond — click a project to view funding
-        details and express investment interest.
+      <p className="text-sm text-rhip-muted mb-3">
+        Compare investable projects by indicative outlook score (translation readiness, capital
+        progress, and impact evidence). Not a financial forecast.
       </p>
-      <div className="flex flex-wrap gap-2 mb-6">
+      {roiDisclaimer && (
+        <p className="text-xs text-rhip-muted bg-white border border-rhip-border rounded-xl px-4 py-3 mb-5 leading-relaxed">
+          {roiDisclaimer}
+        </p>
+      )}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <span className="text-xs font-medium text-rhip-muted uppercase tracking-wide mr-1">Sort</span>
         {[
-          { key: 'all', label: 'All' },
-          { key: 'feasibility', label: 'Feasibility' },
-          { key: 'clinical', label: 'Clinical' },
-          { key: 'commercial', label: 'Commercial' },
-        ].map((f) => (
+          { key: 'score', label: 'Indicative score' },
+          { key: 'trl', label: 'TRL' },
+          { key: 'funding', label: 'Funding progress' },
+        ].map((opt) => (
           <button
-            key={f.key}
+            key={opt.key}
             type="button"
-            onClick={() => setReadiness(f.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-              readiness === f.key
+            onClick={() => setSortBy(opt.key)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              sortBy === opt.key
                 ? 'bg-rhip-teal text-white'
                 : 'bg-white text-rhip-body border border-gray-200 hover:border-rhip-teal/40'
             }`}
           >
-            {f.label}
+            {opt.label}
+          </button>
+        ))}
+      </div>
+      <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
+        {TRL_FILTERS.map((f) => (
+          <button
+            key={f.key}
+            type="button"
+            onClick={() => setTrlFilter(f.key)}
+            className={`px-4 py-3 rounded-xl text-left transition-colors ${
+              trlFilter === f.key
+                ? 'bg-rhip-teal text-white'
+                : 'bg-white text-rhip-body border border-gray-200 hover:border-rhip-teal/40'
+            }`}
+          >
+            <span className="block text-sm font-semibold">{f.label}</span>
+            {f.trlRange && (
+              <span
+                className={`block text-xs mt-0.5 ${
+                  trlFilter === f.key ? 'text-white/80' : 'text-rhip-muted'
+                }`}
+              >
+                {f.trlRange}
+              </span>
+            )}
+            <span
+              className={`block text-xs mt-1 leading-snug ${
+                trlFilter === f.key ? 'text-white/90' : 'text-rhip-muted'
+              }`}
+            >
+              {f.description}
+            </span>
           </button>
         ))}
       </div>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filtered.map((p) => (
-          <ProjectCard key={p.id} project={p} onClick={() => setSelectedProjectId(p.id)} />
+          <ProjectCard
+            key={p.id}
+            project={p}
+            onClick={() => setSelectedProjectId(p.id)}
+            showStageBand
+            showIndicativeRoi
+          />
         ))}
         {filtered.length === 0 && (
           <p className="text-rhip-muted col-span-full text-center py-12">
@@ -266,13 +339,18 @@ export default function InvestorPage() {
   const { user } = useAuth()
   const [tab, setTab] = useState('overview')
   const [data, setData] = useState(null)
+  const [stories, setStories] = useState([])
   const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const { data: overview } = await api.get('/investor/overview')
+      const [{ data: overview }, storiesRes] = await Promise.all([
+        api.get('/investor/overview'),
+        api.get('/pulse/stories').catch(() => ({ data: { stories: [] } })),
+      ])
       setData(overview)
+      setStories(storiesRes.data.stories || [])
     } catch {
       setData(null)
     } finally {
@@ -330,10 +408,29 @@ export default function InvestorPage() {
         ))}
       </div>
 
-      {tab === 'overview' && <OverviewTab data={data} onViewPipeline={() => setTab('pipeline')} />}
+      {tab === 'overview' && (
+        <OverviewTab
+          data={data}
+          onViewPipeline={() => setTab('pipeline')}
+          onViewStories={() => setTab('stories')}
+        />
+      )}
       {tab === 'metrics' && <MetricsTab kpis={data.kpis} />}
       {tab === 'pipeline' && (
-        <PipelineTab projects={data.projects} onProjectUpdate={handleProjectInvested} />
+        <PipelineTab
+          projects={data.projects}
+          onProjectUpdate={handleProjectInvested}
+          roiDisclaimer={data.roi_disclaimer}
+        />
+      )}
+      {tab === 'stories' && (
+        <div>
+          <p className="text-sm text-rhip-muted mb-6">
+            Proven translation journeys — clinical challenge to commercial outcome, with impact
+            metrics investors can cite.
+          </p>
+          <TranslationJourney stories={stories} />
+        </div>
       )}
       {tab === 'hth' && <HthTab hthOccupancy={data.hth_occupancy} />}
       {tab === 'contact' && <ContactTab user={user} />}

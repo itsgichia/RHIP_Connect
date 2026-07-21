@@ -13,6 +13,7 @@ import { canInitiateChat } from '../../utils/roles'
 export const PROFILE_SECTIONS = [
   { id: 'overview', label: 'Overview' },
   { id: 'highlights', label: 'Highlights' },
+  { id: 'skills', label: 'Skills' },
   { id: 'study-with-me', label: 'Study With Me' },
   { id: 'insights', label: 'Insights' },
   { id: 'patents', label: 'Patents' },
@@ -155,6 +156,12 @@ export function ProfileSummaryBar({ profile, firstName }) {
               {startingChat ? 'Opening Messages…' : 'Contact'}
             </button>
             <Link
+              to={`/map?focus=${encodeURIComponent(profile.id)}`}
+              className="block text-xs text-rhip-muted hover:text-rhip-teal hover:underline"
+            >
+              View in Knowledge Map
+            </Link>
+            <Link
               to="/challenges"
               className="block text-xs text-rhip-muted hover:text-rhip-teal hover:underline"
             >
@@ -162,9 +169,17 @@ export function ProfileSummaryBar({ profile, firstName }) {
             </Link>
           </div>
         ) : (
-          <p className="text-sm text-rhip-muted">
-            {profile.is_own_profile ? 'This is your profile' : 'Messaging unavailable for your role'}
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-rhip-muted">
+              {profile.is_own_profile ? 'This is your profile' : 'Messaging unavailable for your role'}
+            </p>
+            <Link
+              to={`/map?focus=${encodeURIComponent(profile.id)}`}
+              className="block text-xs text-rhip-muted hover:text-rhip-teal hover:underline"
+            >
+              View in Knowledge Map
+            </Link>
+          </div>
         )}
       </div>
     </div>

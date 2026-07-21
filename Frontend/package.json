@@ -13,6 +13,7 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "axios": "^1.7.0",
+    "d3-force": "^3.0.0",
     "date-fns": "^4.1.0",
     "firebase": "^12.14.0",
     "react": "^18.3.1",

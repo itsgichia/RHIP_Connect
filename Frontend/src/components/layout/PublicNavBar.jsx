@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import BrandLogo from '../ui/BrandLogo'
 
 export default function PublicNavBar({ hideLogin = false }) {
   const scrollToHTH = () => {
@@ -6,38 +7,41 @@ export default function PublicNavBar({ hideLogin = false }) {
   }
 
   return (
-    <nav className="bg-rhip-dark px-6 py-4 flex items-center justify-between">
+    <nav className="bg-white px-6 md:px-8 py-4 flex items-center justify-between border-b border-rhip-border">
       <div className="flex items-center gap-6">
-        {!hideLogin && (
-          <Link
-            to="/auth/login"
-            className="px-4 py-2 border border-rhip-ice text-rhip-ice rounded-full text-sm font-medium hover:bg-rhip-teal hover:border-rhip-teal hover:text-white transition-colors"
-          >
-            Log In
-          </Link>
-        )}
-        <Link to="/" className="text-white font-display text-xl font-semibold">
-          RHIP Connect
+        <Link to="/">
+          <BrandLogo />
         </Link>
         <Link
           to="/community"
-          className="text-rhip-ice text-sm font-medium hover:text-white transition-colors hidden sm:inline"
+          className="text-rhip-body text-sm font-medium hover:text-rhip-teal transition-colors hidden sm:inline"
         >
           Community
         </Link>
         <Link
           to="/government"
-          className="text-rhip-ice text-sm font-medium hover:text-white transition-colors hidden sm:inline"
+          className="text-rhip-body text-sm font-medium hover:text-rhip-teal transition-colors hidden sm:inline"
         >
           Government
         </Link>
       </div>
-      <button
-        onClick={scrollToHTH}
-        className="px-5 py-2 bg-rhip-teal text-white rounded-full text-sm font-medium hover:bg-rhip-seafoam transition-colors"
-      >
-        Become a Tenant
-      </button>
+      <div className="flex items-center gap-3">
+        {!hideLogin && (
+          <Link
+            to="/auth/login"
+            className="text-rhip-body text-sm font-medium hover:text-rhip-teal transition-colors hidden sm:inline"
+          >
+            Log In
+          </Link>
+        )}
+        <button
+          type="button"
+          onClick={scrollToHTH}
+          className="rhip-btn-primary text-sm px-5 py-2"
+        >
+          Become a Tenant
+        </button>
+      </div>
     </nav>
   )
 }

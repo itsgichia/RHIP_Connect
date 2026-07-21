@@ -4,6 +4,7 @@ const NAV_LINKS = [
   { id: 'overview', label: 'Overview' },
   { id: 'metrics', label: 'Impact Metrics' },
   { id: 'pipeline', label: 'Translation Pipeline' },
+  { id: 'stories', label: 'Success Stories' },
   { id: 'briefing', label: 'Request Briefing' },
 ]
 

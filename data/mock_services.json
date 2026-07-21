@@ -88,7 +88,7 @@
       }
     ],
     "team": [
-      {"name": "Prof. Sarah Chen", "title": "Professor of Psychiatry", "role": "Treatment-Resistant Depression Clinic", "phone": "02 9382 3888"},
+      {"name": "Prof. Colleen Loo", "title": "Professor of Psychiatry", "role": "Treatment-Resistant Depression Clinic", "phone": "02 9382 3888"},
       {"name": "Dr. James Morrison", "title": "Consultant Psychiatrist", "role": "Youth Mental Health", "phone": "02 9382 3888"},
       {"name": "Dr. Alex Rivera", "title": "Consultant Psychiatrist", "role": "Adult Acute Services", "phone": "02 9382 3888"}
     ]
@@ -118,7 +118,7 @@
       }
     ],
     "team": [
-      {"name": "Prof. Elena Vasquez", "title": "Professor of Paediatrics", "role": "Clinical Genetics", "phone": "02 9382 1111"},
+      {"name": "Prof. Michelle Haber", "title": "Professor", "role": "Paediatric Oncology Research", "phone": "02 9382 1111"},
       {"name": "Dr. Priya Sharma", "title": "Staff Specialist", "role": "General Paediatrics", "phone": "02 9382 1111"}
     ]
   },

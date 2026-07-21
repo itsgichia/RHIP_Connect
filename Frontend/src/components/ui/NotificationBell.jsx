@@ -23,7 +23,12 @@ export default function NotificationBell() {
     }
     setOpen(false)
     if (notification.action_url) {
-      navigate(notification.action_url)
+      const legacyMatch = notification.action_url.match(/^\/challenges\/([^/?]+)$/)
+      if (legacyMatch) {
+        navigate(`/challenges?challenge=${legacyMatch[1]}`)
+      } else {
+        navigate(notification.action_url)
+      }
     }
   }
 

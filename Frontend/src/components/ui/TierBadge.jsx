@@ -1,8 +1,8 @@
 const TIER_STYLES = {
-  none: 'bg-gray-100 text-gray-500',
-  bronze: 'bg-amber-100 text-amber-800',
-  silver: 'bg-gray-200 text-gray-700',
-  gold: 'bg-yellow-100 text-yellow-800',
+  none: 'bg-slate-100 text-slate-500',
+  bronze: 'bg-amber-50 text-amber-800',
+  silver: 'bg-slate-200 text-slate-700',
+  gold: 'bg-yellow-50 text-yellow-800',
 }
 
 export default function TierBadge({ tier, size = 'sm' }) {

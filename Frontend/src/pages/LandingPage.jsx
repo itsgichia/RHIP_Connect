@@ -74,8 +74,8 @@ export default function LandingPage() {
     })
     api.get('/pipeline/projects').then((res) => {
       const publicProjects = res.data.projects
-        .filter((p) => p.stage >= 4 && p.stage <= 8)
-        .sort((a, b) => b.stage - a.stage)
+        .filter((p) => p.trl >= 4 && p.trl <= 8)
+        .sort((a, b) => b.trl - a.trl)
         .slice(0, 6)
       setProjects(publicProjects)
     })
@@ -88,13 +88,20 @@ export default function LandingPage() {
       <PublicNavBar />
 
       {/* Hero */}
-      <section className="bg-rhip-dark px-6 py-20 md:py-28">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-            The Future of Lifelong Health
+      <section className="relative overflow-hidden" style={{ background: 'var(--rhip-hero-gradient)' }}>
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl bg-rhip-teal" />
+          <div className="absolute bottom-0 left-20 w-64 h-64 rounded-full translate-y-1/2 blur-2xl bg-rhip-seafoam" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-28 text-center">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border mb-6 text-rhip-ice border-rhip-ice/30 bg-white/10">
+            Randwick, Sydney · RHIP Precinct
+          </span>
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+            Where Healthcare Meets Innovation
           </h1>
-          <p className="text-rhip-ice text-lg md:text-xl mb-12">
-            56 hectares. 22,000 people. One innovation ecosystem.
+          <p className="text-rhip-ice text-lg md:text-xl mb-12 max-w-2xl mx-auto opacity-90">
+            56 hectares. 22,000 people. One innovation ecosystem connecting clinicians, researchers, and industry.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {HERO_STATS.map((s) => (
@@ -103,15 +110,13 @@ export default function LandingPage() {
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             <button
+              type="button"
               onClick={() => scrollTo('about')}
-              className="px-6 py-3 border border-rhip-ice text-rhip-ice rounded-full font-medium hover:bg-rhip-teal hover:border-rhip-teal hover:text-white transition-colors"
+              className="rhip-btn-secondary"
             >
               Explore the Precinct
             </button>
-            <Link
-              to="/auth/login"
-              className="px-6 py-3 bg-rhip-teal text-white rounded-full font-medium hover:bg-rhip-seafoam transition-colors"
-            >
+            <Link to="/auth/login" className="rhip-btn-primary">
               Log In
             </Link>
           </div>

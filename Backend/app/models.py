@@ -42,6 +42,12 @@ class ChallengeStatus(str, enum.Enum):
     CLOSED = "closed"
 
 
+class ChallengeKind(str, enum.Enum):
+    KNOWLEDGE = "knowledge"
+    CAPABILITY = "capability"
+    EITHER = "either"
+
+
 class ThreadStatus(str, enum.Enum):
     PENDING = "pending"
     ACTIVE = "active"
@@ -164,6 +170,7 @@ class Profile(Base):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     specialty_area: Mapped[str] = mapped_column(String(255), nullable=False)
     expertise_tags: Mapped[list] = mapped_column(JSON, default=list)
+    skills: Mapped[list] = mapped_column(JSON, default=list)
     bio: Mapped[str] = mapped_column(Text, default="")
     publications: Mapped[int] = mapped_column(Integer, default=0)
     active_projects: Mapped[int] = mapped_column(Integer, default=0)
@@ -171,9 +178,34 @@ class Profile(Base):
     news: Mapped[list] = mapped_column(JSON, default=list)
     awards: Mapped[list] = mapped_column(JSON, default=list)
     is_public: Mapped[bool] = mapped_column(Boolean, default=True)
+    # Multiselect identity (clinician + researcher + …); orthogonal to User.role
+    identity_facets: Mapped[list] = mapped_column(JSON, default=list)
+    primary_lens: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    professional_title: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    career_level: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="profile")
     institution_name: Mapped[str | None] = None  # populated in API responses
+    scholarly_works: Mapped[list["Publication"]] = relationship(back_populates="profile")
+
+
+class Publication(Base):
+    __tablename__ = "publications"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    profile_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("profiles.id"), nullable=False, index=True
+    )
+    pmid: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    title: Mapped[str] = mapped_column(String(512), nullable=False)
+    journal: Mapped[str] = mapped_column(String(255), default="")
+    year: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    authors: Mapped[list] = mapped_column(JSON, default=list)
+    doi: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    abstract: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    profile: Mapped["Profile"] = relationship(back_populates="scholarly_works")
 
 
 class Challenge(Base):
@@ -184,6 +216,9 @@ class Challenge(Base):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     specialty_area: Mapped[str] = mapped_column(String(255), nullable=False)
+    challenge_kind: Mapped[ChallengeKind] = mapped_column(
+        Enum(ChallengeKind), default=ChallengeKind.EITHER
+    )
     status: Mapped[ChallengeStatus] = mapped_column(
         Enum(ChallengeStatus), default=ChallengeStatus.PENDING
     )
@@ -276,11 +311,13 @@ class Project(Base):
         String(36), ForeignKey("users.id"), nullable=True
     )
     readiness: Mapped[Readiness] = mapped_column(Enum(Readiness), nullable=False)
+    trl: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
     visibility: Mapped[Visibility] = mapped_column(Enum(Visibility), nullable=False)
     funding_goal: Mapped[float] = mapped_column(Float, default=0)
     funding_raised: Mapped[float] = mapped_column(Float, default=0)
     started_at: Mapped[date | None] = mapped_column(Date, nullable=True)
     funding_breakdown: Mapped[list] = mapped_column(JSON, default=list)
+    impact_metrics: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     investments: Mapped[list["ProjectInvestment"]] = relationship(back_populates="project")
 

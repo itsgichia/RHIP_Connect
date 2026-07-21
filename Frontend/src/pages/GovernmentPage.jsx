@@ -3,6 +3,7 @@ import {
   ChartBarIcon,
   DocumentArrowDownIcon,
   BeakerIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 import api from '../hooks/useApi'
 import PublicNavBar from '../components/layout/PublicNavBar'
@@ -12,6 +13,7 @@ import TranslationProjectCard from '../components/ui/TranslationProjectCard'
 import KpiDetailModal from '../components/ui/KpiDetailModal'
 import GovernmentProjectModal from '../components/ui/GovernmentProjectModal'
 import GovernmentBriefingForm from '../components/forms/GovernmentBriefingForm'
+import TranslationJourney from '../components/ui/TranslationJourney'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
 
@@ -22,7 +24,7 @@ const HIGHLIGHT_METRICS = [
   'patient_interactions',
 ]
 
-function OverviewTab({ data, onViewMetrics, onViewPipeline, onExport }) {
+function OverviewTab({ data, onViewMetrics, onViewPipeline, onViewStories, onExport }) {
   const highlights = data.kpis.filter((k) => HIGHLIGHT_METRICS.includes(k.metric_name))
 
   return (
@@ -41,7 +43,7 @@ function OverviewTab({ data, onViewMetrics, onViewPipeline, onExport }) {
         ))}
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-2xl p-6 shadow-sm">
           <ChartBarIcon className="w-8 h-8 text-rhip-teal mb-3" />
           <h3 className="font-semibold text-rhip-dark mb-2">Impact Metrics</h3>
@@ -72,6 +74,21 @@ function OverviewTab({ data, onViewMetrics, onViewPipeline, onExport }) {
             className="text-sm text-rhip-teal hover:underline"
           >
             View pipeline →
+          </button>
+        </div>
+
+        <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <SparklesIcon className="w-8 h-8 text-rhip-teal mb-3" />
+          <h3 className="font-semibold text-rhip-dark mb-2">Success Stories</h3>
+          <p className="text-sm text-rhip-muted mb-4">
+            Challenge → research match → pipeline → clinical impact, with outcome metrics.
+          </p>
+          <button
+            type="button"
+            onClick={onViewStories}
+            className="text-sm text-rhip-teal hover:underline"
+          >
+            View journeys →
           </button>
         </div>
 
@@ -203,14 +220,19 @@ function BriefingTab() {
 export default function GovernmentPage() {
   const [tab, setTab] = useState('overview')
   const [data, setData] = useState(null)
+  const [stories, setStories] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedKpi, setSelectedKpi] = useState(null)
 
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const { data: overview } = await api.get('/government/overview')
+      const [{ data: overview }, storiesRes] = await Promise.all([
+        api.get('/government/overview'),
+        api.get('/pulse/stories').catch(() => ({ data: { stories: [] } })),
+      ])
       setData(overview)
+      setStories(storiesRes.data.stories || [])
     } catch {
       setData(null)
     } finally {
@@ -250,7 +272,7 @@ export default function GovernmentPage() {
       <main className="max-w-6xl mx-auto px-6 py-10">
         {loading && <p className="text-rhip-muted">Loading impact data…</p>}
 
-        {!loading && !data && (
+        {!loading && !data && tab !== 'stories' && tab !== 'briefing' && (
           <p className="text-rhip-muted">Unable to load government data. Please try again later.</p>
         )}
 
@@ -259,6 +281,7 @@ export default function GovernmentPage() {
             data={data}
             onViewMetrics={() => setTab('metrics')}
             onViewPipeline={() => setTab('pipeline')}
+            onViewStories={() => setTab('stories')}
             onExport={handleExport}
           />
         )}
@@ -266,6 +289,14 @@ export default function GovernmentPage() {
           <MetricsTab kpis={data.kpis} onKpiClick={setSelectedKpi} />
         )}
         {data && tab === 'pipeline' && <PipelineTab projects={data.projects} />}
+        {tab === 'stories' && (
+          <div>
+            <p className="text-sm text-rhip-muted mb-6">
+              End-to-end translation journeys — from clinical challenge to measurable impact.
+            </p>
+            <TranslationJourney stories={stories} />
+          </div>
+        )}
         {tab === 'briefing' && <BriefingTab />}
       </main>
 

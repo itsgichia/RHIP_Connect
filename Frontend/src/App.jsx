@@ -2,7 +2,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import { NotificationProvider } from './context/NotificationContext'
+import RoleRoute from './components/auth/RoleRoute'
 import AppLayout from './components/layout/AppLayout'
+import { ROLES } from './utils/roles'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
@@ -11,6 +13,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
 import DashboardPage from './pages/DashboardPage'
 import DirectoryPage from './pages/DirectoryPage'
+import MapPage from './pages/MapPage'
 import ProfilePage from './pages/ProfilePage'
 import ChallengePage from './pages/ChallengePage'
 import MessagesPage from './pages/MessagesPage'
@@ -48,13 +51,36 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/directory" element={<DirectoryPage />} />
             <Route path="/directory/:profileId" element={<ProfilePage />} />
+            <Route path="/map" element={<MapPage />} />
+            <Route path="/ecosystem" element={<Navigate to="/map" replace />} />
             <Route path="/challenges" element={<ChallengePage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/messages/:threadId" element={<MessagesPage />} />
-            <Route path="/pipeline" element={<PipelinePage />} />
+            <Route
+              path="/pipeline"
+              element={
+                <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.INDUSTRY, ROLES.INVESTOR]}>
+                  <PipelinePage />
+                </RoleRoute>
+              }
+            />
             <Route path="/passport" element={<PassportPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/investor" element={<InvestorPage />} />
+            <Route
+              path="/admin"
+              element={
+                <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+                  <AdminPage />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="/investor"
+              element={
+                <RoleRoute allowedRoles={[ROLES.INVESTOR, ROLES.ADMIN]}>
+                  <InvestorPage />
+                </RoleRoute>
+              }
+            />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,17 +1,70 @@
+@import './theme/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #2D3748;
-  background-color: #F5F9FA;
-  -webkit-font-smoothing: antialiased;
+@layer base {
+  body {
+    margin: 0;
+    font-family: var(--rhip-font-sans);
+    color: var(--rhip-body);
+    background-color: var(--rhip-lightBg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background-color: var(--rhip-lightTeal);
+    color: var(--rhip-dark);
+  }
 }
 
-#root {
-  min-height: 100vh;
+@layer components {
+  .rhip-btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-2.5 bg-rhip-teal text-white rounded-xl text-sm font-medium
+      hover:bg-rhip-teal-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rhip-ring focus-visible:ring-offset-2;
+  }
+
+  .rhip-btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-2.5 border text-rhip-ice rounded-xl text-sm font-medium
+      hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rhip-ring focus-visible:ring-offset-2;
+    border-color: rgba(202, 220, 252, 0.3);
+  }
+
+  .rhip-btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-rhip text-sm font-medium text-rhip-body
+      hover:bg-rhip-lightTeal transition-colors;
+  }
+
+  .rhip-card {
+    @apply bg-white border border-rhip-lightTeal rounded-2xl p-6 shadow-rhip;
+  }
+
+  .rhip-card-interactive {
+    @apply rhip-card hover:shadow-rhip-lg hover:border-rhip-teal/30 transition-all cursor-pointer;
+  }
+
+  .rhip-section-title {
+    @apply font-display text-3xl font-semibold text-rhip-dark tracking-tight;
+  }
+
+  .rhip-pill-active {
+    @apply px-5 py-2 rounded-full text-sm font-medium bg-rhip-teal text-white;
+  }
+
+  .rhip-pill-inactive {
+    @apply px-5 py-2 rounded-full text-sm font-medium bg-white text-rhip-body border border-rhip-border hover:bg-rhip-mint transition-colors;
+  }
+
+  .rhip-input {
+    @apply w-full px-4 py-2.5 border border-rhip-border rounded-rhip bg-white text-rhip-body text-sm
+      placeholder:text-rhip-muted focus:outline-none focus:ring-2 focus:ring-rhip-teal/30 focus:border-rhip-teal;
+  }
 }
 
 @media print {

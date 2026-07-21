@@ -1,14 +1,30 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
-export default function MatchCard({ match, onSend, sent }) {
+export default function MatchCard({ match, onSend, sent, challengeId }) {
   const [message, setMessage] = useState('')
   const profile = match.profile
   const pct = Math.round(match.score * 100)
+  const profileId = profile?.id
+
+  const mapHref =
+    profileId &&
+    `/map?focus=${encodeURIComponent(profileId)}&from=match${
+      challengeId ? `&challenge=${encodeURIComponent(challengeId)}` : ''
+    }`
 
   if (sent) {
     return (
-      <div className="bg-rhip-lightTeal rounded-2xl p-6 border border-rhip-teal/20">
+      <div className="bg-rhip-lightTeal rounded-2xl p-6 border border-rhip-teal/20 space-y-3">
         <p className="text-rhip-teal font-medium text-center">Connection request sent</p>
+        {mapHref && (
+          <Link
+            to={mapHref}
+            className="block text-center text-sm text-rhip-teal hover:underline"
+          >
+            View in Knowledge Map
+          </Link>
+        )}
       </div>
     )
   }
@@ -43,12 +59,25 @@ export default function MatchCard({ match, onSend, sent }) {
       </div>
       <p className="text-sm italic text-rhip-muted mb-4">{match.reasoning}</p>
       <div className="flex flex-wrap gap-1 mb-4">
+        {(profile?.skills || []).slice(0, 3).map((skill) => (
+          <span key={`s-${skill}`} className="px-2 py-0.5 bg-amber-50 text-amber-800 text-xs rounded-full">
+            {skill}
+          </span>
+        ))}
         {(profile?.expertise_tags || []).slice(0, 3).map((tag) => (
           <span key={tag} className="px-2 py-0.5 bg-rhip-lightTeal text-rhip-teal text-xs rounded-full">
             {tag}
           </span>
         ))}
       </div>
+      {mapHref && (
+        <Link
+          to={mapHref}
+          className="inline-flex mb-4 text-sm font-medium text-rhip-teal hover:underline"
+        >
+          View in Knowledge Map →
+        </Link>
+      )}
       <hr className="border-gray-100 mb-4" />
       <textarea
         value={message}

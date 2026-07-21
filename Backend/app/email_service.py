@@ -11,10 +11,38 @@ FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@rhip.edu.au")
 MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
+MAIL_FROM = os.getenv("MAIL_FROM", "noreply@rhipnexus.edu.au")
+MAIL_FROM_NAME = os.getenv("MAIL_FROM_NAME", "RHIP Connect")
+MAIL_SERVER = os.getenv("MAIL_SERVER", "live.smtp.mailtrap.io")
+MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
+MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "True").lower() == "true"
+MAIL_SSL_TLS = os.getenv("MAIL_SSL_TLS", "False").lower() == "true"
+
+_fastmail = None
 
 
 def _mail_configured() -> bool:
     return bool(MAIL_USERNAME and MAIL_PASSWORD and MAIL_USERNAME != "your-mailtrap-username")
+
+
+def _get_fastmail():
+    global _fastmail
+    if _fastmail is None:
+        from fastapi_mail import ConnectionConfig, FastMail
+
+        conf = ConnectionConfig(
+            MAIL_USERNAME=MAIL_USERNAME,
+            MAIL_PASSWORD=MAIL_PASSWORD,
+            MAIL_FROM=MAIL_FROM,
+            MAIL_FROM_NAME=MAIL_FROM_NAME,
+            MAIL_SERVER=MAIL_SERVER,
+            MAIL_PORT=MAIL_PORT,
+            MAIL_STARTTLS=MAIL_STARTTLS,
+            MAIL_SSL_TLS=MAIL_SSL_TLS,
+            USE_CREDENTIALS=True,
+        )
+        _fastmail = FastMail(conf)
+    return _fastmail
 
 
 async def _send_email(to: str, subject: str, body: str) -> None:
@@ -27,27 +55,16 @@ async def _send_email(to: str, subject: str, body: str) -> None:
         return
 
     try:
-        from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
+        from fastapi_mail import MessageSchema, MessageType
 
-        conf = ConnectionConfig(
-            MAIL_USERNAME=MAIL_USERNAME,
-            MAIL_PASSWORD=MAIL_PASSWORD,
-            MAIL_FROM=os.getenv("MAIL_FROM", "noreply@rhipnexus.edu.au"),
-            MAIL_FROM_NAME=os.getenv("MAIL_FROM_NAME", "RHIP Connect"),
-            MAIL_SERVER=os.getenv("MAIL_SERVER", "smtp.mailtrap.io"),
-            MAIL_PORT=int(os.getenv("MAIL_PORT", "587")),
-            MAIL_STARTTLS=os.getenv("MAIL_STARTTLS", "True").lower() == "true",
-            MAIL_SSL_TLS=os.getenv("MAIL_SSL_TLS", "False").lower() == "true",
-            USE_CREDENTIALS=True,
-        )
         message = MessageSchema(
             subject=subject,
             recipients=[to],
             body=body,
             subtype=MessageType.html,
         )
-        fm = FastMail(conf)
-        await fm.send_message(message)
+        await _get_fastmail().send_message(message)
+        logger.info("Email sent to %s — %s", to, subject)
     except Exception as e:
         logger.error("Email send failed: %s", e)
         logger.info("=== EMAIL (fallback after error) ===")

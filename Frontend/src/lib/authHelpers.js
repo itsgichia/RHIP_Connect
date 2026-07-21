@@ -40,7 +40,11 @@ export async function firebaseSignup(form) {
   await api.post('/auth/firebase/signup', {
     id_token: idToken,
     name: form.name,
-    role: form.role,
+    role: form.role || null,
+    identity_facets: form.identity_facets || [],
+    primary_lens: form.primary_lens || null,
+    career_level: form.career_level || null,
+    professional_title: form.professional_title || null,
     institution_name: form.institution_name,
     specialty_area: form.specialty_area || null,
   })

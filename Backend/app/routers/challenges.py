@@ -10,11 +10,13 @@ from app.database import SessionLocal, get_db
 from app.models import (
     AIMatch,
     Challenge,
+    ChallengeKind,
     ChallengeStatus,
     Notification,
     NotificationType,
     Profile,
     Role,
+    Thread,
     User,
 )
 from app.schemas import (
@@ -25,6 +27,8 @@ from app.schemas import (
     ChallengePosterSnippet,
     ChallengeResponse,
     ProfileSummary,
+    ResearcherMatchItem,
+    ResearcherMatchListResponse,
 )
 from app.constants import ALL_SPECIALTIES, SPECIALTY_AREAS
 from app.services.ai_service import AIOrchestrator
@@ -39,10 +43,35 @@ def _normalize_specialty(value: Optional[str]) -> str:
 
 
 def _profiles_for_challenge(challenge: Challenge, db: Session) -> list[Profile]:
-    q = db.query(Profile).filter(Profile.is_public == True)  # noqa: E712
-    if challenge.specialty_area != ALL_SPECIALTIES:
-        q = q.filter(Profile.specialty_area == challenge.specialty_area)
-    return q.all()
+    """Public profiles; for capability asks, also pull professional_technical outside specialty.
+
+    Always excludes the poster's own profile so they are never matched to themselves.
+    """
+    from sqlalchemy import String, cast
+
+    from app.services.ai_service import _challenge_kind
+
+    kind = _challenge_kind(challenge)
+    base = db.query(Profile).filter(
+        Profile.is_public == True,  # noqa: E712
+        Profile.user_id != challenge.posted_by,
+    )
+
+    if challenge.specialty_area == ALL_SPECIALTIES:
+        return base.all()
+
+    specialty_q = base.filter(Profile.specialty_area == challenge.specialty_area)
+    if kind != ChallengeKind.CAPABILITY:
+        return specialty_q.all()
+
+    # Capability: specialty peers OR professional/technical staff anywhere
+    pro_tech = base.filter(
+        cast(Profile.identity_facets, String).like('%"professional_technical"%')
+    )
+    ids = {p.id for p in specialty_q.all()} | {p.id for p in pro_tech.all()}
+    if not ids:
+        return specialty_q.all()
+    return db.query(Profile).filter(Profile.id.in_(ids)).all()
 
 
 def _profile_summary_from_match(profile: Profile, db: Session) -> ProfileSummary:
@@ -84,7 +113,7 @@ async def run_ai_matching(challenge_id: str):
                 type=NotificationType.MATCH,
                 title="You've been matched to a challenge",
                 body=f"Your expertise was matched to: '{challenge.title}'",
-                action_url=f"/challenges/{challenge.id}",
+                action_url=f"/challenges?challenge={challenge.id}",
             ))
 
         db.flush()
@@ -124,6 +153,7 @@ async def create_challenge(
         title=body.title,
         description=body.description,
         specialty_area=specialty,
+        challenge_kind=body.challenge_kind or ChallengeKind.EITHER,
         posted_by=current_user.id,
         status=ChallengeStatus.PENDING,
     )
@@ -139,11 +169,14 @@ async def create_challenge(
 def list_challenges(
     status: Optional[str] = None,
     specialty: Optional[str] = None,
+    mine: bool = False,
     page: int = 1,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     q = db.query(Challenge)
+    if mine:
+        q = q.filter(Challenge.posted_by == current_user.id)
     if status:
         q = q.filter(Challenge.status == status)
     if specialty:
@@ -160,6 +193,7 @@ def list_challenges(
             title=c.title,
             description=c.description,
             specialty_area=c.specialty_area,
+            challenge_kind=getattr(c, "challenge_kind", None) or ChallengeKind.EITHER,
             status=c.status,
             created_at=c.created_at,
             posted_by=ChallengePosterSnippet(
@@ -171,6 +205,59 @@ def list_challenges(
     return ChallengeListResponse(challenges=results, total=total)
 
 
+def _challenge_response(challenge: Challenge, db: Session) -> ChallengeResponse:
+    poster = db.query(User).filter(User.id == challenge.posted_by).first()
+    profile = db.query(Profile).filter(Profile.user_id == challenge.posted_by).first() if poster else None
+    return ChallengeResponse(
+        id=challenge.id,
+        title=challenge.title,
+        description=challenge.description,
+        specialty_area=challenge.specialty_area,
+        challenge_kind=getattr(challenge, "challenge_kind", None) or ChallengeKind.EITHER,
+        status=challenge.status,
+        created_at=challenge.created_at,
+        posted_by=ChallengePosterSnippet(
+            id=poster.id,
+            name=poster.name,
+            title=profile.title if profile else None,
+        ) if poster else None,
+    )
+
+
+@router.get("/matched-for-me", response_model=ResearcherMatchListResponse)
+def get_matched_for_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_roles([Role.CLINICIAN, Role.RESEARCHER, Role.ADMIN])
+    ),
+):
+    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
+    if not profile:
+        return ResearcherMatchListResponse(matches=[])
+
+    ai_matches = (
+        db.query(AIMatch)
+        .filter(AIMatch.profile_id == profile.id)
+        .order_by(AIMatch.created_at.desc())
+        .all()
+    )
+    results: list[ResearcherMatchItem] = []
+    for ai_match in ai_matches:
+        challenge = db.query(Challenge).filter(Challenge.id == ai_match.challenge_id).first()
+        if not challenge:
+            continue
+        thread = db.query(Thread).filter(Thread.match_id == ai_match.id).first()
+        results.append(ResearcherMatchItem(
+            match_id=ai_match.id,
+            score=ai_match.score,
+            reasoning=ai_match.reasoning,
+            rank=ai_match.rank,
+            challenge=_challenge_response(challenge, db),
+            thread_id=thread.id if thread else None,
+        ))
+    return ResearcherMatchListResponse(matches=results)
+
+
 @router.get("/{challenge_id}", response_model=ChallengeResponse)
 def get_challenge(
     challenge_id: str,
@@ -180,21 +267,7 @@ def get_challenge(
     c = db.query(Challenge).filter(Challenge.id == challenge_id).first()
     if not c:
         raise HTTPException(status_code=404, detail="Challenge not found")
-    poster = db.query(User).filter(User.id == c.posted_by).first()
-    profile = db.query(Profile).filter(Profile.user_id == c.posted_by).first() if poster else None
-    return ChallengeResponse(
-        id=c.id,
-        title=c.title,
-        description=c.description,
-        specialty_area=c.specialty_area,
-        status=c.status,
-        created_at=c.created_at,
-        posted_by=ChallengePosterSnippet(
-            id=poster.id,
-            name=poster.name,
-            title=profile.title if profile else None,
-        ) if poster else None,
-    )
+    return _challenge_response(c, db)
 
 
 @router.get("/{challenge_id}/matches", response_model=ChallengeMatchesResponse)

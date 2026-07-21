@@ -6,6 +6,8 @@ import RelativeTime from '../components/ui/RelativeTime'
 import { canInitiateChat } from '../utils/roles'
 import { useAuth } from '../context/AuthContext'
 
+const THREAD_LIST_POLL_MS = 5000
+
 export default function MessagesPage() {
   const { threadId } = useParams()
   const navigate = useNavigate()
@@ -16,18 +18,26 @@ export default function MessagesPage() {
   const [challengeContext, setChallengeContext] = useState(null)
   const [canRespond, setCanRespond] = useState(false)
 
-  const fetchThreads = useCallback(async () => {
-    setLoading(true)
+  const fetchThreads = useCallback(async ({ silent = false } = {}) => {
+    if (!silent) setLoading(true)
     try {
       const { data } = await api.get('/threads')
       setThreads(data.threads)
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }, [])
 
   useEffect(() => {
     fetchThreads()
+    const interval = setInterval(() => fetchThreads({ silent: true }), THREAD_LIST_POLL_MS)
+    return () => clearInterval(interval)
+  }, [fetchThreads])
+
+  const handleStatusChange = useCallback((status, respond) => {
+    setThreadStatus(status)
+    if (respond !== undefined) setCanRespond(respond)
+    fetchThreads({ silent: true })
   }, [fetchThreads])
 
   useEffect(() => {
@@ -118,11 +128,7 @@ export default function MessagesPage() {
               threadStatus={threadStatus}
               challengeContext={challengeContext}
               canRespond={canRespond}
-              onStatusChange={(status, respond) => {
-                setThreadStatus(status)
-                if (respond !== undefined) setCanRespond(respond)
-                fetchThreads()
-              }}
+              onStatusChange={handleStatusChange}
             />
           ) : (
             <div className="flex items-center justify-center h-full min-h-[480px] text-rhip-muted">

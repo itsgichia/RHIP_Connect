@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.trl import trl_label
 from app.models import KPI, Project, User, Visibility
 from app.routers.pipeline import _months_since, _project_to_response
 from app.schemas import (
@@ -64,8 +65,8 @@ def _government_kpis(db: Session) -> list[KPI]:
 def _translation_projects(db: Session) -> list[Project]:
     return (
         db.query(Project)
-        .filter(Project.visibility == Visibility.PUBLIC, Project.stage >= 4)
-        .order_by(Project.stage.desc())
+        .filter(Project.visibility == Visibility.PUBLIC, Project.trl >= 4)
+        .order_by(Project.trl.desc(), Project.stage.desc())
         .all()
     )
 
@@ -79,12 +80,12 @@ def _to_government_project(project: Project, db: Session) -> GovernmentProjectRe
         stage=base.stage,
         specialty_area=base.specialty_area,
         readiness=base.readiness,
+        trl=base.trl,
+        trl_label=base.trl_label,
         lead_researcher_name=base.lead_researcher_name,
         started_at=base.started_at,
         duration_months=_months_since(project.started_at),
-        translation_status=_TRANSLATION_STATUS.get(
-            project.readiness.value, "Active innovation project"
-        ),
+        translation_status=f"{base.trl_label}: {trl_label(project.trl)}",
     )
 
 
@@ -277,7 +278,7 @@ def get_kpi_detail(metric_name: str, db: Session = Depends(get_db)):
 @router.get("/projects/{project_id}", response_model=GovernmentProjectResponse)
 def get_project_detail(project_id: str, db: Session = Depends(get_db)):
     project = db.query(Project).filter(Project.id == project_id).first()
-    if not project or project.visibility != Visibility.PUBLIC or project.stage < 4:
+    if not project or project.visibility != Visibility.PUBLIC or project.trl < 4:
         raise HTTPException(status_code=404, detail="Project not found")
     return _to_government_project(project, db)
 
@@ -299,14 +300,14 @@ def export_impact_snapshot(db: Session = Depends(get_db)):
         writer.writerow([kpi.display_label, kpi.display_value, kpi.category.value, kpi.period])
     writer.writerow([])
     writer.writerow(["Translation Pipeline"])
-    writer.writerow(["Title", "Specialty", "Stage", "Readiness", "Lead Researcher"])
+    writer.writerow(["Title", "Specialty", "TRL", "Stage", "Lead Researcher"])
     for project in projects:
         lead_user = db.query(User).filter(User.id == project.lead_researcher_id).first()
         writer.writerow([
             project.title,
             project.specialty_area,
+            project.trl,
             project.stage,
-            project.readiness.value,
             lead_user.name if lead_user else "",
         ])
 

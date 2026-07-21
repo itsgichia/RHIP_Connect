@@ -1,18 +1,18 @@
 import { formatAud } from '../../utils/formatters'
+import { trlBadgeClass, trlFullLabel, trlShortLabel, trlStageBandLabel } from '../../utils/trl'
+import {
+  formatIllustrativeMultiple,
+  indicativeBandClass,
+  indicativeBandLabel,
+} from '../../utils/roi'
 
-const READINESS_COLORS = {
-  early: 'bg-gray-100 text-gray-600',
-  feasibility: 'bg-rhip-lightTeal text-rhip-teal',
-  clinical: 'bg-rhip-seafoam/15 text-rhip-seafoam',
-  commercial: 'bg-rhip-coral/10 text-rhip-coral',
-}
-
-const STAGE_LABELS = {
-  1: 'Need', 2: 'Idea', 3: 'PoC', 4: 'Feasibility', 5: 'Proof of Value',
-  6: 'Initial Trials', 7: 'Validation', 8: 'Approval', 9: 'Clinical Use', 10: 'Standard of Care',
-}
-
-export default function ProjectCard({ project, onClick }) {
+export default function ProjectCard({
+  project,
+  onClick,
+  showStage = false,
+  showStageBand = false,
+  showIndicativeRoi = false,
+}) {
   const interactive = Boolean(onClick)
 
   return (
@@ -20,15 +20,31 @@ export default function ProjectCard({ project, onClick }) {
       type="button"
       onClick={() => onClick?.(project)}
       disabled={!interactive}
-      className={`bg-white rounded-2xl p-6 shadow-sm text-left w-full transition-shadow ${
-        interactive ? 'hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-rhip-teal/40' : ''
+      className={`bg-white rounded-2xl p-6 border border-rhip-lightTeal text-left w-full transition-shadow ${
+        interactive ? 'hover:shadow-rhip-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-rhip-teal/40' : 'shadow-rhip'
       }`}
     >
-      <div className="flex items-start justify-between mb-3">
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${READINESS_COLORS[project.readiness] || READINESS_COLORS.early}`}>
-          {project.readiness}
+      <div className="flex items-start justify-between mb-3 gap-2">
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${trlBadgeClass(project.trl)}`}>
+          {showStageBand ? trlStageBandLabel(project.trl) : trlShortLabel(project.trl)}
         </span>
-        <span className="text-xs text-rhip-muted">Stage {project.stage}: {STAGE_LABELS[project.stage]}</span>
+        {showIndicativeRoi && project.indicative_score != null ? (
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ${indicativeBandClass(
+              project.indicative_band
+            )}`}
+          >
+            Score {Math.round(project.indicative_score)}
+          </span>
+        ) : showStage && project.stage ? (
+          <span className="text-xs text-rhip-muted shrink-0">Stage {project.stage}</span>
+        ) : (
+          <span className="text-xs text-rhip-muted text-right line-clamp-2 max-w-[55%]">
+            {showStageBand
+              ? `${trlShortLabel(project.trl)} · ${project.trl_label || trlFullLabel(project.trl)}`
+              : project.trl_label || trlFullLabel(project.trl)}
+          </span>
+        )}
       </div>
       <h3 className="font-display font-semibold text-rhip-dark mb-2">{project.title}</h3>
       <p className="text-sm text-rhip-muted line-clamp-3 mb-3">{project.description}</p>
@@ -36,6 +52,14 @@ export default function ProjectCard({ project, onClick }) {
         <span>{project.specialty_area}</span>
         {project.lead_researcher_name && <span>{project.lead_researcher_name}</span>}
       </div>
+      {showIndicativeRoi && project.indicative_score != null && (
+        <div className="mt-3 flex items-center justify-between gap-2 text-xs">
+          <span className="text-rhip-muted">{indicativeBandLabel(project.indicative_band)}</span>
+          <span className="font-medium text-rhip-dark">
+            Illus. {formatIllustrativeMultiple(project.illustrative_multiple)}
+          </span>
+        </div>
+      )}
       {(project.funding_raised > 0 || project.funding_goal > 0) && (
         <div className="mt-4 pt-3 border-t border-gray-100">
           <div className="flex items-center justify-between text-xs mb-1.5">

@@ -3,18 +3,12 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import api from '../../hooks/useApi'
 import ProjectInvestForm from '../forms/ProjectInvestForm'
 import { formatAud, formatDuration, formatStartDate } from '../../utils/formatters'
-
-const READINESS_COLORS = {
-  early: 'bg-gray-100 text-gray-600',
-  feasibility: 'bg-rhip-lightTeal text-rhip-teal',
-  clinical: 'bg-rhip-seafoam/15 text-rhip-seafoam',
-  commercial: 'bg-rhip-coral/10 text-rhip-coral',
-}
-
-const STAGE_LABELS = {
-  1: 'Need', 2: 'Idea', 3: 'PoC', 4: 'Feasibility', 5: 'Proof of Value',
-  6: 'Initial Trials', 7: 'Validation', 8: 'Approval', 9: 'Clinical Use', 10: 'Standard of Care',
-}
+import { trlBadgeClass, trlFullLabel, trlShortLabel } from '../../utils/trl'
+import {
+  formatIllustrativeMultiple,
+  indicativeBandClass,
+  indicativeBandLabel,
+} from '../../utils/roi'
 
 export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
   const [project, setProject] = useState(null)
@@ -71,11 +65,11 @@ export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
             ) : project ? (
               <>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${READINESS_COLORS[project.readiness] || READINESS_COLORS.early}`}>
-                    {project.readiness}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${trlBadgeClass(project.trl)}`}>
+                    {trlShortLabel(project.trl)}
                   </span>
                   <span className="text-xs text-rhip-muted">
-                    Stage {project.stage}: {STAGE_LABELS[project.stage]}
+                    {project.trl_label || trlFullLabel(project.trl)}
                   </span>
                 </div>
                 <h2 className="font-display text-xl font-semibold text-rhip-dark">{project.title}</h2>
@@ -150,6 +144,82 @@ export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
                   </div>
                 </div>
               </div>
+
+              {project.indicative_score != null && (
+                <div className="rounded-xl border border-rhip-border p-5 space-y-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-medium text-rhip-muted uppercase tracking-wide mb-1">
+                        Indicative investment outlook
+                      </p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${indicativeBandClass(
+                            project.indicative_band
+                          )}`}
+                        >
+                          {indicativeBandLabel(project.indicative_band)}
+                        </span>
+                        <span className="font-display text-2xl font-bold text-rhip-dark">
+                          {Math.round(project.indicative_score)}
+                          <span className="text-sm font-medium text-rhip-muted"> / 100</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-rhip-muted mb-1">Illustrative multiple</p>
+                      <p className="font-display text-xl font-semibold text-rhip-teal">
+                        {formatIllustrativeMultiple(project.illustrative_multiple)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {(project.roi_components || []).map((c) => (
+                      <div key={c.key}>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="font-medium text-rhip-dark">{c.label}</span>
+                          <span className="text-rhip-muted">
+                            {c.points} / {c.max_points}
+                          </span>
+                        </div>
+                        <div className="h-1.5 bg-rhip-lightBg rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-rhip-teal rounded-full"
+                            style={{
+                              width: `${Math.min((c.points / c.max_points) * 100, 100)}%`,
+                            }}
+                          />
+                        </div>
+                        <p className="text-xs text-rhip-muted mt-1">{c.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {project.impact_link && (
+                    <div className="text-xs text-rhip-body bg-rhip-lightTeal/50 rounded-lg px-3 py-2 space-y-1">
+                      <p className="font-medium text-rhip-dark">
+                        Documented impact
+                        {project.impact_link.evidence_level
+                          ? ` · ${project.impact_link.evidence_level}`
+                          : ''}
+                      </p>
+                      <p>
+                        {project.impact_link.patients_helped.toLocaleString()} patients ·{' '}
+                        {project.impact_link.time_saved_days || 0} days saved ·{' '}
+                        {formatAud(project.impact_link.cost_reduced_aud)} cost reduced
+                      </p>
+                      {project.impact_link.evidence_note && (
+                        <p className="text-rhip-muted">{project.impact_link.evidence_note}</p>
+                      )}
+                    </div>
+                  )}
+
+                  <p className="text-xs text-rhip-muted leading-relaxed">
+                    {project.roi_disclaimer}
+                  </p>
+                </div>
+              )}
 
               {project.funding_breakdown?.length > 0 && (
                 <div>
