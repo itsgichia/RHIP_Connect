@@ -4,6 +4,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { format, parseISO } from 'date-fns'
 import api from '../hooks/useApi'
 import { parseProfileName } from '../utils/profile'
+import CollaborationMap from '../components/CollaborationMap'
 import {
   EmptySection,
   getObserverRoot,
@@ -184,6 +185,13 @@ export default function ProfilePage() {
       </header>
 
       <ProfileSummaryBar profile={profile} firstName={firstName} />
+
+      {/* Collaboration map — only for profiles with an ORCID iD */}
+      {profile.orcid_id && (
+        <div className="my-8">
+          <CollaborationMap orcidId={profile.orcid_id} />
+        </div>
+      )}
 
       {/* Sidebar + content */}
       <div className="grid lg:grid-cols-[220px_1fr] gap-8 items-start">
