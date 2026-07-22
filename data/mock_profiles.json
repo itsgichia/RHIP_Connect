@@ -1008,25 +1008,6 @@
     "role": "researcher"
   },
   {
-    "name": "Ulrika Athanassiou",
-    "email": "ulrika.athanassiou@unsw.example",
-    "title": "Researcher",
-    "specialty_area": "Health Systems",
-    "orcid_id": "0000-0002-9214-1665",
-    "expertise_tags": [
-      "Crime Patterns and Interventions",
-      "Child Abuse and Trauma",
-      "Psychopathy, Forensic Psychiatry, Sexual Offending",
-      "Child and Adolescent Psychosocial and Emotional Development",
-      "Criminal Justice and Corrections Analysis"
-    ],
-    "bio": "UNSW researcher in Social Sciences.",
-    "publications": 0,
-    "active_projects": 1,
-    "institution": "UNSW Sydney",
-    "role": "researcher"
-  },
-  {
     "name": "Slava Kalyuga",
     "email": "slava.kalyuga@unsw.example",
     "title": "Researcher",
@@ -1192,25 +1173,6 @@
       "Retinal Diseases and Treatments"
     ],
     "bio": "UNSW researcher in Medicine.",
-    "publications": 0,
-    "active_projects": 1,
-    "institution": "UNSW Sydney",
-    "role": "researcher"
-  },
-  {
-    "name": "Anita Stefoska‐Needham",
-    "email": "anita.stefoska‐needham@unsw.example",
-    "title": "Researcher",
-    "specialty_area": "Health Systems",
-    "orcid_id": "0000-0001-7114-1634",
-    "expertise_tags": [
-      "Agriculture Sustainability and Environmental Impact",
-      "Food composition and properties",
-      "Eating Disorders and Behaviors",
-      "Dialysis and Renal Disease Management",
-      "Nutritional Studies and Diet"
-    ],
-    "bio": "UNSW researcher in Environmental Science.",
     "publications": 0,
     "active_projects": 1,
     "institution": "UNSW Sydney",
@@ -1388,57 +1350,95 @@
     "role": "researcher"
   },
   {
-    "name": "Richard D. Tilley",
-    "email": "richard.d..tilley@unsw.example",
+    "name": "Jessica Lo",
+    "email": "jessica.lo@unsw.example",
     "title": "Researcher",
     "specialty_area": "Health Systems",
-    "orcid_id": "0000-0003-2097-063X",
+    "orcid_id": "0000-0003-4778-8360",
     "expertise_tags": [
-      "Electrocatalysts for Energy Conversion",
-      "Quantum Dots Synthesis And Properties",
-      "Advanced biosensing and bioanalysis techniques",
-      "Electrochemical Analysis and Applications",
-      "Gold and Silver Nanoparticles Synthesis and Applications"
+      "Dementia and Cognitive Impairment Research",
+      "Neonatal Respiratory Health Research",
+      "Acute Ischemic Stroke Management",
+      "Stroke Rehabilitation and Recovery",
+      "Respiratory Support and Mechanisms"
     ],
-    "bio": "UNSW researcher in Energy.",
+    "bio": "UNSW researcher in Medicine.",
     "publications": 0,
     "active_projects": 1,
     "institution": "UNSW Sydney",
     "role": "researcher"
   },
   {
-    "name": "Rishi Ravindra Naik",
-    "email": "rishi.ravindra.naik@unsw.example",
+    "name": "Timothy Neal",
+    "email": "timothy.neal@unsw.example",
     "title": "Researcher",
     "specialty_area": "Health Systems",
-    "orcid_id": "0000-0002-7306-8001",
+    "orcid_id": "0000-0003-1125-4009",
     "expertise_tags": [
-      "Proteins in Food Systems",
-      "Protein Hydrolysis and Bioactive Peptides",
-      "Microencapsulation and Drying Processes",
-      "Meat and Animal Product Quality",
-      "Bee Products Chemical Analysis"
+      "Sports injuries and prevention",
+      "Climate change impacts on agriculture",
+      "Agricultural risk and resilience",
+      "Athletic Training and Education",
+      "Monetary Policy and Economic Impact"
     ],
-    "bio": "UNSW researcher in Agricultural and Biological Sciences.",
+    "bio": "UNSW researcher in Medicine.",
     "publications": 0,
     "active_projects": 1,
     "institution": "UNSW Sydney",
     "role": "researcher"
   },
   {
-    "name": "Tracy Huang",
-    "email": "tracy.huang@unsw.example",
+    "name": "Fatemeh Vafaee",
+    "email": "fatemeh.vafaee@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Personalised Medicine",
+    "orcid_id": "0000-0002-7521-2417",
+    "expertise_tags": [
+      "Bioinformatics and Genomic Networks",
+      "Single-cell and spatial transcriptomics",
+      "Gene expression and cancer classification",
+      "Cell Image Analysis Techniques",
+      "Computational Drug Discovery Methods"
+    ],
+    "bio": "UNSW researcher in Biochemistry, Genetics and Molecular Biology.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Ilan Katz",
+    "email": "ilan.katz@unsw.example",
+    "title": "Researcher",
+    "specialty_area": "Mental Health & Neuroscience",
+    "orcid_id": "0000-0001-9002-0205",
+    "expertise_tags": [
+      "Child Abuse and Trauma",
+      "Child Welfare and Adoption",
+      "Homelessness and Social Issues",
+      "Early Childhood Education and Development",
+      "Migration, Health and Trauma"
+    ],
+    "bio": "UNSW researcher in Psychology.",
+    "publications": 0,
+    "active_projects": 1,
+    "institution": "UNSW Sydney",
+    "role": "researcher"
+  },
+  {
+    "name": "Loren Brener",
+    "email": "loren.brener@unsw.example",
     "title": "Researcher",
     "specialty_area": "Health Systems",
-    "orcid_id": "0000-0002-4843-572X",
+    "orcid_id": "0000-0002-7453-4852",
     "expertise_tags": [
-      "Experimental Learning in Engineering",
-      "Engineering Education and Curriculum Development",
-      "Adolescent and Pediatric Healthcare",
-      "Engineering Education and Pedagogy",
-      "Global Cancer Incidence and Screening"
+      "HIV, Drug Use, Sexual Risk",
+      "Hepatitis C virus research",
+      "HIV/AIDS Research and Interventions",
+      "Hepatitis B Virus Studies",
+      "Mental Health Treatment and Access"
     ],
-    "bio": "UNSW researcher in Engineering.",
+    "bio": "UNSW researcher in Medicine.",
     "publications": 0,
     "active_projects": 1,
     "institution": "UNSW Sydney",

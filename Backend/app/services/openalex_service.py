@@ -24,7 +24,7 @@ OPENALEX_API = "https://api.openalex.org"
 POLITE_EMAIL = os.getenv("OPENALEX_EMAIL", "rhip-connect@unsw.edu.au")
 
 # OpenAlex research FIELDS we count as health-related for RHIP
-# (Randwick Health & Innovation Precinct — broad, includes biomedical + health tech).
+# (Randwick Health & Innovation Precinct — broad, includes biomedical).
 HEALTH_FIELDS = {
     "Medicine",
     "Nursing",
@@ -99,16 +99,9 @@ def get_collaborations(orcid_id: str, max_works: int = 200) -> dict:
 def get_author_info(orcid_id: str) -> dict | None:
     """Fetch a researcher's OpenAlex profile.
 
-    Returns:
-      {
-        "name": "...",
-        "topics": ["Depression", "Health data science", ...],  # real research topics
-        "top_field": "Medicine",
-        "is_health": True,          # is their research in a health-related field?
-        "currently_unsw": True,     # is their most recent institution UNSW?
-        "current_affiliation": "UNSW Sydney",
-      }
-    or None if the ORCID isn't found in OpenAlex.
+    is_health is based on their PRIMARY research field only (topics[0].field).
+    Using just the top field avoids false positives — e.g. a food scientist
+    whose secondary field happens to be biochemistry no longer slips through.
     """
     resp = httpx.get(
         f"{OPENALEX_API}/authors",
@@ -129,7 +122,9 @@ def get_author_info(orcid_id: str) -> dict | None:
         if t.get("field") and t["field"].get("display_name")
     ]
     top_field = fields[0] if fields else None
-    is_health = any(f in HEALTH_FIELDS for f in fields[:3])
+
+    # Health check = PRIMARY field only (not top-3). Tighter, fewer false positives.
+    is_health = bool(fields) and fields[0] in HEALTH_FIELDS
 
     insts = author.get("last_known_institutions") or []
     inst_names = [i.get("display_name", "") for i in insts if i.get("display_name")]
@@ -149,8 +144,10 @@ def get_author_info(orcid_id: str) -> dict | None:
 
 # Quick test:  python -m app.services.openalex_service
 if __name__ == "__main__":
-    data = get_collaborations("0000-0003-0390-661X")  # Louisa Jorm
-    print(f"Works: {data['work_count']}, top country: {data['countries'][0]}")
-    info = get_author_info("0000-0003-0390-661X")
-    print("Field:", info["top_field"], "| health?:", info["is_health"])
-    print("Topics:", info["topics"])
+    for oid, who in [
+        ("0000-0003-0390-661X", "Louisa Jorm (should be health)"),
+        ("0000-0002-7306-8001", "Rishi Ravindra Naik (food scientist — should NOT be health)"),
+    ]:
+        info = get_author_info(oid)
+        if info:
+            print(f"{who}: field={info['top_field']} | is_health={info['is_health']}")
