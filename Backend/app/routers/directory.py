@@ -37,7 +37,7 @@ def search_directory(
     specialty: Optional[str] = None,
     institution: Optional[str] = None,
     page: int = 1,
-    limit: int = 12,
+    limit: int = 100,
     db: Session = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
