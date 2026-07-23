@@ -159,6 +159,11 @@ Key settings for `Backend/.env`:
 | `FRONTEND_URL` | Frontend origin used in platform notification email links |
 | `ADMIN_EMAIL` | Recipient for tenant/investor enquiry notifications |
 | `MAIL_*` | Optional SMTP for platform notification emails only (see below) |
+| `ORCID_CLIENT_ID` / `ORCID_CLIENT_SECRET` | ORCID Public API app credentials ([developer tools](https://orcid.org/developer-tools)) — required to load live works on profiles |
+| `ORCID_API_BASE` | Default `https://pub.orcid.org/v3.0` |
+| `ORCID_TOKEN_URL` | Default `https://orcid.org/oauth/token` |
+
+See `Backend/.env.example` for a full template.
 
 ### Frontend (`Frontend/.env`)
 
@@ -251,3 +256,5 @@ cd Frontend && npm run lint
 3. Use feature branches and pull requests for shared work.
 
 For full product specification and API design, see [`rhip_connect.md`](./rhip_connect.md).
+
+**Publications & Knowledge Map:** this branch uses **PubMed** as the primary paper source (not OpenAlex). See [`docs/DATA_SOURCES.md`](./docs/DATA_SOURCES.md).

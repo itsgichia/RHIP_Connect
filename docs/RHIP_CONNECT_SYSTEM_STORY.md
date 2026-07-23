@@ -69,6 +69,8 @@ flowchart LR
 
 **How to read it:** Needs sit in silos → different audiences arrive → the website and API connect them → AI matches people on the Challenge Board → collaboration, pipeline visibility, and engagement.
 
+**Data sources:** profile publications and Knowledge Map co-author edges come from **PubMed** (seed + cache). OpenAlex is not the primary paper source on this branch — see [`DATA_SOURCES.md`](./DATA_SOURCES.md).
+
 ---
 
 ## 2. All audience paths (where they meet)

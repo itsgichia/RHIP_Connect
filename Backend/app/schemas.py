@@ -144,6 +144,7 @@ class ProfileSummary(BaseModel):
     primary_lens: Optional[str] = None
     career_level: Optional[str] = None
     professional_title: Optional[str] = None
+    orcid_id: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -170,6 +171,12 @@ class ProfileUpdate(BaseModel):
     bio: Optional[str] = None
     expertise_tags: Optional[list[str]] = None
     skills: Optional[list[str]] = None
+    orcid_id: Optional[str] = None
+
+
+class OrcidWorksResponse(BaseModel):
+    orcid_id: Optional[str] = None
+    works: list[PublicationResponse] = Field(default_factory=list)
 
 
 class KeywordSuggestionsResponse(BaseModel):

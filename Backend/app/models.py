@@ -183,6 +183,9 @@ class Profile(Base):
     primary_lens: Mapped[str | None] = mapped_column(String(64), nullable=True)
     professional_title: Mapped[str | None] = mapped_column(String(255), nullable=True)
     career_level: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    orcid_id: Mapped[str | None] = mapped_column(String(19), nullable=True)
+    # True after we attempted ORCID registry lookup (found or not)
+    orcid_checked: Mapped[bool] = mapped_column(Boolean, default=False)
 
     user: Mapped["User"] = relationship(back_populates="profile")
     institution_name: Mapped[str | None] = None  # populated in API responses

@@ -280,6 +280,234 @@ PROFESSIONAL_TECHNICAL_DEMOS = [
         "professional_title": "Data analyst",
         "career_level": "ecr",
     },
+    {
+        "name": "Dr. Samira Okonkwo",
+        "email": "samira.okonkwo@unsw.edu.au",
+        "title": "Epidemiologist",
+        "specialty_area": "Health Systems",
+        "expertise_tags": [
+            "Epidemiology",
+            "Population health",
+            "Surveillance",
+            "Outbreak investigation",
+            "Health equity",
+        ],
+        "skills": ["Epidemiology", "R", "Survey design", "GIS", "Causal inference"],
+        "bio": (
+            "Epidemiologist supporting RHIP population-health programmes, linking SESLHD "
+            "surveillance data with UNSW translational research teams."
+        ),
+        "publications": 19,
+        "active_projects": 3,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["professional_technical", "researcher"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Epidemiologist",
+        "career_level": "mid",
+    },
+    {
+        "name": "Dr. James Chen",
+        "email": "james.chen@unsw.edu.au",
+        "title": "Research Fellow",
+        "specialty_area": "Personalised Medicine",
+        "expertise_tags": [
+            "Precision oncology",
+            "Biomarker discovery",
+            "Translational research",
+            "Clinical genomics",
+        ],
+        "skills": ["Clinical genomics", "Grant writing", "Protocol design", "Stakeholder engagement"],
+        "bio": (
+            "Research Fellow bridging laboratory genomics and clinical oncology pathways "
+            "across the Randwick precinct and Prince of Wales Hospital."
+        ),
+        "publications": 22,
+        "active_projects": 2,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["professional_technical", "researcher"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Research fellow",
+        "career_level": "ecr",
+    },
+    {
+        "name": "Hannah Park",
+        "email": "hannah.park@seslhd.health.nsw.gov.au",
+        "title": "Clinical Trials Coordinator",
+        "specialty_area": "Rare Diseases",
+        "expertise_tags": [
+            "Clinical trials",
+            "GCP",
+            "Participant recruitment",
+            "Protocol compliance",
+            "Rare disease cohorts",
+        ],
+        "skills": ["Trial coordination", "Ethics submissions", "REDCap", "Stakeholder liaison"],
+        "bio": (
+            "Coordinates multi-site rare-disease trials for SESLHD and Sydney Children's Hospital, "
+            "connecting investigators with regulatory and ethics pathways."
+        ),
+        "publications": 3,
+        "active_projects": 4,
+        "institution": "SESLHD",
+        "role": "researcher",
+        "identity_facets": ["professional_technical"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Clinical trials coordinator",
+        "career_level": "mid",
+    },
+    {
+        "name": "Dr. Noah Bergström",
+        "email": "noah.bergstrom@unsw.edu.au",
+        "title": "Health Economist",
+        "specialty_area": "Health Systems",
+        "expertise_tags": [
+            "Health economics",
+            "Cost-effectiveness",
+            "HTA",
+            "Value-based care",
+            "Budget impact",
+        ],
+        "skills": ["Health economics", "Modelling", "R", "Evidence synthesis", "Policy briefing"],
+        "bio": (
+            "Health economist advising RHIP partners on cost-effectiveness and value-based "
+            "care models for new diagnostics and digital pathways."
+        ),
+        "publications": 14,
+        "active_projects": 2,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["professional_technical", "researcher"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Health economist",
+        "career_level": "mid",
+    },
+    {
+        "name": "Mei Lin Zhao",
+        "email": "mei.zhao@unsw.edu.au",
+        "title": "Bioinformatician",
+        "specialty_area": "Rare Diseases",
+        "expertise_tags": [
+            "Bioinformatics",
+            "Variant interpretation",
+            "Rare disease genomics",
+            "Pipeline development",
+        ],
+        "skills": ["Python", "Nextflow", "Variant calling", "SQL", "Data pipelines"],
+        "bio": (
+            "Bioinformatician building analysis pipelines for rare-disease genomics programmes "
+            "shared across UNSW and Sydney Children's Hospital Network."
+        ),
+        "publications": 8,
+        "active_projects": 3,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["professional_technical"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Bioinformatician",
+        "career_level": "ecr",
+    },
+]
+
+# Policy / health-system governance demos — identity_facets include policy
+POLICY_DEMOS = [
+    {
+        "name": "Dr. Lauren Whitfield",
+        "email": "lauren.whitfield@health.nsw.gov.au",
+        "title": "Senior Policy Advisor",
+        "specialty_area": "Health Systems",
+        "expertise_tags": [
+            "Health policy",
+            "System reform",
+            "Workforce planning",
+            "Intergovernmental liaison",
+        ],
+        "skills": ["Policy analysis", "Stakeholder engagement", "Briefing", "Evaluation design"],
+        "bio": (
+            "Senior policy advisor linking NSW Health system reform priorities with RHIP "
+            "research and clinical translation programmes."
+        ),
+        "publications": 5,
+        "active_projects": 2,
+        "institution": "NSW Health",
+        "role": "researcher",
+        "identity_facets": ["policy"],
+        "primary_lens": "policy",
+        "career_level": "senior",
+    },
+    {
+        "name": "Omar Haddad",
+        "email": "omar.haddad@unsw.edu.au",
+        "title": "Health Policy Analyst",
+        "specialty_area": "Mental Health & Neuroscience",
+        "expertise_tags": [
+            "Mental health policy",
+            "Service redesign",
+            "Lived-experience engagement",
+            "Implementation science",
+        ],
+        "skills": ["Policy analysis", "Qualitative research", "Co-design", "Evidence synthesis"],
+        "bio": (
+            "Policy analyst focused on mental health service redesign, working across UNSW, "
+            "Black Dog Institute, and SESLHD planning teams."
+        ),
+        "publications": 7,
+        "active_projects": 2,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["policy", "researcher"],
+        "primary_lens": "policy",
+        "career_level": "mid",
+    },
+    {
+        "name": "Dr. Fiona Kelleher",
+        "email": "fiona.kelleher@seslhd.health.nsw.gov.au",
+        "title": "Director of Clinical Governance",
+        "specialty_area": "Rare Diseases",
+        "expertise_tags": [
+            "Clinical governance",
+            "Patient safety",
+            "Quality improvement",
+            "Rare disease pathways",
+        ],
+        "skills": ["Clinical governance", "Risk management", "Quality frameworks", "Policy drafting"],
+        "bio": (
+            "Leads clinical governance for rare-disease pathways across SESLHD, aligning "
+            "hospital policy with RHIP research translation."
+        ),
+        "publications": 9,
+        "active_projects": 1,
+        "institution": "SESLHD",
+        "role": "researcher",
+        "identity_facets": ["policy", "clinician"],
+        "primary_lens": "policy",
+        "career_level": "executive",
+    },
+    {
+        "name": "Priya Desai",
+        "email": "priya.desai@unsw.edu.au",
+        "title": "Research Policy Officer",
+        "specialty_area": "Personalised Medicine",
+        "expertise_tags": [
+            "Research policy",
+            "Ethics and governance",
+            "Genomic medicine policy",
+            "Data sharing frameworks",
+        ],
+        "skills": ["Policy drafting", "Ethics review", "Stakeholder facilitation", "Grant strategy"],
+        "bio": (
+            "Supports genomic and personalised-medicine programmes with research governance "
+            "and data-sharing policy across the Randwick precinct."
+        ),
+        "publications": 4,
+        "active_projects": 2,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["policy"],
+        "primary_lens": "policy",
+        "career_level": "ecr",
+    },
 ]
 
 # HDR / postgraduate students — User.role=researcher, career_level=student
@@ -316,13 +544,16 @@ POSTGRADUATE_STUDENT_DEMOS = [
         "specialty_area": "Mental Health & Neuroscience",
         "expertise_tags": [
             "Youth mental health",
+            "Adolescent wellbeing",
             "Digital interventions",
+            "Social media and mental health",
             "Implementation science",
         ],
         "skills": ["Qualitative research", "Survey design", "R", "Literature synthesis"],
         "bio": (
             "PhD candidate at UNSW and the Black Dog Institute studying digital mental health "
-            "interventions for young people across SESLHD and RHIP clinical partners."
+            "interventions for teenagers and young people, including harms linked to social media "
+            "use, across SESLHD and RHIP clinical partners."
         ),
         "publications": 2,
         "active_projects": 1,
@@ -335,24 +566,33 @@ POSTGRADUATE_STUDENT_DEMOS = [
     {
         "name": "Tomás Okello",
         "email": "t.okello@unsw.edu.au",
-        "title": "MPhil Student",
+        "title": "Bioinformatician",
         "specialty_area": "Personalised Medicine",
         "expertise_tags": [
             "Genomics",
             "Bioinformatics",
             "Precision oncology",
+            "Computational biology",
         ],
-        "skills": ["Bioinformatics", "Python", "Pipeline tooling", "Data cleaning"],
+        "skills": [
+            "Bioinformatics",
+            "Python",
+            "Pipeline tooling",
+            "Data cleaning",
+            "Genomics analysis",
+        ],
         "bio": (
-            "MPhil student in personalised medicine, collaborating with RHIP researchers on "
-            "genomic data pipelines that support clinical decision-making."
+            "Bioinformatician and MPhil researcher in personalised medicine, collaborating with "
+            "RHIP teams on genomic data pipelines that support clinical decision-making. "
+            "Methods overlap with biostatistics and computational biology."
         ),
         "publications": 0,
         "active_projects": 1,
         "institution": "UNSW Sydney",
         "role": "researcher",
-        "identity_facets": ["researcher"],
-        "primary_lens": "researcher",
+        "identity_facets": ["professional_technical", "researcher"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Bioinformatician",
         "career_level": "student",
     },
     {
@@ -564,6 +804,7 @@ def seed():
             researchers_data
             + clinicians_data
             + PROFESSIONAL_TECHNICAL_DEMOS
+            + POLICY_DEMOS
             + POSTGRADUATE_STUDENT_DEMOS
         )
         profiles_by_email: dict[str, Profile] = {}
@@ -825,6 +1066,7 @@ def seed():
         print(f"  {len(researchers_data)} real RHIP researchers seeded (PubMed enriched)")
         print(f"  {len(clinicians_data)} clinician profiles seeded")
         print(f"  {len(PROFESSIONAL_TECHNICAL_DEMOS)} professional/technical profiles seeded")
+        print(f"  {len(POLICY_DEMOS)} policy profiles seeded")
         print(f"  {len(POSTGRADUATE_STUDENT_DEMOS)} postgraduate student profiles seeded")
         print(f"  {len(projects_data)} projects seeded ({partnered} with clinical partners)")
         print(f"  {len(CROSS_DISCIPLINARY_THREADS)} cross-disciplinary collaboration threads")

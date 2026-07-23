@@ -40,11 +40,16 @@ export default function ProfilePage() {
   const [suggestions, setSuggestions] = useState(null)
   const [savingSkills, setSavingSkills] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [orcidWorks, setOrcidWorks] = useState(null)
+  const [orcidLoading, setOrcidLoading] = useState(false)
+  const [orcidError, setOrcidError] = useState(null)
 
   useEffect(() => {
     const load = async () => {
       setLoading(true)
       setError(null)
+      setOrcidWorks(null)
+      setOrcidError(null)
       try {
         const { data } = await api.get(`/directory/${profileId}`)
         setProfile(data)
@@ -57,6 +62,43 @@ export default function ProfilePage() {
     load()
     setEditing(false)
   }, [profileId])
+
+  useEffect(() => {
+    if (!profile?.id) {
+      setOrcidWorks(null)
+      setOrcidError(null)
+      setOrcidLoading(false)
+      return undefined
+    }
+
+    let cancelled = false
+    const loadOrcid = async () => {
+      setOrcidLoading(true)
+      setOrcidError(null)
+      try {
+        const { data } = await api.get(`/orcid/profile/${profile.id}/works`)
+        if (cancelled) return
+        const resolvedId = data.orcid_id || null
+        setOrcidWorks(data.works || [])
+        if (resolvedId && resolvedId !== profile.orcid_id) {
+          setProfile((prev) => (prev ? { ...prev, orcid_id: resolvedId } : prev))
+        } else if (!resolvedId && profile.orcid_id) {
+          setProfile((prev) => (prev ? { ...prev, orcid_id: null } : prev))
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setOrcidWorks(null)
+          setOrcidError(err.response?.data?.detail || 'Could not load ORCID works')
+        }
+      } finally {
+        if (!cancelled) setOrcidLoading(false)
+      }
+    }
+    loadOrcid()
+    return () => {
+      cancelled = true
+    }
+  }, [profile?.id, profile?.orcid_id])
 
   const togglePublic = async () => {
     if (!profile?.is_own_profile || savingVisibility) return
@@ -166,7 +208,12 @@ export default function ProfilePage() {
   const patents = profile.patents || []
   const news = profile.news || []
   const awards = profile.awards || []
-  const scholarlyWorks = profile.scholarly_works || []
+  const dbScholarlyWorks = profile.scholarly_works || []
+  const useOrcidWorks = Array.isArray(orcidWorks) && orcidWorks.length > 0
+  const scholarlyWorks = useOrcidWorks ? orcidWorks : dbScholarlyWorks
+  const publicationCount = useOrcidWorks
+    ? orcidWorks.length
+    : profile.publications
 
   return (
     <div className="max-w-6xl profile-page">
@@ -221,6 +268,27 @@ export default function ProfilePage() {
           )}
           {profile.professional_title && (
             <span className="text-sm text-rhip-muted">{profile.professional_title}</span>
+          )}
+          {profile.orcid_id && (
+            <a
+              href={`https://orcid.org/${profile.orcid_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-[#A6CE39] hover:underline font-mono"
+              title="View ORCID record"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 256 256" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M128 0C57.3 0 0 57.3 0 128s57.3 128 128 128 128-57.3 128-128S198.7 0 128 0zm0 232.2C70.5 232.2 23.8 185.5 23.8 128S70.5 23.8 128 23.8 232.2 70.5 232.2 128 185.5 232.2 128 232.2z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M86.3 68.9c0 6.3-5.1 11.4-11.4 11.4S63.5 75.2 63.5 68.9s5.1-11.4 11.4-11.4 11.4 5.1 11.4 11.4zM65.1 95.2h20.4v95.1H65.1V95.2zm118.1 41.7c0 26.8-17.2 41.7-46.1 41.7-10.2 0-20.7-2.3-28.8-6.5v22.2H88.1V95.2h20.1v8.6c7.8-6.1 18.1-9.9 29.1-9.9 28.5 0 45.9 15.1 45.9 42.9v.1zm-20.5-.3c0-15.4-9.4-25.4-25.7-25.4-9.4 0-17.5 4.5-22.7 11.2v39.1c5.4 3.5 12.6 5.5 20.6 5.5 15.9 0 27.8-9.6 27.8-30.4z"
+                />
+              </svg>
+              {profile.orcid_id}
+            </a>
           )}
         </div>
         {profile.is_own_profile && !editing && (
@@ -443,12 +511,33 @@ export default function ProfilePage() {
           </ProfileSection>
 
           <ProfileSection id="scholarly-works" title="Scholarly Works">
+            {profile.orcid_id && (
+              <p className="text-xs text-rhip-muted mb-3">
+                Linked ORCID:{' '}
+                <a
+                  href={`https://orcid.org/${profile.orcid_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-rhip-teal hover:underline font-mono"
+                >
+                  {profile.orcid_id}
+                </a>
+                {useOrcidWorks && ' · showing live ORCID works'}
+              </p>
+            )}
+            {orcidLoading && (
+              <p className="text-sm text-rhip-muted mb-4">Loading publications from ORCID…</p>
+            )}
+            {!orcidLoading && orcidError && !useOrcidWorks && (
+              <p className="text-sm text-amber-800 mb-4">{orcidError}</p>
+            )}
             {scholarlyWorks.length > 0 ? (
               <>
-                {profile.publications > 0 && (
+                {publicationCount > 0 && (
                   <p className="text-sm text-rhip-body mb-4">
-                    <strong>{profile.publications}</strong> indexed scholarly works
-                    {profile.specialty_area
+                    <strong>{publicationCount}</strong>{' '}
+                    {useOrcidWorks ? 'works from ORCID' : 'indexed scholarly works'}
+                    {!useOrcidWorks && profile.specialty_area
                       ? ` across ${profile.specialty_area.toLowerCase()}`
                       : ''}
                     .
@@ -473,6 +562,7 @@ export default function ProfilePage() {
                         {work.journal && <span>{work.journal}</span>}
                         {work.year && <span>{work.year}</span>}
                         {work.pmid && <span>PMID {work.pmid}</span>}
+                        {work.doi && <span>DOI {work.doi}</span>}
                       </div>
                       {work.authors?.length > 0 && (
                         <p className="text-xs text-rhip-muted mt-1 line-clamp-1">
@@ -485,9 +575,10 @@ export default function ProfilePage() {
                 </ul>
               </>
             ) : (
-              profile.publications > 0 && (
+              !orcidLoading &&
+              publicationCount > 0 && (
                 <p className="text-sm text-rhip-body">
-                  <strong>{profile.publications}</strong> indexed scholarly works
+                  <strong>{publicationCount}</strong> indexed scholarly works
                   {profile.specialty_area
                     ? ` across ${profile.specialty_area.toLowerCase()}`
                     : ''}

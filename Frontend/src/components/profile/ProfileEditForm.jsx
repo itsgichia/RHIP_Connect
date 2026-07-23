@@ -38,6 +38,7 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
     bio: '',
     expertise_tags: '',
     skills: '',
+    orcid_id: '',
     is_public: true,
   })
   const [saving, setSaving] = useState(false)
@@ -57,6 +58,7 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
       bio: profile.bio || '',
       expertise_tags: listToText(profile.expertise_tags),
       skills: listToText(profile.skills),
+      orcid_id: profile.orcid_id || '',
       is_public: !!profile.is_public,
     })
   }, [profile])
@@ -103,6 +105,7 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
         bio: form.bio,
         expertise_tags: textToList(form.expertise_tags),
         skills: textToList(form.skills),
+        orcid_id: form.orcid_id.trim() || null,
         is_public: form.is_public,
       })
       toast.success('Profile updated')
@@ -215,6 +218,20 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
           />
         </div>
       )}
+
+      <div>
+        <label className="block text-sm font-medium mb-1">ORCID iD (optional override)</label>
+        <input
+          value={form.orcid_id}
+          onChange={(e) => setForm({ ...form, orcid_id: e.target.value })}
+          placeholder="0000-0001-2345-6789"
+          className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal font-mono"
+        />
+        <p className="text-xs text-rhip-muted mt-1">
+          Leave blank to auto-link from ORCID when your name/institution uniquely matches.
+          Paste your iD if auto-link misses (emails on ORCID are usually private).
+        </p>
+      </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">Bio</label>

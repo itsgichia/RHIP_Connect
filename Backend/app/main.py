@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 from app.database import Base, engine
-from app.routers import admin, admin_community, auth, challenges, community, directory, forms, government, impact, investor, knowledge_map, messages, notifications, passport, pipeline, pulse
+from app.routers import admin, admin_community, auth, challenges, community, directory, forms, government, impact, investor, knowledge_map, messages, notifications, orcid, passport, pipeline, pulse
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,6 +27,8 @@ def _ensure_sqlite_columns() -> None:
                 ("professional_title", "VARCHAR(255)"),
                 ("career_level", "VARCHAR(32)"),
                 ("skills", "JSON"),
+                ("orcid_id", "VARCHAR(19)"),
+                ("orcid_checked", "BOOLEAN DEFAULT 0"),
             ]
             for name, col_type in profile_cols:
                 if name not in existing:
@@ -62,6 +64,7 @@ app.include_router(community.router, prefix=API_PREFIX)
 app.include_router(pipeline.router, prefix=API_PREFIX)
 app.include_router(forms.router, prefix=API_PREFIX)
 app.include_router(directory.router, prefix=API_PREFIX)
+app.include_router(orcid.router, prefix=API_PREFIX)
 app.include_router(challenges.router, prefix=API_PREFIX)
 app.include_router(messages.router, prefix=API_PREFIX)
 app.include_router(notifications.router, prefix=API_PREFIX)

@@ -22,6 +22,7 @@ from app.schemas import (
     ProfileUpdate,
     PublicationResponse,
 )
+from app.services.orcid_service import normalize_orcid_id
 
 router = APIRouter(prefix="/directory", tags=["directory"])
 
@@ -47,6 +48,7 @@ def _profile_summary(profile: Profile, db: Session) -> ProfileSummary:
         primary_lens=profile.primary_lens or (facets[0] if facets else None),
         career_level=profile.career_level,
         professional_title=profile.professional_title,
+        orcid_id=profile.orcid_id,
     )
 
 
@@ -130,6 +132,12 @@ def update_my_profile(
     elif body.primary_lens is not None:
         facets = profile_facets(profile, current_user)
         profile.primary_lens = validate_primary_lens(facets, body.primary_lens)
+    if "orcid_id" in body.model_fields_set:
+        try:
+            profile.orcid_id = normalize_orcid_id(body.orcid_id)
+            profile.orcid_checked = True
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     db.commit()
     db.refresh(profile)
