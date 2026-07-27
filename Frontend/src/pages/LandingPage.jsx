@@ -297,25 +297,12 @@ export default function LandingPage() {
       <section className="bg-white px-6 pb-20">
         <div className="max-w-6xl mx-auto">
           {/* Vision + strategic pillars */}
-          <div className="max-w-3xl mb-14">
-            <h2 className="font-display text-3xl font-semibold text-rhip-dark mb-4">
-              Inside the precinct
-            </h2>
-            <p className="text-rhip-body leading-relaxed mb-4">{RHIP_VISION}</p>
-            <p className="text-xs font-medium uppercase tracking-wide text-rhip-muted mb-2">
-              Strategic pillars (2026-2030)
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {RHIP_PILLARS.map((p) => (
-                <span
-                  key={p}
-                  className="px-3 py-1 rounded-full bg-rhip-lightBg text-rhip-body text-xs font-medium"
-                >
-                  {p}
-                </span>
-              ))}
-            </div>
-          </div>
+<div className="max-w-3xl mb-14">
+  <h2 className="font-display text-3xl font-semibold text-rhip-dark mb-4">
+    Inside the precinct
+  </h2>
+  <p className="text-rhip-body leading-relaxed">{RHIP_VISION}</p>
+</div>
 
           {/* Optional intro video */}
           {RHIP_VIDEO_URL && (
@@ -334,10 +321,9 @@ export default function LandingPage() {
           <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-6">Speciality areas</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
             {RHIP_SPECIALTIES.map((s) => (
-              <div key={s.area} className="bg-rhip-lightBg rounded-2xl p-5">
-                <h4 className="font-display text-base font-semibold text-rhip-dark mb-2">{s.area}</h4>
-                <p className="text-sm text-rhip-body leading-relaxed">{s.blurb}</p>
-              </div>
+              <div key={s.area} className="bg-rhip-lightBg rounded-2xl p-5 text-center">
+  <h4 className="font-display text-base font-semibold text-rhip-dark">{s.area}</h4>
+</div>
             ))}
           </div>
 
