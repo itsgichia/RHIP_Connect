@@ -67,7 +67,7 @@ export default function TenantEnquiryForm() {
           onChange={(e) => setForm({ ...form, company_type: e.target.value })}
           className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rhip-teal"
         >
-          {['biotech', 'medtech', 'healthtech', 'pharma', 'digital health', 'research', 'other'].map((t) => (
+          {['Biotech', 'Medtech', 'Healthtech', 'Pharma', 'Digital health', 'Research', 'Other'].map((t) => (
             <option key={t} value={t}>{t}</option>
           ))}
         </select>

@@ -87,7 +87,7 @@ def get_collaborations(orcid_id: str, max_works: int = 200) -> dict:
         ],
         "institutions": [
             {"name": name, "country_code": institution_country.get(name), "count": n}
-            for name, n in institution_counts.most_common(30)
+            for name, n in institution_counts.most_common()
         ],
     }
 
