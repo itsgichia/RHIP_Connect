@@ -114,7 +114,7 @@ const RHIP_BUILDINGS = [
   },
 ]
 
-// News & events — we link straight to RHIP's own pages instead of copying
+// News & Events — we link straight to RHIP's own pages instead of copying
 // their content, so it's always current and accurate (never stale).
 const RHIP_LINKS = [
   {
@@ -354,8 +354,8 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* News & events (links straight to RHIP — always current) */}
-          <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-2">News &amp; events</h3>
+          {/* News & Events (links straight to RHIP — always current) */}
+          <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-2">News &amp; Events</h3>
           <p className="text-sm text-rhip-muted mb-6">Straight from RHIP, always up to date.</p>
           <div className="grid md:grid-cols-2 gap-6">
             {RHIP_LINKS.map((l) => (
