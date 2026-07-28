@@ -44,46 +44,44 @@ const PARTNER_LINKS = [
 ]
 
 // ---------------------------------------------------------------------------
-// "Inside the precinct" content — all grounded in official RHIP material so it
-// stays verifiable (not made up):
+// Landing content — all grounded in official RHIP material so it stays
+// verifiable (not made up):
 //   - Vision:        https://rhip.org.au/about/strategy
+//   - Life stages:   RHIP facilities mapped across a lifespan
 //   - New buildings: RHIP "Amplifying the Impact" deck (NEW BUILDINGS slide)
-//   - Milestones:    RHIP deck (RHIP Evolution 2016–2021) + UNSW/NSW Gov
-//   - News:          https://rhip.org.au/news-publications  (links out — always current)
+//   - News:          https://rhip.org.au/news-publications  (links out, always current)
 // ---------------------------------------------------------------------------
 
-// Short vision line + strategic pillars (from RHIP strategy page).
+// RHIP spans every life stage — all these exist here, but aren't connected (the hook).
+// `operator` = who runs the facility; filled badge = operated by an LHD/network,
+// outlined badge = independent institute that is UNSW-affiliated.
+const LIFE_STAGES = [
+  { stage: 'Prenatal & Birth', emoji: '🤰', color: 'bg-rose-100', facility: 'Royal Hospital for Women', url: 'https://www.seslhd.health.nsw.gov.au/royal-hospital-for-women', operator: 'SESLHD', operatorStyle: 'bg-teal-600 text-white', desc: 'Maternity & neonatal care' },
+  { stage: 'Child', emoji: '🧒', color: 'bg-amber-100', facility: "Sydney Children's Hospital", url: 'https://www.schn.health.nsw.gov.au', operator: 'SCHN', operatorStyle: 'bg-rose-500 text-white', desc: 'Paediatric hospital & cancer centre' },
+  { stage: 'Adolescent & Youth', emoji: '🧑', color: 'bg-teal-100', facility: 'Black Dog Institute', url: 'https://www.blackdoginstitute.org.au', operator: 'UNSW-affiliated', operatorStyle: 'border border-gray-300 text-rhip-muted', desc: 'Youth mental health research' },
+  { stage: 'Adult', emoji: '🧑‍⚕️', color: 'bg-sky-100', facility: 'Prince of Wales Hospital', url: 'https://www.seslhd.health.nsw.gov.au/prince-of-wales-hospital', operator: 'SESLHD', operatorStyle: 'bg-teal-600 text-white', desc: 'Acute & emergency care' },
+  { stage: 'Older Adult', emoji: '🧓', color: 'bg-indigo-100', facility: 'NeuRA', url: 'https://neura.edu.au', operator: 'UNSW-affiliated', operatorStyle: 'border border-gray-300 text-rhip-muted', desc: 'Neuroscience & healthy ageing' },
+]
+
+// The three founding partners of RHIP.
+const FOUNDING_PARTNERS = [
+  { name: 'UNSW Sydney', dot: 'bg-amber-400' },
+  { name: 'South Eastern Sydney LHD', dot: 'bg-teal-400' },
+  { name: "Sydney Children's Hospitals Network", dot: 'bg-rose-400' },
+]
+
+// Short vision line (from RHIP strategy page).
 const RHIP_VISION =
   'Our vision is to be a world-class precinct, collaboratively creating transformational change ' +
   'across research, education and health outcomes.'
 
-// The four pillars of RHIP's draft 2026-2030 strategy.
-const RHIP_PILLARS = [
-  'Accelerate translation',
-  'Attract investment, industry & talent',
-  'Make the precinct work as one',
-  'Strengthen profile, voice & recognition',
-]
-
 // RHIP's four speciality areas (source: RHIP deck "SPECIALITY AREAS" slide).
 // These match the specialty_area values used in the researcher directory.
 const RHIP_SPECIALTIES = [
-  {
-    area: 'Mental Health & Neuroscience',
-    blurb: 'Brain, mind and mental-health research and care, spanning neuroscience and drug & alcohol research.',
-  },
-  {
-    area: 'Personalised Medicine',
-    blurb: 'Precision oncology and tailored treatments for both adults and children.',
-  },
-  {
-    area: 'Rare Diseases',
-    blurb: 'Diagnosis, care and research for rare and complex conditions.',
-  },
-  {
-    area: 'Health Systems',
-    blurb: 'Designing better models of care and the future of health systems.',
-  },
+  { area: 'Mental Health & Neuroscience' },
+  { area: 'Personalised Medicine' },
+  { area: 'Rare Diseases' },
+  { area: 'Health Systems' },
 ]
 
 // Optional intro video. Paste a YouTube/Vimeo EMBED url, e.g.
@@ -113,46 +111,6 @@ const RHIP_BUILDINGS = [
     focus: 'Specialised care & research',
     specs: ['340 beds', '36,000 m²', '$658M'],
     image: '/LandingPageImages/RHIP/childrens-hospital.png',
-  },
-]
-
-// Precinct journey (sources: RHIP deck "RHIP Evolution", UNSW Newsroom, NSW Gov).
-const RHIP_MILESTONES = [
-  {
-    date: '1858',
-    title: 'Prince of Wales origins',
-    blurb:
-      'The Society for the Relief of Destitute Children opens an asylum in Randwick. The site is officially named Prince of Wales Hospital in 1953.',
-  },
-  {
-    date: '1949',
-    title: 'UNSW established',
-    blurb:
-      'UNSW is incorporated by an Act of Parliament, with roots tracing back to the 1843 Sydney Mechanics’ Institute.',
-  },
-  {
-    date: '2016',
-    title: 'Randwick collaboration agreement signed',
-    blurb:
-      'Partners sign the Collaboration Agreement to work more closely together toward a long-term vision. The NSW Government announces $500M for the Prince of Wales Acute Services Building.',
-  },
-  {
-    date: '2018',
-    title: '$250M for the Health Translation Hub',
-    blurb:
-      'UNSW announces a $250M investment in the Health Translation Hub, anchoring the precinct’s new home for education, innovation and translation.',
-  },
-  {
-    date: '2019',
-    title: '$608M for children’s health',
-    blurb:
-      'The NSW Government announces $608M for Sydney Children’s Hospital Stage 1 and the Children’s Comprehensive Cancer Centre.',
-  },
-  {
-    date: '2021',
-    title: 'Collaboration agreement renewed',
-    blurb:
-      'The RHIP Collaboration Agreement is formalised, including collaborative partner investment, to take the partnership to the next level.',
   },
 ]
 
@@ -252,58 +210,100 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="bg-white px-6 py-20">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="font-display text-3xl font-semibold text-rhip-dark mb-4">About RH&IP</h2>
-            <p className="text-rhip-body leading-relaxed mb-4">
-              The Randwick Health &amp; Innovation Precinct brings together UNSW Sydney, South Eastern
-              Sydney Local Health District, and Sydney Children&apos;s Hospitals Network in a co-located
-              ecosystem where research, clinical care, and industry innovation converge.
-            </p>
-            <div className="flex flex-wrap gap-x-8 gap-y-4 mt-6">
-  <div>
-    <p className="font-display text-2xl font-bold text-rhip-teal">3</p>
-    <p className="text-xs text-rhip-muted">major teaching hospitals</p>
-  </div>
-  <div>
-    <p className="font-display text-2xl font-bold text-rhip-teal">4</p>
-    <p className="text-xs text-rhip-muted">medical research institutes</p>
-  </div>
-  <div>
-    <p className="font-display text-2xl font-bold text-rhip-teal">Top 20</p>
-    <p className="text-xs text-rhip-muted">UNSW, ranked globally</p>
-  </div>
-</div>
+      {/* About RH&IP + one precinct, every life stage (merged) */}
+      <section id="about" className="bg-rhip-lightBg px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          {/* Intro (left) + key stats (right) */}
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center mb-14">
+            <div>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-rhip-dark mb-4">
+                One precinct, every life stage
+              </h2>
+              <p className="text-rhip-body leading-relaxed">
+                The Randwick Health &amp; Innovation Precinct brings world-class hospitals, research
+                institutes and a leading university together in one place, caring for people at every
+                stage of life, from the first ultrasound to a stroke recovery ward. Everything is here,
+                yet today none of it is connected.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { n: '3', l: 'major teaching hospitals' },
+                { n: '4', l: 'medical research institutes' },
+                { n: 'Top 20', l: 'UNSW, ranked globally' },
+              ].map((s) => (
+                <div key={s.l} className="bg-white rounded-2xl p-4 text-center">
+                  <p className="font-display text-2xl font-bold text-rhip-teal mb-1">{s.n}</p>
+                  <p className="text-[11px] text-rhip-muted leading-snug">{s.l}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-wrap justify-center gap-6">
-            {PARTNER_LINKS.map(({ name, href }) => (
-              <a
-                key={name}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-4 bg-rhip-lightBg rounded-2xl text-center min-w-[140px] cursor-pointer transition-colors hover:bg-rhip-lightTeal hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rhip-teal"
-              >
-                <span className="font-semibold text-rhip-dark text-sm">{name}</span>
-              </a>
+
+          {/* Life-stage timeline */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-6">
+            {LIFE_STAGES.map((s) => (
+              <div key={s.stage} className="flex flex-col">
+                <div className="flex flex-col items-center mb-4">
+                  <p className="text-xs font-semibold text-rhip-dark mb-2 text-center">{s.stage}</p>
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl ${s.color}`}>
+                    {s.emoji}
+                  </div>
+                </div>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex-1 block bg-white rounded-2xl p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+                >
+                  <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide mb-2 ${s.operatorStyle}`}>
+                    {s.operator}
+                  </span>
+                  <h3 className="font-display text-base font-semibold text-rhip-dark mb-2">
+                    {s.facility}
+                  </h3>
+                  <p className="text-xs text-rhip-muted leading-relaxed mb-3">{s.desc}</p>
+                  <span className="text-xs font-medium text-rhip-teal">
+                    Visit <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
+                  </span>
+                </a>
+              </div>
             ))}
           </div>
+
+          {/* Legend */}
+          <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-rhip-muted mb-10">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rhip-teal" /> Operated by an LHD / hospital network
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full border border-gray-400" /> Independent institute, UNSW-affiliated
+            </span>
+          </div>
+
+          {/* Founding partners */}
+          <div className="bg-rhip-dark rounded-2xl p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-rhip-ice shrink-0">
+                Founding partners
+              </p>
+              <div className="flex flex-wrap gap-x-8 gap-y-3">
+                {FOUNDING_PARTNERS.map((p) => (
+                  <span key={p.name} className="flex items-center gap-2 text-white text-sm font-medium">
+                    <span className={`w-2.5 h-2.5 rounded-full ${p.dot}`} />
+                    {p.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Inside the precinct — vision, new buildings, milestones, news */}
-      <section className="bg-white px-6 pb-20">
+      {/* Inside the precinct — vision, speciality areas, new buildings, news */}
+      <section className="bg-white px-6 pb-20 pt-20">
         <div className="max-w-6xl mx-auto">
-          {/* Vision + strategic pillars */}
-<div className="max-w-3xl mb-14">
-  <h2 className="font-display text-3xl font-semibold text-rhip-dark mb-4">
-    Inside the precinct
-  </h2>
-  <p className="text-rhip-body leading-relaxed">{RHIP_VISION}</p>
-</div>
-
           {/* Optional intro video */}
           {RHIP_VIDEO_URL && (
             <div className="mb-14 max-w-3xl aspect-video rounded-2xl overflow-hidden bg-rhip-cardBg">
@@ -317,41 +317,7 @@ export default function LandingPage() {
             </div>
           )}
 
-          {/* Speciality areas */}
-          <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-6">Speciality areas</h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-            {RHIP_SPECIALTIES.map((s) => (
-              <div key={s.area} className="bg-rhip-lightBg rounded-2xl p-5 text-center">
-  <h4 className="font-display text-base font-semibold text-rhip-dark">{s.area}</h4>
-</div>
-            ))}
-          </div>
-
-          {/* Milestones timeline (the journey of agreements & funding) */}
-          <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-6">Milestones</h3>
-          <ol className="mb-16">
-            {RHIP_MILESTONES.map((m, i) => (
-              <li key={m.title} className="flex gap-4">
-                {/* Rail: dot + connecting line */}
-                <div className="flex flex-col items-center">
-                  <span className="mt-5 w-4 h-4 rounded-full bg-rhip-teal ring-4 ring-white shrink-0" />
-                  {i < RHIP_MILESTONES.length - 1 && (
-                    <span className="w-0.5 flex-1 bg-rhip-lightTeal" />
-                  )}
-                </div>
-                {/* Card */}
-                <div className="flex-1 mb-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full bg-rhip-lightBg text-rhip-teal text-xs font-semibold uppercase tracking-wide mb-2">
-                    {m.date}
-                  </span>
-                  <h4 className="font-display text-base font-semibold text-rhip-dark mb-1">{m.title}</h4>
-                  <p className="text-sm text-rhip-body leading-relaxed">{m.blurb}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-
-          {/* New buildings (the physical results of that investment) */}
+          {/* New buildings */}
           <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-6">New Buildings</h3>
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             {RHIP_BUILDINGS.map((b) => (
@@ -376,13 +342,13 @@ export default function LandingPage() {
                     {b.name}
                   </h4>
                   <p className="text-sm text-rhip-muted mb-4">{b.focus}</p>
-         <ul className="mt-auto flex flex-wrap gap-2 text-xs font-medium text-rhip-body">
-  {b.specs.map((s) => (
-    <li key={s} className="px-2.5 py-1 rounded-full bg-rhip-lightBg">
-      {s}
-    </li>
-  ))}
-</ul>
+                  <ul className="mt-auto flex flex-wrap gap-2 text-xs font-medium text-rhip-body">
+                    {b.specs.map((s) => (
+                      <li key={s} className="px-2.5 py-1 rounded-full bg-rhip-lightBg">
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </article>
             ))}
@@ -390,7 +356,7 @@ export default function LandingPage() {
 
           {/* News & events (links straight to RHIP — always current) */}
           <h3 className="font-display text-2xl font-semibold text-rhip-dark mb-2">News &amp; events</h3>
-          <p className="text-sm text-rhip-muted mb-6">Straight from RHIP — always up to date.</p>
+          <p className="text-sm text-rhip-muted mb-6">Straight from RHIP, always up to date.</p>
           <div className="grid md:grid-cols-2 gap-6">
             {RHIP_LINKS.map((l) => (
               <a
@@ -540,9 +506,9 @@ export default function LandingPage() {
               The Health Translation Hub
             </h2>
             <p className="text-rhip-body leading-relaxed mb-6">
-  The Hub's industry floors are designed for organisations that want to co-locate with
-  the precinct's hospitals and research institutes, where discovery meets clinical practice.
-</p>
+              The Hub&apos;s industry floors are designed for organisations that want to co-locate with
+              the precinct&apos;s hospitals and research institutes, where discovery meets clinical practice.
+            </p>
             {hthOccupancy && (
               <div className="bg-white rounded-2xl p-6">
                 <p className="text-sm font-medium text-rhip-body mb-2">Current Occupancy</p>
@@ -644,7 +610,7 @@ export default function LandingPage() {
                   rel="noopener noreferrer"
                   className="hover:text-rhip-teal transition-colors"
                 >
-                  Randwick Health Precinct ebsite
+                  RHIP Website
                 </a>
               </li>
               <li>
