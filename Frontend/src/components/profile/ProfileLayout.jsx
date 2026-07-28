@@ -244,7 +244,7 @@ export function ProfileSummaryBar({ profile, firstName }) {
   )
 }
 
-export function ProfileSectionNav({ activeSection, onNavigate }) {
+export function ProfileSectionNav({ activeSection, onNavigate, sections = PROFILE_SECTIONS }) {
   const scrollToTop = () => scrollPageToTop()
 
   return (
@@ -257,7 +257,7 @@ export function ProfileSectionNav({ activeSection, onNavigate }) {
         Scroll to top ↑
       </button>
       <ul>
-        {PROFILE_SECTIONS.map(({ id, label }) => (
+        {sections.map(({ id, label }) => (
           <li key={id}>
             <button
               type="button"

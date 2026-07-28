@@ -23,7 +23,7 @@ from app.models import (
 router = APIRouter(prefix="/pulse", tags=["pulse"])
 
 _DATA_DIR = Path(__file__).resolve().parents[3] / "data"
-_STORIES_PATH = _DATA_DIR / "mock_stories.json"
+_STORIES_PATH = _DATA_DIR / "success_stories.json"
 
 _ROLE_COLORS = {
     "clinician": "#0D7377",

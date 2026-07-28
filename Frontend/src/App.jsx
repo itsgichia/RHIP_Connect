@@ -15,6 +15,7 @@ import DashboardPage from './pages/DashboardPage'
 import DirectoryPage from './pages/DirectoryPage'
 import MapPage from './pages/MapPage'
 import ProfilePage from './pages/ProfilePage'
+import SettingsPage from './pages/SettingsPage'
 import ChallengePage from './pages/ChallengePage'
 import MessagesPage from './pages/MessagesPage'
 import PipelinePage from './pages/PipelinePage'
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/directory" element={<DirectoryPage />} />
             <Route path="/directory/:profileId" element={<ProfilePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/ecosystem" element={<Navigate to="/map" replace />} />
             <Route path="/challenges" element={<ChallengePage />} />

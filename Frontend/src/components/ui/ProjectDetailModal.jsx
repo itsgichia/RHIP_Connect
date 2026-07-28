@@ -9,6 +9,7 @@ import {
   indicativeBandClass,
   indicativeBandLabel,
 } from '../../utils/roi'
+import { funderBadgeClass, funderLabel } from '../../utils/funder'
 
 export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
   const [project, setProject] = useState(null)
@@ -68,11 +69,33 @@ export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${trlBadgeClass(project.trl)}`}>
                     {trlShortLabel(project.trl)}
                   </span>
+                  {funderLabel(project.funder) && (
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${funderBadgeClass(project.funder)}`}>
+                      {funderLabel(project.funder)}
+                    </span>
+                  )}
                   <span className="text-xs text-rhip-muted">
                     {project.trl_label || trlFullLabel(project.trl)}
                   </span>
                 </div>
                 <h2 className="font-display text-xl font-semibold text-rhip-dark">{project.title}</h2>
+                {project.grant_id && (
+                  <p className="text-sm text-rhip-muted mt-1">
+                    Grant ID:{' '}
+                    {project.grant_url ? (
+                      <a
+                        href={project.grant_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-rhip-teal hover:underline"
+                      >
+                        {project.grant_id}
+                      </a>
+                    ) : (
+                      <span className="font-mono">{project.grant_id}</span>
+                    )}
+                  </p>
+                )}
               </>
             ) : (
               <h2 className="font-display text-xl font-semibold text-rhip-dark">Project details</h2>

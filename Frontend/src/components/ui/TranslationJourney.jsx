@@ -14,6 +14,23 @@ function formatAud(n) {
   return `$${n}`
 }
 
+function defaultMetrics(impact = {}) {
+  return [
+    {
+      label: 'Patients helped',
+      value: (impact.patients_helped || 0).toLocaleString(),
+    },
+    {
+      label: 'Time saved',
+      value: `${impact.time_saved_days || 0} days`,
+    },
+    {
+      label: 'Cost reduced',
+      value: formatAud(impact.cost_reduced_aud || 0),
+    },
+  ]
+}
+
 export default function TranslationJourney({ stories = [] }) {
   const [activeId, setActiveId] = useState(stories[0]?.id || null)
   const active = stories.find((s) => s.id === activeId) || stories[0]
@@ -25,6 +42,11 @@ export default function TranslationJourney({ stories = [] }) {
       </div>
     )
   }
+
+  const metrics =
+    active?.impact_metrics?.length > 0
+      ? active.impact_metrics
+      : defaultMetrics(active?.impact)
 
   return (
     <div className="space-y-5">
@@ -49,27 +71,21 @@ export default function TranslationJourney({ stories = [] }) {
             </p>
             <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2">{active.title}</h3>
             <p className="text-rhip-ice max-w-2xl">{active.tagline}</p>
+            {active.partners?.length > 0 && (
+              <p className="mt-4 text-sm text-rhip-ice/90 max-w-3xl">
+                <span className="font-semibold text-white">Precinct partners: </span>
+                {active.partners.join(' · ')}
+              </p>
+            )}
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 p-5 border-b border-rhip-border bg-rhip-lightBg/60">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-rhip-muted mb-1">Patients helped</p>
-              <p className="font-display text-2xl font-bold text-rhip-dark">
-                {active.impact.patients_helped.toLocaleString()}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wide text-rhip-muted mb-1">Time saved</p>
-              <p className="font-display text-2xl font-bold text-rhip-dark">
-                {active.impact.time_saved_days} days
-              </p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wide text-rhip-muted mb-1">Cost reduced</p>
-              <p className="font-display text-2xl font-bold text-rhip-dark">
-                {formatAud(active.impact.cost_reduced_aud)}
-              </p>
-            </div>
+            {metrics.slice(0, 3).map((m) => (
+              <div key={m.label}>
+                <p className="text-xs uppercase tracking-wide text-rhip-muted mb-1">{m.label}</p>
+                <p className="font-display text-2xl font-bold text-rhip-dark">{m.value}</p>
+              </div>
+            ))}
           </div>
 
           <div className="p-5 md:p-6">
@@ -102,6 +118,13 @@ export default function TranslationJourney({ stories = [] }) {
                 </li>
               ))}
             </ol>
+
+            {active.sources?.length > 0 && (
+              <p className="mt-6 pt-4 border-t border-rhip-border text-xs text-rhip-muted">
+                Based on publicly reported precinct partner outcomes. See partner publications for full
+                study details.
+              </p>
+            )}
           </div>
         </div>
       )}

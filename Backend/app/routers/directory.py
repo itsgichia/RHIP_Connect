@@ -27,6 +27,36 @@ from app.services.orcid_service import normalize_orcid_id
 router = APIRouter(prefix="/directory", tags=["directory"])
 
 
+def _ensure_profile(user: User, db: Session) -> Profile:
+    """Create a minimal private profile when a user is missing one (e.g. legacy investor accounts)."""
+    profile = db.query(Profile).filter(Profile.user_id == user.id).first()
+    if profile:
+        return profile
+    profile = Profile(
+        user_id=user.id,
+        name=user.name,
+        title=user.name,
+        specialty_area=user.specialty_area or "Health Systems",
+        expertise_tags=[],
+        skills=[],
+        bio="",
+        publications=0,
+        active_projects=0,
+        patents=[],
+        news=[],
+        awards=[],
+        is_public=False,
+        identity_facets=[],
+        primary_lens=None,
+        professional_title=None,
+        career_level=None,
+    )
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+    return profile
+
+
 def _profile_summary(profile: Profile, db: Session) -> ProfileSummary:
     user = db.query(User).filter(User.id == profile.user_id).first()
     institution_name = None
@@ -91,9 +121,7 @@ def get_my_profile(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
+    profile = _ensure_profile(current_user, db)
     return _profile_detail(profile, db, current_user)
 
 
@@ -103,9 +131,7 @@ def update_my_profile(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
+    profile = _ensure_profile(current_user, db)
 
     if body.is_public is not None:
         profile.is_public = body.is_public

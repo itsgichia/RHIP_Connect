@@ -9,6 +9,13 @@ import ProjectDetailModal from '../components/ui/ProjectDetailModal'
 import InvestorContactForm from '../components/forms/InvestorContactForm'
 import TranslationJourney from '../components/ui/TranslationJourney'
 import { TRL_FILTERS, matchesTrlFilter } from '../utils/trl'
+import {
+  FUNDER_FILTERS,
+  funderBadgeClass,
+  funderLabel,
+  isCompetitiveGrant,
+  matchesFunderFilter,
+} from '../utils/funder'
 
 const TABS = [
   { key: 'overview', label: 'Overview' },
@@ -20,7 +27,7 @@ const TABS = [
 ]
 
 const BENEFITS = [
-  'Access to a pipeline of 24+ investable projects',
+  'Access to a pipeline of ARC- and MRFF-backed investable projects',
   'Co-location in the Health Translation Hub',
   'Direct clinical trial partnerships',
   'IP licensing opportunities',
@@ -44,10 +51,11 @@ function TabButton({ active, onClick, children }) {
 }
 
 function OverviewTab({ data, onViewPipeline, onViewStories }) {
-  const { kpis, hth_occupancy, investable_count } = data
+  const { kpis, hth_occupancy, investable_count, projects = [] } = data
   const highlights = kpis.filter((k) =>
     ['active_innovation_projects', 'hth_occupancy', 'spinouts', 'industry_partnerships'].includes(k.metric_name)
   )
+  const competitiveGrants = projects.filter(isCompetitiveGrant).slice(0, 6)
 
   return (
     <div className="space-y-6">
@@ -67,6 +75,44 @@ function OverviewTab({ data, onViewPipeline, onViewStories }) {
           <div className="col-span-full text-sm text-rhip-muted">Loading metrics…</div>
         )}
       </div>
+
+      {competitiveGrants.length > 0 && (
+        <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <h3 className="font-semibold text-rhip-dark mb-1">Competitive grants (ARC / MRFF)</h3>
+              <p className="text-sm text-rhip-muted max-w-2xl">
+                Real Australian Research Council and Medical Research Future Fund awards linked to
+                precinct researchers — shown with grant IDs in the investable pipeline.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onViewPipeline}
+              className="text-sm text-rhip-teal hover:underline shrink-0"
+            >
+              Filter pipeline →
+            </button>
+          </div>
+          <ul className="space-y-3">
+            {competitiveGrants.map((p) => (
+              <li
+                key={p.id}
+                className="flex flex-wrap items-center gap-2 text-sm border-b border-gray-100 last:border-0 pb-3 last:pb-0"
+              >
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${funderBadgeClass(p.funder)}`}>
+                  {funderLabel(p.funder)}
+                </span>
+                <span className="font-mono text-xs text-rhip-muted">{p.grant_id}</span>
+                <span className="text-rhip-dark font-medium flex-1 min-w-[12rem]">{p.title}</span>
+                {p.lead_researcher_name && (
+                  <span className="text-xs text-rhip-muted">{p.lead_researcher_name}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white rounded-2xl p-6 shadow-sm">
@@ -157,21 +203,14 @@ function MetricsTab({ kpis }) {
 
 function PipelineTab({ projects, onProjectUpdate, roiDisclaimer }) {
   const [trlFilter, setTrlFilter] = useState('all')
-  const [sortBy, setSortBy] = useState('score')
+  const [funderFilter, setFunderFilter] = useState('all')
   const [selectedProjectId, setSelectedProjectId] = useState(null)
 
   const filtered = projects
     .filter((p) => matchesTrlFilter(p.trl, trlFilter))
+    .filter((p) => matchesFunderFilter(p.funder, funderFilter))
     .slice()
-    .sort((a, b) => {
-      if (sortBy === 'trl') return (b.trl || 0) - (a.trl || 0)
-      if (sortBy === 'funding') {
-        const ap = a.funding_goal > 0 ? a.funding_raised / a.funding_goal : 0
-        const bp = b.funding_goal > 0 ? b.funding_raised / b.funding_goal : 0
-        return bp - ap
-      }
-      return (b.indicative_score || 0) - (a.indicative_score || 0)
-    })
+    .sort((a, b) => (b.indicative_score || 0) - (a.indicative_score || 0))
 
   const handleInvested = (projectId, amount) => {
     onProjectUpdate?.(projectId, amount)
@@ -189,18 +228,14 @@ function PipelineTab({ projects, onProjectUpdate, roiDisclaimer }) {
         </p>
       )}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <span className="text-xs font-medium text-rhip-muted uppercase tracking-wide mr-1">Sort</span>
-        {[
-          { key: 'score', label: 'Indicative score' },
-          { key: 'trl', label: 'TRL' },
-          { key: 'funding', label: 'Funding progress' },
-        ].map((opt) => (
+        <span className="text-xs font-medium text-rhip-muted uppercase tracking-wide mr-1">Funder</span>
+        {FUNDER_FILTERS.map((opt) => (
           <button
             key={opt.key}
             type="button"
-            onClick={() => setSortBy(opt.key)}
+            onClick={() => setFunderFilter(opt.key)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              sortBy === opt.key
+              funderFilter === opt.key
                 ? 'bg-rhip-teal text-white'
                 : 'bg-white text-rhip-body border border-gray-200 hover:border-rhip-teal/40'
             }`}

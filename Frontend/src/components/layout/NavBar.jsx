@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronDownIcon, UserCircleIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon,
+  Cog6ToothIcon,
+  UserCircleIcon,
+} from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../context/AuthContext'
 import BrandLogo from '../ui/BrandLogo'
@@ -9,7 +14,7 @@ import NotificationBell from '../ui/NotificationBell'
 import api from '../../hooks/useApi'
 
 export default function NavBar() {
-  const { user, logout } = useAuth()
+  const { user, logout, updateUser } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [openingProfile, setOpeningProfile] = useState(false)
   const menuRef = useRef(null)
@@ -39,7 +44,7 @@ export default function NavBar() {
     navigate('/')
   }
 
-  const handleMyProfile = async () => {
+  const openOwnProfile = async () => {
     setMenuOpen(false)
     if (user?.profile_id) {
       navigate(`/directory/${user.profile_id}`)
@@ -48,6 +53,9 @@ export default function NavBar() {
     setOpeningProfile(true)
     try {
       const { data } = await api.get('/directory/me')
+      if (data?.id && updateUser) {
+        updateUser({ profile_id: data.id })
+      }
       navigate(`/directory/${data.id}`)
     } catch {
       toast.error('No profile found for this account yet')
@@ -55,6 +63,13 @@ export default function NavBar() {
       setOpeningProfile(false)
     }
   }
+
+  const handleSettings = () => {
+    setMenuOpen(false)
+    navigate('/settings')
+  }
+
+  const handleMyProfile = () => openOwnProfile()
 
   return (
     <header className="bg-white border-b border-rhip-border px-6 py-3 flex items-center justify-between">
@@ -106,7 +121,17 @@ export default function NavBar() {
                 className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-rhip-body hover:bg-rhip-lightBg disabled:opacity-50"
               >
                 <UserCircleIcon className="w-4 h-4 text-rhip-muted" />
-                {openingProfile ? 'Opening profile…' : 'My profile'}
+                {openingProfile ? 'Opening…' : 'My profile'}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={handleSettings}
+                disabled={openingProfile}
+                className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-rhip-body hover:bg-rhip-lightBg disabled:opacity-50"
+              >
+                <Cog6ToothIcon className="w-4 h-4 text-rhip-muted" />
+                Settings
               </button>
               <button
                 type="button"

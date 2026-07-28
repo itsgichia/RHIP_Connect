@@ -25,6 +25,14 @@ const EVENT_TYPES = [
 
 const EVENT_TYPE_LABELS = Object.fromEntries(EVENT_TYPES.map((t) => [t.value, t.label]))
 
+const CPD_CATEGORIES = [
+  { value: 'educational_activities', label: 'Educational Activities' },
+  { value: 'reviewing_performance', label: 'Reviewing Performance' },
+  { value: 'measuring_outcomes', label: 'Measuring Outcomes' },
+]
+
+const CPD_CATEGORY_LABELS = Object.fromEntries(CPD_CATEGORIES.map((c) => [c.value, c.label]))
+
 const ROLE_OPTIONS = [
   ROLES.ADMIN,
   ROLES.CLINICIAN,
@@ -137,17 +145,30 @@ function UsersTab({ users, onUpdate }) {
 }
 
 function EventsTab({ events, onCreate }) {
-  const [form, setForm] = useState({ name: '', date: '', type: 'conference' })
+  const emptyForm = {
+    name: '',
+    date: '',
+    type: 'conference',
+    cpd_eligible: false,
+    cpd_hours: '',
+    cpd_category: 'educational_activities',
+    cpd_notes: '',
+  }
+  const [form, setForm] = useState(emptyForm)
   const [creating, setCreating] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.name.trim() || !form.date) return
+    if (form.cpd_eligible && (!form.cpd_hours || !form.cpd_category)) {
+      toast.error('CPD-eligible events need hours and a category')
+      return
+    }
     setCreating(true)
     try {
       await onCreate(form)
       toast.success('Event created')
-      setForm({ name: '', date: '', type: 'conference' })
+      setForm(emptyForm)
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Failed to create event')
     } finally {
@@ -191,6 +212,58 @@ function EventsTab({ events, onCreate }) {
               ))}
             </select>
           </div>
+
+          <div className="md:col-span-4 rounded-xl border border-gray-100 bg-gray-50/60 p-4 space-y-3">
+            <label className="inline-flex items-center gap-2 text-sm text-rhip-dark cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.cpd_eligible}
+                onChange={(e) => setForm((f) => ({ ...f, cpd_eligible: e.target.checked }))}
+                className="rounded border-gray-300 text-rhip-teal focus:ring-rhip-teal"
+              />
+              CPD-eligible (clinicians can export verified hours)
+            </label>
+            {form.cpd_eligible && (
+              <div className="grid md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs text-rhip-muted mb-1">Suggested CPD hours</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="40"
+                    step="0.5"
+                    value={form.cpd_hours}
+                    onChange={(e) => setForm((f) => ({ ...f, cpd_hours: e.target.value }))}
+                    placeholder="e.g. 3"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-rhip-muted mb-1">CPD category</label>
+                  <select
+                    value={form.cpd_category}
+                    onChange={(e) => setForm((f) => ({ ...f, cpd_category: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal bg-white"
+                  >
+                    {CPD_CATEGORIES.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-rhip-muted mb-1">Notes for MyCPD (optional)</label>
+                  <input
+                    type="text"
+                    value={form.cpd_notes}
+                    onChange={(e) => setForm((f) => ({ ...f, cpd_notes: e.target.value }))}
+                    placeholder="e.g. Clinical education sessions"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rhip-teal bg-white"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={creating || !form.name.trim() || !form.date}
@@ -210,6 +283,7 @@ function EventsTab({ events, onCreate }) {
                 <th className="px-6 py-4 font-medium">Name</th>
                 <th className="px-6 py-4 font-medium">Date</th>
                 <th className="px-6 py-4 font-medium">Type</th>
+                <th className="px-6 py-4 font-medium">CPD</th>
                 <th className="px-6 py-4 font-medium">QR Code</th>
               </tr>
             </thead>
@@ -224,6 +298,15 @@ function EventsTab({ events, onCreate }) {
                     <span className="text-xs px-2 py-0.5 bg-rhip-lightTeal text-rhip-teal rounded-full">
                       {EVENT_TYPE_LABELS[ev.type] || ev.type}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-rhip-body">
+                    {ev.cpd_eligible ? (
+                      <span className="text-xs">
+                        {ev.cpd_hours}h · {CPD_CATEGORY_LABELS[ev.cpd_category] || ev.cpd_category}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-rhip-muted">—</span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <code className="text-xs bg-gray-100 px-2 py-1 rounded text-rhip-dark">{ev.qr_code}</code>
@@ -439,11 +522,18 @@ export default function AdminPage() {
   }
 
   const createEvent = async (form) => {
-    const { data: created } = await api.post('/admin/events', {
+    const payload = {
       name: form.name.trim(),
       date: form.date,
       type: form.type,
-    })
+      cpd_eligible: Boolean(form.cpd_eligible),
+    }
+    if (form.cpd_eligible) {
+      payload.cpd_hours = Number(form.cpd_hours)
+      payload.cpd_category = form.cpd_category
+      if (form.cpd_notes?.trim()) payload.cpd_notes = form.cpd_notes.trim()
+    }
+    const { data: created } = await api.post('/admin/events', payload)
     setEvents((prev) => [created, ...prev])
   }
 

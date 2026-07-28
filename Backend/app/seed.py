@@ -10,19 +10,26 @@ from app.identity import (
     validate_primary_lens,
 )
 from app.profile_extras import build_profile_extras
+from app.services.grant_service import (
+    enrich_manifest_entry,
+    load_cache,
+    resolve_grant_mode,
+    save_cache,
+)
 from app.services.pubmed_service import (
     fetch_or_load_publications,
-    load_cache,
-    save_cache,
+    load_cache as load_pubmed_cache,
+    save_cache as save_pubmed_cache,
     _resolve_pubmed_mode,
 )
-from app.trl import readiness_from_trl, trl_from_readiness
+from app.trl import readiness_from_trl
 from app.models import (
     AIMatch,
     Challenge,
     ChallengeStatus,
     ClinicalService,
     CommunitySpecialist,
+    CpdCategory,
     Event,
     EventType,
     Facility,
@@ -34,6 +41,7 @@ from app.models import (
     ParticipantRole,
     Profile,
     Project,
+    ProjectFunder,
     Publication,
     Readiness,
     Role,
@@ -65,118 +73,31 @@ INSTITUTION_MAP = {
     "Pacific VC": (InstitutionType.INDUSTRY, None),
 }
 
-# Seeded collaborations that create real knowledge-map edges across disciplines.
+# Seeded collaborations among real researchers (knowledge-map edges).
 CROSS_DISCIPLINARY_THREADS = [
-    ("c.wakefield@unsw.edu.au", "sarah.okonjo@health.nsw.gov.au"),
-    ("p.mitchell@unsw.edu.au", "rebecca.tan@schn.health.nsw.gov.au"),
-    ("a.patel@georgeinstitute.org.au", "cameron.holloway@health.nsw.gov.au"),
-    ("d.ziegler@unsw.edu.au", "isabelle.fontaine@schn.health.nsw.gov.au"),
-    ("c.sue@neura.edu.au", "grace.mitchell@schn.health.nsw.gov.au"),
-    ("a.wernerseidler@unsw.edu.au", "lisa.nguyen@schn.health.nsw.gov.au"),
-    ("v.perkovic@unsw.edu.au", "anthony.joshua@health.nsw.gov.au"),
-    ("l.jorm@unsw.edu.au", "omar.haddad@health.nsw.gov.au"),
-    ("v.macefield@unsw.edu.au", "adrian.havryk@health.nsw.gov.au"),
-    ("j.mattick@unsw.edu.au", "craig.haifer@health.nsw.gov.au"),
-    ("c.loo@unsw.edu.au", "clinician@rhip.edu.au"),
-    ("m.haber@ccia.org.au", "anthony.joshua@health.nsw.gov.au"),
-    ("g.halliday@neura.edu.au", "marcus.webb@health.nsw.gov.au"),
-    ("h.brodaty@unsw.edu.au", "marcus.webb@health.nsw.gov.au"),
+    ("c.loo@unsw.edu.au", "p.mitchell@unsw.edu.au"),
+    ("h.christensen@unsw.edu.au", "a.wernerseidler@unsw.edu.au"),
+    ("d.ziegler@unsw.edu.au", "m.haber@ccia.org.au"),
+    ("k.anstey@unsw.edu.au", "h.brodaty@unsw.edu.au"),
+    ("b.neal@georgeinstitute.org.au", "a.patel@georgeinstitute.org.au"),
+    ("p.sachdev@unsw.edu.au", "g.halliday@neura.edu.au"),
+    ("r.bryant@unsw.edu.au", "s.harvey@unsw.edu.au"),
+    ("c.sue@neura.edu.au", "p.schofield@neura.edu.au"),
+    ("l.jorm@unsw.edu.au", "v.perkovic@unsw.edu.au"),
+    ("m.teesson@unsw.edu.au", "k.boydell@unsw.edu.au"),
+    ("j.newby@unsw.edu.au", "a.wernerseidler@unsw.edu.au"),
+    ("c.wakefield@unsw.edu.au", "d.ziegler@unsw.edu.au"),
+    ("v.macefield@unsw.edu.au", "c.weickert@neura.edu.au"),
 ]
 
-CROSS_DISCIPLINARY_CHALLENGES = [
-    {
-        "poster_email": "clinician@rhip.edu.au",
-        "title": "Need genomic psychiatry expertise for treatment-resistant cases",
-        "description": (
-            "Looking for researchers who can help design a rapid genomic workup "
-            "pathway for complex mood and neurodevelopmental presentations."
-        ),
-        "specialty_area": "Mental Health & Neuroscience",
-        "match_emails": [
-            "p.mitchell@unsw.edu.au",
-            "m.kavanagh@unsw.edu.au",
-            "c.sue@neura.edu.au",
-        ],
-        "scores": [0.91, 0.84, 0.79],
-    },
-    {
-        "poster_email": "isabelle.fontaine@schn.health.nsw.gov.au",
-        "title": "Survivorship mental health support for paediatric oncology",
-        "description": (
-            "Seeking collaborators for a shared care model linking childhood cancer "
-            "survivorship clinics with digital and liaison psychiatry services."
-        ),
-        "specialty_area": "Rare Diseases",
-        "match_emails": [
-            "c.wakefield@unsw.edu.au",
-            "sarah.okonjo@health.nsw.gov.au",
-            "a.wernerseidler@unsw.edu.au",
-        ],
-        "scores": [0.93, 0.88, 0.81],
-    },
-    {
-        "poster_email": "michael.torres@health.nsw.gov.au",
-        "title": "ED triage for rare disease and mental health presentations",
-        "description": (
-            "Need health systems and digital health partners to reduce bounce-backs "
-            "for complex rare disease and youth mental health presentations."
-        ),
-        "specialty_area": "Health Systems",
-        "match_emails": [
-            "l.jorm@unsw.edu.au",
-            "a.wernerseidler@unsw.edu.au",
-            "lisa.nguyen@schn.health.nsw.gov.au",
-        ],
-        "scores": [0.89, 0.86, 0.82],
-    },
-]
+# No pre-seeded challenges — users post their own from the Challenge Board.
+CROSS_DISCIPLINARY_CHALLENGES = []
 
 
 def _load_json(filename: str) -> list:
     path = os.path.join(DATA_DIR, filename)
     with open(path) as f:
         return json.load(f)
-
-
-def _project_funding(stage: int, index: int) -> tuple[float, float, date, list]:
-    """Return funding_goal, funding_raised, started_at, and breakdown for a project."""
-    base_goals = {
-        4: 750_000,
-        5: 1_200_000,
-        6: 2_000_000,
-        7: 3_500_000,
-        8: 5_000_000,
-        9: 8_000_000,
-        10: 12_000_000,
-    }
-    goal = base_goals.get(stage, 1_000_000) * (1 + (index % 5) * 0.12)
-    progress_ratios = [0.18, 0.32, 0.45, 0.58, 0.71, 0.84]
-    raised = goal * progress_ratios[index % len(progress_ratios)]
-    years_active = max(1, stage - 2 + (index % 3))
-    started = date(2026, 6, 25).replace(year=2026 - years_active)
-
-    categories = [
-        ("Research & Development", 0.35, "Core R&D, prototyping, and validation studies"),
-        ("Clinical Trials", 0.25, "Patient recruitment, trial sites, and monitoring"),
-        ("Personnel", 0.20, "Research staff, clinicians, and project management"),
-        ("Equipment & Infrastructure", 0.12, "Lab equipment, devices, and facility costs"),
-        ("Commercialisation", 0.08, "Regulatory, IP, and go-to-market activities"),
-    ]
-    breakdown = [
-        {
-            "label": label,
-            "amount": round(raised * share),
-            "description": desc,
-        }
-        for label, share, desc in categories
-    ]
-    return goal, raised, started, breakdown
-
-
-def _resolve_trl(proj: dict) -> int:
-    if "trl" in proj:
-        return int(proj["trl"])
-    return trl_from_readiness(proj.get("readiness", "feasibility"), proj.get("stage", 5))
 
 
 def _add_profile(db, institutions: dict, profile_data: dict) -> Profile:
@@ -228,290 +149,8 @@ def _add_profile(db, institutions: dict, profile_data: dict) -> Profile:
     return profile
 
 
-PROFESSIONAL_TECHNICAL_DEMOS = [
-    {
-        "name": "Dr. Priya Nair",
-        "email": "priya.nair@unsw.edu.au",
-        "title": "Biostatistician",
-        "specialty_area": "Health Systems",
-        "expertise_tags": ["Biostatistics", "Clinical trial design", "Survival analysis"],
-        "skills": ["Biostatistics", "Survival analysis", "Clinical trial design", "R", "Data visualisation"],
-        "bio": "Biostatistician supporting RHIP clinical trials and registry analyses across SESLHD and UNSW.",
-        "publications": 28,
-        "active_projects": 3,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["professional_technical", "researcher"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Biostatistician",
-        "career_level": "mid",
-    },
-    {
-        "name": "Marcus Wei",
-        "email": "marcus.wei@seslhd.health.nsw.gov.au",
-        "title": "Clinical Registry Manager",
-        "specialty_area": "Rare Diseases",
-        "expertise_tags": ["Registry management", "Data governance", "Rare disease cohorts"],
-        "skills": ["Registry management", "Data governance", "Data quality", "Cohort building"],
-        "bio": "Manages multi-site clinical registries for rare disease programmes linked to Sydney Children's Hospital and RHIP partners.",
-        "publications": 4,
-        "active_projects": 2,
-        "institution": "SESLHD",
-        "role": "researcher",
-        "identity_facets": ["professional_technical"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Registry manager",
-        "career_level": "mid",
-    },
-    {
-        "name": "Aisha Rahman",
-        "email": "aisha.rahman@unsw.edu.au",
-        "title": "Health Data Scientist",
-        "specialty_area": "Mental Health & Neuroscience",
-        "expertise_tags": ["Data analysis", "Python", "Electronic medical records", "R", "Data visualisation"],
-        "skills": ["Data analysis", "Data visualisation", "Python", "EMR analytics", "Dashboarding", "R"],
-        "bio": "Data analyst embedded with CBDRH-linked projects, supporting clinicians and researchers with EMR-derived insights.",
-        "publications": 6,
-        "active_projects": 2,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["professional_technical"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Data analyst",
-        "career_level": "ecr",
-    },
-    {
-        "name": "Dr. Samira Okonkwo",
-        "email": "samira.okonkwo@unsw.edu.au",
-        "title": "Epidemiologist",
-        "specialty_area": "Health Systems",
-        "expertise_tags": [
-            "Epidemiology",
-            "Population health",
-            "Surveillance",
-            "Outbreak investigation",
-            "Health equity",
-        ],
-        "skills": ["Epidemiology", "R", "Survey design", "GIS", "Causal inference"],
-        "bio": (
-            "Epidemiologist supporting RHIP population-health programmes, linking SESLHD "
-            "surveillance data with UNSW translational research teams."
-        ),
-        "publications": 19,
-        "active_projects": 3,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["professional_technical", "researcher"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Epidemiologist",
-        "career_level": "mid",
-    },
-    {
-        "name": "Dr. James Chen",
-        "email": "james.chen@unsw.edu.au",
-        "title": "Research Fellow",
-        "specialty_area": "Personalised Medicine",
-        "expertise_tags": [
-            "Precision oncology",
-            "Biomarker discovery",
-            "Translational research",
-            "Clinical genomics",
-        ],
-        "skills": ["Clinical genomics", "Grant writing", "Protocol design", "Stakeholder engagement"],
-        "bio": (
-            "Research Fellow bridging laboratory genomics and clinical oncology pathways "
-            "across the Randwick precinct and Prince of Wales Hospital."
-        ),
-        "publications": 22,
-        "active_projects": 2,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["professional_technical", "researcher"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Research fellow",
-        "career_level": "ecr",
-    },
-    {
-        "name": "Hannah Park",
-        "email": "hannah.park@seslhd.health.nsw.gov.au",
-        "title": "Clinical Trials Coordinator",
-        "specialty_area": "Rare Diseases",
-        "expertise_tags": [
-            "Clinical trials",
-            "GCP",
-            "Participant recruitment",
-            "Protocol compliance",
-            "Rare disease cohorts",
-        ],
-        "skills": ["Trial coordination", "Ethics submissions", "REDCap", "Stakeholder liaison"],
-        "bio": (
-            "Coordinates multi-site rare-disease trials for SESLHD and Sydney Children's Hospital, "
-            "connecting investigators with regulatory and ethics pathways."
-        ),
-        "publications": 3,
-        "active_projects": 4,
-        "institution": "SESLHD",
-        "role": "researcher",
-        "identity_facets": ["professional_technical"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Clinical trials coordinator",
-        "career_level": "mid",
-    },
-    {
-        "name": "Dr. Noah Bergström",
-        "email": "noah.bergstrom@unsw.edu.au",
-        "title": "Health Economist",
-        "specialty_area": "Health Systems",
-        "expertise_tags": [
-            "Health economics",
-            "Cost-effectiveness",
-            "HTA",
-            "Value-based care",
-            "Budget impact",
-        ],
-        "skills": ["Health economics", "Modelling", "R", "Evidence synthesis", "Policy briefing"],
-        "bio": (
-            "Health economist advising RHIP partners on cost-effectiveness and value-based "
-            "care models for new diagnostics and digital pathways."
-        ),
-        "publications": 14,
-        "active_projects": 2,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["professional_technical", "researcher"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Health economist",
-        "career_level": "mid",
-    },
-    {
-        "name": "Mei Lin Zhao",
-        "email": "mei.zhao@unsw.edu.au",
-        "title": "Bioinformatician",
-        "specialty_area": "Rare Diseases",
-        "expertise_tags": [
-            "Bioinformatics",
-            "Variant interpretation",
-            "Rare disease genomics",
-            "Pipeline development",
-        ],
-        "skills": ["Python", "Nextflow", "Variant calling", "SQL", "Data pipelines"],
-        "bio": (
-            "Bioinformatician building analysis pipelines for rare-disease genomics programmes "
-            "shared across UNSW and Sydney Children's Hospital Network."
-        ),
-        "publications": 8,
-        "active_projects": 3,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["professional_technical"],
-        "primary_lens": "professional_technical",
-        "professional_title": "Bioinformatician",
-        "career_level": "ecr",
-    },
-]
-
-# Policy / health-system governance demos — identity_facets include policy
-POLICY_DEMOS = [
-    {
-        "name": "Dr. Lauren Whitfield",
-        "email": "lauren.whitfield@health.nsw.gov.au",
-        "title": "Senior Policy Advisor",
-        "specialty_area": "Health Systems",
-        "expertise_tags": [
-            "Health policy",
-            "System reform",
-            "Workforce planning",
-            "Intergovernmental liaison",
-        ],
-        "skills": ["Policy analysis", "Stakeholder engagement", "Briefing", "Evaluation design"],
-        "bio": (
-            "Senior policy advisor linking NSW Health system reform priorities with RHIP "
-            "research and clinical translation programmes."
-        ),
-        "publications": 5,
-        "active_projects": 2,
-        "institution": "NSW Health",
-        "role": "researcher",
-        "identity_facets": ["policy"],
-        "primary_lens": "policy",
-        "career_level": "senior",
-    },
-    {
-        "name": "Omar Haddad",
-        "email": "omar.haddad@unsw.edu.au",
-        "title": "Health Policy Analyst",
-        "specialty_area": "Mental Health & Neuroscience",
-        "expertise_tags": [
-            "Mental health policy",
-            "Service redesign",
-            "Lived-experience engagement",
-            "Implementation science",
-        ],
-        "skills": ["Policy analysis", "Qualitative research", "Co-design", "Evidence synthesis"],
-        "bio": (
-            "Policy analyst focused on mental health service redesign, working across UNSW, "
-            "Black Dog Institute, and SESLHD planning teams."
-        ),
-        "publications": 7,
-        "active_projects": 2,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["policy", "researcher"],
-        "primary_lens": "policy",
-        "career_level": "mid",
-    },
-    {
-        "name": "Dr. Fiona Kelleher",
-        "email": "fiona.kelleher@seslhd.health.nsw.gov.au",
-        "title": "Director of Clinical Governance",
-        "specialty_area": "Rare Diseases",
-        "expertise_tags": [
-            "Clinical governance",
-            "Patient safety",
-            "Quality improvement",
-            "Rare disease pathways",
-        ],
-        "skills": ["Clinical governance", "Risk management", "Quality frameworks", "Policy drafting"],
-        "bio": (
-            "Leads clinical governance for rare-disease pathways across SESLHD, aligning "
-            "hospital policy with RHIP research translation."
-        ),
-        "publications": 9,
-        "active_projects": 1,
-        "institution": "SESLHD",
-        "role": "researcher",
-        "identity_facets": ["policy", "clinician"],
-        "primary_lens": "policy",
-        "career_level": "executive",
-    },
-    {
-        "name": "Priya Desai",
-        "email": "priya.desai@unsw.edu.au",
-        "title": "Research Policy Officer",
-        "specialty_area": "Personalised Medicine",
-        "expertise_tags": [
-            "Research policy",
-            "Ethics and governance",
-            "Genomic medicine policy",
-            "Data sharing frameworks",
-        ],
-        "skills": ["Policy drafting", "Ethics review", "Stakeholder facilitation", "Grant strategy"],
-        "bio": (
-            "Supports genomic and personalised-medicine programmes with research governance "
-            "and data-sharing policy across the Randwick precinct."
-        ),
-        "publications": 4,
-        "active_projects": 2,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["policy"],
-        "primary_lens": "policy",
-        "career_level": "ecr",
-    },
-]
-
-# HDR / postgraduate students — User.role=researcher, career_level=student
-POSTGRADUATE_STUDENT_DEMOS = [
+# Real student login for demos (not fictional directory filler).
+REAL_STUDENT_PROFILES = [
     {
         "name": "Gichia Muiruri",
         "email": "z5580775@ad.unsw.edu.au",
@@ -537,93 +176,270 @@ POSTGRADUATE_STUDENT_DEMOS = [
         "primary_lens": "researcher",
         "career_level": "student",
     },
+]
+
+# Real professional/technical staff (biostatistics, data science, bioinformatics)
+# sourced from UNSW / CBDRH / NeuRA-linked / Children's Cancer Institute public profiles.
+PROFESSIONAL_TECHNICAL_REAL = [
     {
-        "name": "Elena Vargas",
-        "email": "elena.vargas@unsw.edu.au",
-        "title": "PhD Candidate",
-        "specialty_area": "Mental Health & Neuroscience",
+        "name": "Dr. Sanja Lujic",
+        "email": "s.lujic@unsw.edu.au",
+        "title": "Senior Lecturer in Biostatistics",
+        "specialty_area": "Health Systems",
         "expertise_tags": [
-            "Youth mental health",
-            "Adolescent wellbeing",
-            "Digital interventions",
-            "Social media and mental health",
-            "Implementation science",
-        ],
-        "skills": ["Qualitative research", "Survey design", "R", "Literature synthesis"],
-        "bio": (
-            "PhD candidate at UNSW and the Black Dog Institute studying digital mental health "
-            "interventions for teenagers and young people, including harms linked to social media "
-            "use, across SESLHD and RHIP clinical partners."
-        ),
-        "publications": 2,
-        "active_projects": 1,
-        "institution": "UNSW Sydney",
-        "role": "researcher",
-        "identity_facets": ["researcher"],
-        "primary_lens": "researcher",
-        "career_level": "student",
-    },
-    {
-        "name": "Tomás Okello",
-        "email": "t.okello@unsw.edu.au",
-        "title": "Bioinformatician",
-        "specialty_area": "Personalised Medicine",
-        "expertise_tags": [
-            "Genomics",
-            "Bioinformatics",
-            "Precision oncology",
-            "Computational biology",
+            "Biostatistics",
+            "Linked administrative data",
+            "Health services research",
+            "Multimorbidity",
+            "Population ageing",
         ],
         "skills": [
-            "Bioinformatics",
-            "Python",
-            "Pipeline tooling",
-            "Data cleaning",
-            "Genomics analysis",
+            "Biostatistics",
+            "Data linkage",
+            "Statistical modelling",
+            "R",
+            "SAS",
+            "Health data curation",
         ],
         "bio": (
-            "Bioinformatician and MPhil researcher in personalised medicine, collaborating with "
-            "RHIP teams on genomic data pipelines that support clinical decision-making. "
-            "Methods overlap with biostatistics and computational biology."
+            "Senior Lecturer in Biostatistics and Director of Teaching at the Centre for Big Data "
+            "Research in Health (CBDRH), UNSW Sydney (Randwick). Experienced biostatistician "
+            "specialising in linked administrative health datasets, multimorbidity, and teaching "
+            "in the Master of Science in Health Data Science."
         ),
-        "publications": 0,
-        "active_projects": 1,
+        "publications": 76,
+        "active_projects": 3,
         "institution": "UNSW Sydney",
         "role": "researcher",
         "identity_facets": ["professional_technical", "researcher"],
         "primary_lens": "professional_technical",
-        "professional_title": "Bioinformatician",
-        "career_level": "student",
+        "professional_title": "Biostatistician",
+        "career_level": "mid",
+        "pubmed_query": "Lujic S[Author] AND UNSW[Affiliation]",
+        "news": [
+            {
+                "title": "Centre for Big Data Research in Health — Health Data Science",
+                "date": "2025-06-01",
+                "summary": (
+                    "Dr Lujic convenes postgraduate health data science teaching and linked-data "
+                    "methods at CBDRH within the Randwick precinct."
+                ),
+                "url": "https://research.unsw.edu.au/people/dr-sanja-lujic",
+            }
+        ],
     },
     {
-        "name": "Mei Lin Chen",
-        "email": "mei.chen@student.unsw.edu.au",
-        "title": "PhD Student",
-        "specialty_area": "Rare Diseases",
+        "name": "Dr. Heidi Welberry",
+        "email": "h.welberry@unsw.edu.au",
+        "title": "Lecturer in Data Science and Biostatistics",
+        "specialty_area": "Mental Health & Neuroscience",
         "expertise_tags": [
-            "Rare disease registries",
-            "Patient-reported outcomes",
-            "Health systems",
+            "Biostatistics",
+            "Dementia",
+            "Aged care",
+            "Linked data",
+            "Health services research",
+            "Primary care",
         ],
-        "skills": ["Epidemiology", "Stata", "Patient engagement", "Grant writing"],
+        "skills": [
+            "Data science",
+            "Biostatistics",
+            "Linked administrative data",
+            "Epidemiology",
+            "R",
+            "Care-pathway analytics",
+        ],
         "bio": (
-            "PhD student focusing on rare disease registry design and how precinct partners "
-            "share data to improve diagnosis pathways for families."
+            "Lecturer specialising in data science and biostatistics at the Centre for Big Data "
+            "Research in Health and the Centre for Healthy Brain Ageing (CHeBA), UNSW Sydney. "
+            "Collaborates on dementia prevention and care projects across CHeBA and Neuroscience "
+            "Research Australia (NeuRA) in the Randwick precinct."
         ),
-        "publications": 1,
-        "active_projects": 1,
+        "publications": 25,
+        "active_projects": 2,
         "institution": "UNSW Sydney",
         "role": "researcher",
-        "identity_facets": ["researcher"],
-        "primary_lens": "researcher",
-        "career_level": "student",
+        "identity_facets": ["professional_technical", "researcher"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Data scientist / biostatistician",
+        "career_level": "ecr",
+        "pubmed_query": "Welberry H[Author] AND (UNSW[Affiliation] OR NeuRA[Affiliation] OR CHeBA[Affiliation])",
+        "news": [
+            {
+                "title": "CHeBA / NeuRA dementia data collaboration",
+                "date": "2025-03-01",
+                "summary": (
+                    "Dr Welberry applies linked data and biostatistics to dementia prevention and "
+                    "aged-care pathways across CBDRH, CHeBA and NeuRA."
+                ),
+                "url": "https://research.unsw.edu.au/people/dr-heidi-jane-welberry",
+            }
+        ],
+    },
+    {
+        "name": "Prof. Mark Cowley",
+        "email": "m.cowley@ccia.org.au",
+        "title": "Deputy Director, Enabling Platforms & Collaboration",
+        "specialty_area": "Rare Diseases",
+        "expertise_tags": [
+            "Bioinformatics",
+            "Computational biology",
+            "Genomics",
+            "Precision medicine",
+            "Childhood cancer",
+            "Multi-omics",
+        ],
+        "skills": [
+            "Bioinformatics",
+            "Whole genome sequencing analysis",
+            "RNA-seq",
+            "Pipeline engineering",
+            "Clinical genomics informatics",
+            "Python",
+        ],
+        "bio": (
+            "Professor Mark Cowley is Deputy Director (Enabling Platforms and Collaboration) at "
+            "Children's Cancer Institute and Group Leader, Computational Biology, based at the "
+            "Randwick Health & Innovation Precinct. He leads genome informatics and data platforms "
+            "for Australia's Zero Childhood Cancer program, translating multi-omics analytics into "
+            "clinical diagnostics for children with cancer."
+        ),
+        "publications": 120,
+        "active_projects": 5,
+        "institution": "Children's Cancer Institute",
+        "role": "researcher",
+        "identity_facets": ["professional_technical", "researcher"],
+        "primary_lens": "professional_technical",
+        "professional_title": "Computational biologist / bioinformatician",
+        "career_level": "senior",
+        "pubmed_query": "Cowley MJ[Author] AND (Children's Cancer[Affiliation] OR UNSW[Affiliation])",
+        "news": [
+            {
+                "title": "Zero Childhood Cancer — genomics and bioinformatics",
+                "date": "2025-05-01",
+                "summary": (
+                    "Prof. Cowley leads computational biology enabling platforms for ZERO at "
+                    "Children's Cancer Institute in Randwick."
+                ),
+                "url": "https://www.ccia.org.au/about-cci/our-people/mark-cowley",
+            }
+        ],
+        "awards": [
+            {
+                "title": "Good Design Award — ZeroDash precision medicine platform",
+                "year": 2023,
+                "organisation": "Good Design Australia",
+            }
+        ],
+    },
+]
+
+# Real policy / health-systems people (HIA, equity, workplace MH policy translation)
+# sourced from UNSW / Black Dog / LHD partnership public profiles.
+POLICY_REAL = [
+    {
+        "name": "A/Prof. Fiona Haigh",
+        "email": "f.haigh@unsw.edu.au",
+        "title": "Associate Professor; Health Equity Academic Advisor",
+        "specialty_area": "Health Systems",
+        "expertise_tags": [
+            "Health impact assessment",
+            "Health equity",
+            "Health policy",
+            "Social determinants of health",
+            "Human rights and health",
+            "Climate and health",
+        ],
+        "skills": [
+            "Health Impact Assessment (HIA)",
+            "Equity-focused policy appraisal",
+            "Stakeholder co-governance",
+            "Health systems evaluation",
+            "Policy translation",
+            "Capacity building",
+        ],
+        "bio": (
+            "Associate Professor at the International Centre for Future Health Systems, UNSW Sydney, "
+            "and Health Equity Academic Advisor to Sydney Local Health District. Internationally "
+            "recognised for Health Impact Assessment and embedding health equity into policy, "
+            "planning and governance — including equity frameworks for Local Health Districts and "
+            "NSW Health, and prior HIA capacity building with SESLHD."
+        ),
+        "publications": 60,
+        "active_projects": 4,
+        "institution": "UNSW Sydney",
+        "role": "researcher",
+        "identity_facets": ["policy", "researcher"],
+        "primary_lens": "policy",
+        "professional_title": "Health equity / policy advisor",
+        "career_level": "senior",
+        "pubmed_query": "Haigh F[Author] AND UNSW[Affiliation]",
+        "news": [
+            {
+                "title": "Equity-focused HIA informing LHD and NSW Health policy",
+                "date": "2025-04-01",
+                "summary": (
+                    "A/Prof. Haigh develops equity frameworks and HIA tools used across Local "
+                    "Health Districts, with statewide NSW Health implementation planned."
+                ),
+                "url": "https://research.unsw.edu.au/people/associate-professor-fiona-anne-haigh",
+            }
+        ],
+    },
+    {
+        "name": "Dr. Mark Deady",
+        "email": "m.deady@unsw.edu.au",
+        "title": "Senior Research Fellow; Workplace Mental Health Research Lead",
+        "specialty_area": "Mental Health & Neuroscience",
+        "expertise_tags": [
+            "Workplace mental health",
+            "Mental health policy",
+            "Prevention and early intervention",
+            "Digital mental health",
+            "Substance use",
+            "Knowledge translation",
+        ],
+        "skills": [
+            "Policy translation",
+            "Workplace mental health frameworks",
+            "Digital intervention design",
+            "Implementation research",
+            "Clinical trial evaluation",
+            "Stakeholder engagement",
+        ],
+        "bio": (
+            "Senior Research Fellow at the Black Dog Institute (Randwick) and research lead for "
+            "the Workplace Mental Health Research Program. Translates evidence on prevention and "
+            "early intervention into guidance for employers and policymakers, including mentally "
+            "healthy workplace frameworks used across high-risk workforces."
+        ),
+        "publications": 80,
+        "active_projects": 3,
+        "institution": "Black Dog Institute",
+        "role": "researcher",
+        "identity_facets": ["policy", "researcher"],
+        "primary_lens": "policy",
+        "professional_title": "Mental health policy / workplace MH lead",
+        "career_level": "mid",
+        "pubmed_query": "Deady M[Author] AND (Black Dog[Affiliation] OR UNSW[Affiliation])",
+        "news": [
+            {
+                "title": "Mentally healthy workplace framework for employers and policymakers",
+                "date": "2024-07-01",
+                "summary": (
+                    "Dr Deady co-authored a mentally healthy framework to guide employers and "
+                    "policy makers, linking Black Dog research to workplace and system policy."
+                ),
+                "url": "https://research.unsw.edu.au/people/dr-mark-deady",
+            }
+        ],
     },
 ]
 
 
 def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: list[dict]) -> None:
     cache_path = os.path.join(DATA_DIR, "pubmed_cache.json")
-    cache = load_cache(cache_path)
+    cache = load_pubmed_cache(cache_path)
     mode = _resolve_pubmed_mode()
     max_results = int(os.getenv("PUBMED_MAX_RESULTS", "8"))
     stats = {"cache": 0, "live": 0, "none": 0, "papers": 0}
@@ -682,11 +498,128 @@ def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: li
         if publications:
             profile.publications = max(profile.publications, len(publications))
 
-    save_cache(cache_path, cache)
+    save_pubmed_cache(cache_path, cache)
     print(
         f"  PubMed: {stats['papers']} papers "
         f"({stats['cache']} from cache, {stats['live']} live, {stats['none']} missing)"
     )
+
+
+def _seed_grant_projects(db, users_by_email: dict[str, User]) -> int:
+    """Create investable projects from curated ARC/MRFF grant IDs."""
+    manifest_path = os.path.join(DATA_DIR, "grants_manifest.json")
+    if not os.path.isfile(manifest_path):
+        print("  Grants: no grants_manifest.json — skipping")
+        return 0
+
+    with open(manifest_path) as handle:
+        manifest = json.load(handle)
+
+    arc_path = os.path.join(DATA_DIR, "arc_grants_cache.json")
+    mrff_path = os.path.join(DATA_DIR, "mrff_grants_cache.json")
+    arc_cache = load_cache(arc_path)
+    mrff_cache = load_cache(mrff_path)
+    mode = resolve_grant_mode()
+    stats = {"cache": 0, "live": 0, "none": 0, "seeded": 0}
+
+    for entry in manifest:
+        enriched, source = enrich_manifest_entry(
+            entry,
+            arc_cache=arc_cache,
+            mrff_cache=mrff_cache,
+            mode=mode,
+        )
+        stats[source] = stats.get(source, 0) + 1
+        if not enriched:
+            print(f"    ! grant {entry.get('grant_id')} missing ({source})")
+            continue
+
+        lead = users_by_email.get(enriched["lead_email"])
+        if not lead or not lead.profile:
+            print(f"    ! no lead user for {enriched.get('grant_id')} ({enriched['lead_email']})")
+            continue
+
+        funder = ProjectFunder(enriched["funder"])
+        trl = int(enriched.get("trl") or 5)
+        stage = int(enriched.get("stage") or max(4, min(trl, 10)))
+        amount = float(enriched.get("announced_funding_amount") or 0)
+        # Competitive grants are fully awarded; show modest additional raise room for EOIs.
+        funding_goal = amount * 1.15 if amount else 1_000_000
+        funding_raised = amount if amount else funding_goal * 0.45
+        year = enriched.get("funding_year")
+        started = date(int(year), 1, 1) if year else date(2021, 1, 1)
+
+        scheme = enriched.get("scheme_name") or funder.value.upper()
+        breakdown = [
+            {
+                "label": f"{scheme} award",
+                "amount": round(funding_raised * 0.85),
+                "description": f"Competitive {funder.value.upper()} funding ({enriched['grant_id']})",
+            },
+            {
+                "label": "Partner / co-investment",
+                "amount": round(funding_raised * 0.15),
+                "description": "Institutional and partner contributions",
+            },
+        ]
+
+        db.add(Project(
+            title=enriched["title"],
+            description=enriched["description"],
+            stage=stage,
+            specialty_area=enriched.get("specialty_area") or "Health Systems",
+            readiness=Readiness(readiness_from_trl(trl)),
+            trl=trl,
+            visibility=Visibility(enriched.get("visibility") or "public"),
+            lead_researcher_id=lead.id,
+            clinical_partner_id=None,
+            funding_goal=funding_goal,
+            funding_raised=funding_raised,
+            started_at=started,
+            funding_breakdown=breakdown,
+            impact_metrics=enriched.get("impact"),
+            funder=funder,
+            grant_id=enriched["grant_id"],
+            grant_url=enriched.get("grant_url"),
+        ))
+        stats["seeded"] += 1
+        print(f"    + {funder.value.upper()} {enriched['grant_id']} → {enriched['title'][:70]}")
+
+    save_cache(arc_path, arc_cache)
+    print(
+        f"  Grants: {stats['seeded']} projects "
+        f"(arc/mrff sources: {stats['cache']} cache, {stats['live']} live, {stats['none']} missing)"
+    )
+    return stats["seeded"]
+
+
+def sync_event_cpd_metadata() -> int:
+    """Patch CPD fields on existing events from mock_events.json (by qr_code)."""
+    events_data = _load_json("mock_events.json")
+    db = SessionLocal()
+    updated = 0
+    try:
+        for ev in events_data:
+            event = db.query(Event).filter(Event.qr_code == ev["qr_code"]).first()
+            if not event:
+                continue
+            # Only backfill defaults — do not overwrite admin-configured CPD metadata.
+            if event.cpd_eligible or event.cpd_hours is not None or event.cpd_category is not None:
+                continue
+            if not ev.get("cpd_eligible"):
+                continue
+            cpd_category = ev.get("cpd_category")
+            event.cpd_eligible = True
+            event.cpd_hours = (
+                float(ev["cpd_hours"]) if ev.get("cpd_hours") is not None else None
+            )
+            event.cpd_category = CpdCategory(cpd_category) if cpd_category else None
+            event.cpd_notes = ev.get("cpd_notes")
+            updated += 1
+        db.commit()
+    finally:
+        db.close()
+    return updated
 
 
 def seed():
@@ -762,50 +695,51 @@ def seed():
             )
             db.add(user)
             db.flush()
-            if du["role"] in (Role.CLINICIAN, Role.RESEARCHER, Role.ADMIN):
-                extras = build_profile_extras(du)
-                if du["role"] == Role.ADMIN:
-                    facets = []
-                else:
-                    facets = derive_facets_from_seed({
-                        **du,
-                        "role": "clinician" if du["role"] == Role.CLINICIAN else "researcher",
-                    })
-                    if du["role"] == Role.CLINICIAN and "researcher" not in facets:
-                        # Demo clinician also engages in research trials
-                        facets = ["clinician", "researcher"]
-                db.add(Profile(
-                    user_id=user.id,
-                    name=du["name"],
-                    title=du["title"],
-                    specialty_area=du.get("specialty_area") or "",
-                    expertise_tags=du.get("expertise_tags") or [],
-                    bio=du.get("bio") or "",
-                    publications=du.get("publications", 0),
-                    active_projects=du.get("active_projects", 0),
-                    patents=extras["patents"],
-                    news=extras["news"],
-                    awards=extras["awards"],
-                    is_public=True,
-                    identity_facets=facets,
-                    primary_lens=facets[0] if facets else None,
-                    career_level=(
-                        "senior" if du["role"] == Role.CLINICIAN
-                        else ("mid" if du["role"] != Role.ADMIN else None)
-                    ),
-                ))
+            extras = build_profile_extras(du)
+            if du["role"] == Role.ADMIN:
+                facets = []
+            elif du["role"] in (Role.CLINICIAN, Role.RESEARCHER):
+                facets = derive_facets_from_seed({
+                    **du,
+                    "role": "clinician" if du["role"] == Role.CLINICIAN else "researcher",
+                })
+                if du["role"] == Role.CLINICIAN and "researcher" not in facets:
+                    # Demo clinician also engages in research trials
+                    facets = ["clinician", "researcher"]
+            else:
+                # Industry / investor — account profile for My Profile, not directory discovery
+                facets = []
+            is_public = du["role"] in (Role.CLINICIAN, Role.RESEARCHER, Role.ADMIN)
+            db.add(Profile(
+                user_id=user.id,
+                name=du["name"],
+                title=du["title"],
+                specialty_area=du.get("specialty_area") or (
+                    "Investment" if du["role"] == Role.INVESTOR else "Health Systems"
+                ),
+                expertise_tags=du.get("expertise_tags") or [],
+                bio=du.get("bio") or "",
+                publications=du.get("publications", 0),
+                active_projects=du.get("active_projects", 0),
+                patents=extras["patents"],
+                news=extras["news"],
+                awards=extras["awards"],
+                is_public=is_public,
+                identity_facets=facets,
+                primary_lens=facets[0] if facets else None,
+                career_level=(
+                    "senior" if du["role"] == Role.CLINICIAN
+                    else ("mid" if du["role"] == Role.RESEARCHER else None)
+                ),
+            ))
 
+        # Directory = real RHIP researchers + professional/technical + policy + student login.
         researchers_data = _load_json("researchers_manifest.json")
-        clinicians_data = [
-            p for p in _load_json("mock_profiles.json")
-            if p.get("role") == "clinician"
-        ]
         profiles_data = (
             researchers_data
-            + clinicians_data
-            + PROFESSIONAL_TECHNICAL_DEMOS
-            + POLICY_DEMOS
-            + POSTGRADUATE_STUDENT_DEMOS
+            + PROFESSIONAL_TECHNICAL_REAL
+            + POLICY_REAL
+            + REAL_STUDENT_PROFILES
         )
         profiles_by_email: dict[str, Profile] = {}
 
@@ -813,48 +747,17 @@ def seed():
             profile = _add_profile(db, institutions, p)
             profiles_by_email[p["email"]] = profile
 
-        _enrich_publications(db, profiles_by_email, researchers_data)
+        _enrich_publications(
+            db,
+            profiles_by_email,
+            researchers_data + PROFESSIONAL_TECHNICAL_REAL + POLICY_REAL,
+        )
 
         admin = db.query(User).filter(User.email == "admin@rhip.edu.au").first()
         users_by_email = {u.email: u for u in db.query(User).all()}
-        projects_data = _load_json("mock_projects.json")
-        researchers = db.query(User).filter(User.role == Role.RESEARCHER).all()
-        clinicians = db.query(User).filter(User.role == Role.CLINICIAN).all()
-        for i, proj in enumerate(projects_data):
-            lead = users_by_email.get(proj.get("lead_email"))
-            if not lead or lead.role != Role.RESEARCHER:
-                lead = researchers[i % len(researchers)]
 
-            partner = users_by_email.get(proj.get("clinical_partner_email"))
-            if partner and partner.role != Role.CLINICIAN:
-                partner = None
-            if partner is None and clinicians:
-                # Prefer same specialty, then intentionally rotate for cross-links.
-                same_specialty = [
-                    c for c in clinicians
-                    if c.specialty_area == proj["specialty_area"]
-                ]
-                pool = same_specialty or clinicians
-                partner = pool[(i * 3) % len(pool)]
-
-            goal, raised, started, breakdown = _project_funding(proj["stage"], i)
-            trl = _resolve_trl(proj)
-            db.add(Project(
-                title=proj["title"],
-                description=proj["description"],
-                stage=proj["stage"],
-                specialty_area=proj["specialty_area"],
-                readiness=Readiness(readiness_from_trl(trl)),
-                trl=trl,
-                visibility=Visibility(proj["visibility"]),
-                lead_researcher_id=lead.id,
-                clinical_partner_id=partner.id if partner else None,
-                funding_goal=goal,
-                funding_raised=raised,
-                started_at=started,
-                funding_breakdown=breakdown,
-                impact_metrics=proj.get("impact"),
-            ))
+        # Investable pipeline = real ARC/MRFF grants only (no mock_projects.json)
+        grant_count = _seed_grant_projects(db, users_by_email)
 
         # Active collaboration threads (real edges on the knowledge map)
         for initiator_email, receiver_email in CROSS_DISCIPLINARY_THREADS:
@@ -915,6 +818,8 @@ def seed():
         events_data = _load_json("mock_events.json")
         for ev in events_data:
             event_date = date.fromisoformat(ev["date"])
+            cpd_eligible = bool(ev.get("cpd_eligible"))
+            cpd_category = ev.get("cpd_category")
             db.add(Event(
                 name=ev["name"],
                 date=event_date,
@@ -922,9 +827,13 @@ def seed():
                 qr_code=ev["qr_code"],
                 type=EventType(ev["type"]),
                 created_by=admin.id,
+                cpd_eligible=cpd_eligible,
+                cpd_hours=float(ev["cpd_hours"]) if cpd_eligible and ev.get("cpd_hours") is not None else None,
+                cpd_category=CpdCategory(cpd_category) if cpd_eligible and cpd_category else None,
+                cpd_notes=ev.get("cpd_notes") if cpd_eligible else None,
             ))
 
-        project_count = len(projects_data)
+        project_count = grant_count
         kpis = [
             ("active_innovation_projects", "Active Innovation Projects", project_count, f"{project_count}+", KPICategory.COMMERCIAL, ["investor", "all"], None),
             ("hth_occupancy", "HTH Occupancy Rate", 68, "68%", KPICategory.FACILITY, ["investor", "all"], "%"),
@@ -1055,24 +964,6 @@ def seed():
             ))
 
         db.commit()
-        print("Database seeded successfully!")
-        print("Demo accounts:")
-        print("clinician@rhip.edu.au / DemoPass1!")
-        print("admin@rhip.edu.au / AdminPass1!")
-        print("james@medtechcorp.com.au / Industry1!")
-        print("sarah@pacificvc.com.au / Investor1!")
-        print("z5580775@ad.unsw.edu.au / DemoPass1!  (PhD student — Gichia Muiruri)")
-        partnered = sum(1 for p in projects_data if p.get("clinical_partner_email"))
-        print(f"  {len(researchers_data)} real RHIP researchers seeded (PubMed enriched)")
-        print(f"  {len(clinicians_data)} clinician profiles seeded")
-        print(f"  {len(PROFESSIONAL_TECHNICAL_DEMOS)} professional/technical profiles seeded")
-        print(f"  {len(POLICY_DEMOS)} policy profiles seeded")
-        print(f"  {len(POSTGRADUATE_STUDENT_DEMOS)} postgraduate student profiles seeded")
-        print(f"  {len(projects_data)} projects seeded ({partnered} with clinical partners)")
-        print(f"  {len(CROSS_DISCIPLINARY_THREADS)} cross-disciplinary collaboration threads")
-        print(f"  {len(CROSS_DISCIPLINARY_CHALLENGES)} cross-disciplinary challenges with AI matches")
-        print(f"  {len(_load_json('mock_services.json'))} clinical services seeded")
-        print(f"  {len(_load_json('mock_specialists.json'))} community specialists seeded")
     finally:
         db.close()
 

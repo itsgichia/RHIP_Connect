@@ -27,7 +27,7 @@ flowchart LR
   Manifest --> PubMed --> Pubs --> KMap
 ```
 
-1. Seed loads [`data/researchers_manifest.json`](../data/researchers_manifest.json).
+1. Seed loads [`data/researchers_manifest.json`](../data/researchers_manifest.json) — **real RHIP researchers only** (no `mock_profiles.json` filler).
 2. [`Backend/app/services/pubmed_service.py`](../Backend/app/services/pubmed_service.py) fetches (or loads from [`data/pubmed_cache.json`](../data/pubmed_cache.json)) paper metadata.
 3. [`Backend/app/seed.py`](../Backend/app/seed.py) stores `Publication` rows and updates profile publication counts.
 4. [`Backend/app/services/map_service.py`](../Backend/app/services/map_service.py) builds **coauthor** edges when two seeded profiles share a PMID.
@@ -49,3 +49,33 @@ OpenAlex + ORCID (see the `diva` branch) is useful for:
 - A **world** collaboration map (co-author countries/institutions)
 
 If that map becomes a priority later, treat OpenAlex as an **extra** feature keyed by `orcid_id` — keep PubMed for paper lists and the internal Knowledge Map. Do not run two competing “where do papers come from?” pipelines.
+
+## ARC / MRFF competitive grants (Investor Portal)
+
+**Decision:** Curated grant IDs linked to seeded researchers; enrich at seed time on the backend. The React client never calls ARC or Health APIs directly.
+
+| Funder | Machine access | How RHIP uses it |
+|--------|----------------|------------------|
+| **ARC** | Public NCGP API (no key): `https://dataportal.arc.gov.au/NCGP/API/grants` | [`grant_service.py`](../Backend/app/services/grant_service.py) fetches by grant code; cache in [`data/arc_grants_cache.json`](../data/arc_grants_cache.json) |
+| **MRFF** | No public grants API; Health publishes [Excel recipients](https://www.health.gov.au/resources/publications/medical-research-future-fund-mrff-grant-recipients) | Curated rows in [`data/mrff_grants_cache.json`](../data/mrff_grants_cache.json); each `grant_url` must be a GrantConnect award page (`/Ga/Show/<uuid>`) that shows the matching `MRF…` internal reference — never search (`/Ga/List?Keyword=…`) or news placeholders |
+
+```mermaid
+flowchart LR
+  Manifest[grants_manifest.json]
+  ArcAPI[ARC NCGP API]
+  MrffCache[mrff_grants_cache.json]
+  GrantSvc[grant_service]
+  Projects[(Project rows)]
+  Investor[Investor Pipeline]
+  Manifest --> GrantSvc
+  ArcAPI --> GrantSvc
+  MrffCache --> GrantSvc
+  GrantSvc --> Projects --> Investor
+```
+
+1. [`data/grants_manifest.json`](../data/grants_manifest.json) lists grant IDs, funder (`arc` / `mrff`), lead researcher email, and investor overlay (TRL, specialty, impact).
+2. Seed calls `enrich_manifest_entry` → creates `Project` rows with `funder`, `grant_id`, `grant_url`.
+3. Investor overview/pipeline expose those fields (badges, funder filter, competitive-grants callout).
+4. **There is no `mock_projects.json` pipeline** — investable projects are grant-backed only.
+
+Modes: `GRANT_MODE=auto` (default) | `cache` | `live` — same idea as PubMed. Prefer cache for demos.

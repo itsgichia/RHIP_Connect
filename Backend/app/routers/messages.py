@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -35,6 +36,7 @@ from app.schemas import (
     ThreadRespondResponse,
 )
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/threads", tags=["messages"])
 
 
@@ -474,6 +476,8 @@ async def send_message(
     if other_part:
         recipient = db.query(User).filter(User.id == other_part.user_id).first()
         if recipient:
+            # Demo remap recipient: always attempt email (throttle hides demo failures).
+            demo_force = email_service.is_demo_remap_recipient(recipient.email)
             recent = (
                 db.query(Message)
                 .filter(
@@ -484,12 +488,17 @@ async def send_message(
                 .order_by(Message.read_at.desc())
                 .first()
             )
-            should_email = (
+            should_email = demo_force or (
                 not recent
                 or recent.read_at < datetime.utcnow() - timedelta(minutes=30)
             )
             if should_email:
                 await email_service.send_new_message_email(recipient, current_user, thread_id)
+            else:
+                logger.info(
+                    "Skipping message email to %s — recipient active in thread within 30 minutes",
+                    recipient.email,
+                )
 
     return ChatMessageResponse(
         id=message.id,

@@ -10,16 +10,17 @@ export const TRL_LABELS = {
   9: 'Actual system proven in operational environment',
 }
 
+/** RAG badge colours: red = early, amber = middle, green = TRL 7+. */
 export const TRL_COLORS = {
-  1: 'bg-gray-100 text-gray-600',
-  2: 'bg-gray-100 text-gray-700',
-  3: 'bg-slate-100 text-slate-700',
-  4: 'bg-rhip-lightTeal text-rhip-teal',
-  5: 'bg-rhip-lightTeal text-rhip-navy',
-  6: 'bg-rhip-seafoam/15 text-rhip-seafoam',
-  7: 'bg-rhip-teal/10 text-rhip-teal',
-  8: 'bg-rhip-coral/10 text-rhip-coral',
-  9: 'bg-rhip-dark text-white',
+  1: 'bg-red-50 text-red-700',
+  2: 'bg-red-50 text-red-700',
+  3: 'bg-red-50 text-red-700',
+  4: 'bg-amber-50 text-amber-800',
+  5: 'bg-amber-50 text-amber-800',
+  6: 'bg-amber-50 text-amber-800',
+  7: 'bg-emerald-50 text-emerald-800',
+  8: 'bg-emerald-50 text-emerald-800',
+  9: 'bg-emerald-50 text-emerald-800',
 }
 
 /** Investor-facing maturity bands — plain language first, TRL as secondary detail. */

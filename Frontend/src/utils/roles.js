@@ -91,6 +91,15 @@ export function isInvestor(role) {
   return role === ROLES.INVESTOR
 }
 
+export function isIndustry(role) {
+  return role === ROLES.INDUSTRY
+}
+
+/** Investors and industry partners use an account-style profile, not the research directory layout. */
+export function isCommercialPartner(role) {
+  return role === ROLES.INVESTOR || role === ROLES.INDUSTRY
+}
+
 /** Innovation Pipeline is for commercial / investment audiences (+ admin). */
 export function canViewPipeline(role) {
   return [ROLES.ADMIN, ROLES.INDUSTRY, ROLES.INVESTOR].includes(role)
@@ -98,6 +107,11 @@ export function canViewPipeline(role) {
 
 export function canInitiateChat(role) {
   return [ROLES.ADMIN, ROLES.CLINICIAN, ROLES.RESEARCHER].includes(role)
+}
+
+/** Clinicians (and admins) see CPD transcript / MyCPD export on Passport. */
+export function canViewCpd(role) {
+  return [ROLES.ADMIN, ROLES.CLINICIAN].includes(role)
 }
 
 export function getNavLinks(role) {

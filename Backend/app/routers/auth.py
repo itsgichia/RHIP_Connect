@@ -201,17 +201,16 @@ async def signup(body: SignupRequest, db: Session = Depends(get_db)):
     db.add(user)
     db.flush()
 
-    if role not in (Role.INDUSTRY, Role.INVESTOR) and facets:
-        _create_member_profile(
-            db,
-            user,
-            facets=facets,
-            primary_lens=primary,
-            career_level=career,
-            professional_title=professional_title,
-            specialty_area=body.specialty_area,
-            is_public=False,
-        )
+    _create_member_profile(
+        db,
+        user,
+        facets=facets or [],
+        primary_lens=primary,
+        career_level=career,
+        professional_title=professional_title,
+        specialty_area=body.specialty_area,
+        is_public=False,
+    )
 
     token = generate_token()
     email_token = EmailToken(
@@ -308,17 +307,16 @@ def institutional_login(body: InstitutionalLoginRequest, db: Session = Depends(g
     db.add(user)
     db.flush()
 
-    if role not in (Role.INDUSTRY, Role.INVESTOR) and facets:
-        _create_member_profile(
-            db,
-            user,
-            facets=facets,
-            primary_lens=primary,
-            career_level=career,
-            professional_title=professional_title,
-            specialty_area=body.specialty_area,
-            is_public=False,
-        )
+    _create_member_profile(
+        db,
+        user,
+        facets=facets or [],
+        primary_lens=primary,
+        career_level=career,
+        professional_title=professional_title,
+        specialty_area=body.specialty_area,
+        is_public=False,
+    )
 
     db.commit()
     return _token_response(user, db)
@@ -421,17 +419,16 @@ async def firebase_signup(body: FirebaseSignupRequest, db: Session = Depends(get
     db.add(user)
     db.flush()
 
-    if role not in (Role.INDUSTRY, Role.INVESTOR) and facets:
-        _create_member_profile(
-            db,
-            user,
-            facets=facets,
-            primary_lens=primary,
-            career_level=career,
-            professional_title=professional_title,
-            specialty_area=body.specialty_area,
-            is_public=False,
-        )
+    _create_member_profile(
+        db,
+        user,
+        facets=facets or [],
+        primary_lens=primary,
+        career_level=career,
+        professional_title=professional_title,
+        specialty_area=body.specialty_area,
+        is_public=False,
+    )
 
     db.commit()
     return MessageResponse(

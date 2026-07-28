@@ -62,7 +62,7 @@ export default function ChatThread({
     setSending(true)
     try {
       const { data } = await api.post(`/threads/${threadId}/messages`, { content: content.trim() })
-      setMessages((prev) => [...prev, data])
+      setMessages((prev) => (prev.some((m) => m.id === data.id) ? prev : [...prev, data]))
       setContent('')
       refreshNotifications()
     } catch (err) {

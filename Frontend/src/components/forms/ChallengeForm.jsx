@@ -15,7 +15,7 @@ const CHALLENGE_KINDS = [
   {
     value: 'capability',
     label: 'Capability / role',
-    hint: 'Looking for a person with a skill (e.g. biostatistician, data visualisation)',
+    hint: 'Looking for a person with a skill ',
   },
   {
     value: 'knowledge',

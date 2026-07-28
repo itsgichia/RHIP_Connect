@@ -19,6 +19,14 @@ def _ensure_sqlite_columns() -> None:
             existing = {col["name"] for col in inspector.get_columns("projects")}
             if "impact_metrics" not in existing:
                 conn.execute(text("ALTER TABLE projects ADD COLUMN impact_metrics JSON"))
+            project_cols = [
+                ("funder", "VARCHAR(32)"),
+                ("grant_id", "VARCHAR(64)"),
+                ("grant_url", "VARCHAR(512)"),
+            ]
+            for name, col_type in project_cols:
+                if name not in existing:
+                    conn.execute(text(f"ALTER TABLE projects ADD COLUMN {name} {col_type}"))
         if "profiles" in tables:
             existing = {col["name"] for col in inspector.get_columns("profiles")}
             profile_cols = [
@@ -43,9 +51,39 @@ def _ensure_sqlite_columns() -> None:
             existing = {col["name"] for col in inspector.get_columns("publications")}
             if "abstract" not in existing:
                 conn.execute(text("ALTER TABLE publications ADD COLUMN abstract TEXT"))
+        if "users" in tables:
+            existing = {col["name"] for col in inspector.get_columns("users")}
+            user_cols = [
+                ("email_matches", "BOOLEAN DEFAULT 1"),
+                ("email_connections", "BOOLEAN DEFAULT 1"),
+                ("email_messages", "BOOLEAN DEFAULT 1"),
+                ("email_passport", "BOOLEAN DEFAULT 1"),
+            ]
+            for name, col_type in user_cols:
+                if name not in existing:
+                    conn.execute(text(f"ALTER TABLE users ADD COLUMN {name} {col_type}"))
+        if "events" in tables:
+            existing = {col["name"] for col in inspector.get_columns("events")}
+            event_cols = [
+                ("cpd_eligible", "BOOLEAN DEFAULT 0"),
+                ("cpd_hours", "FLOAT"),
+                ("cpd_category", "VARCHAR(64)"),
+                ("cpd_notes", "VARCHAR(500)"),
+            ]
+            for name, col_type in event_cols:
+                if name not in existing:
+                    conn.execute(text(f"ALTER TABLE events ADD COLUMN {name} {col_type}"))
 
 
 _ensure_sqlite_columns()
+
+try:
+    from app.seed import sync_event_cpd_metadata
+
+    sync_event_cpd_metadata()
+except Exception:
+    # Non-fatal: CPD metadata sync is best-effort for existing DBs.
+    pass
 
 app = FastAPI(title="RHIP Connect API", version="1.0.0")
 

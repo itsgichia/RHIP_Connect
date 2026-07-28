@@ -100,6 +100,13 @@ def create_event(
 ):
     event_year = body.date.year
     qr_code = _generate_qr_code(body.type, body.date, db)
+    cpd_eligible = bool(body.cpd_eligible)
+    if cpd_eligible and (body.cpd_hours is None or body.cpd_category is None):
+        raise HTTPException(
+            status_code=400,
+            detail="CPD-eligible events require cpd_hours and cpd_category",
+        )
+
     event = Event(
         name=body.name,
         date=body.date,
@@ -107,6 +114,10 @@ def create_event(
         qr_code=qr_code,
         type=body.type,
         created_by=admin.id,
+        cpd_eligible=cpd_eligible,
+        cpd_hours=body.cpd_hours if cpd_eligible else None,
+        cpd_category=body.cpd_category if cpd_eligible else None,
+        cpd_notes=body.cpd_notes if cpd_eligible else None,
     )
     db.add(event)
     db.flush()

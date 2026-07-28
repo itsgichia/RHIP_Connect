@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext'
 import { parseProfileName } from '../utils/profile'
 import RoleBadge from '../components/ui/RoleBadge'
 import ProfileEditForm from '../components/profile/ProfileEditForm'
+import PartnerAccountView from '../components/profile/PartnerAccountView'
 import {
   getObserverRoot,
   PROFILE_SECTIONS,
@@ -16,7 +17,7 @@ import {
   ProfileSummaryBar,
   scrollToSection,
 } from '../components/profile/ProfileLayout'
-import { CAREER_LEVEL_LABELS, canViewPipeline } from '../utils/roles'
+import { CAREER_LEVEL_LABELS, canViewPipeline, isCommercialPartner } from '../utils/roles'
 
 import { trlFullLabel, trlShortLabel } from '../utils/trl'
 
@@ -35,7 +36,6 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [activeSection, setActiveSection] = useState('overview')
-  const [savingVisibility, setSavingVisibility] = useState(false)
   const [suggesting, setSuggesting] = useState(false)
   const [suggestions, setSuggestions] = useState(null)
   const [savingSkills, setSavingSkills] = useState(false)
@@ -64,7 +64,7 @@ export default function ProfilePage() {
   }, [profileId])
 
   useEffect(() => {
-    if (!profile?.id) {
+    if (!profile?.id || (profile.is_own_profile && isCommercialPartner(user?.role))) {
       setOrcidWorks(null)
       setOrcidError(null)
       setOrcidLoading(false)
@@ -98,25 +98,7 @@ export default function ProfilePage() {
     return () => {
       cancelled = true
     }
-  }, [profile?.id, profile?.orcid_id])
-
-  const togglePublic = async () => {
-    if (!profile?.is_own_profile || savingVisibility) return
-    setSavingVisibility(true)
-    try {
-      const { data } = await api.patch('/directory/me', { is_public: !profile.is_public })
-      setProfile(data)
-      toast.success(
-        data.is_public
-          ? 'You are now visible in Directory & Map'
-          : 'Profile hidden from Directory & Map',
-      )
-    } catch (err) {
-      toast.error(err.response?.data?.detail || 'Could not update visibility')
-    } finally {
-      setSavingVisibility(false)
-    }
-  }
+  }, [profile?.id, profile?.orcid_id, profile?.is_own_profile, user?.role])
 
   const handleSuggestKeywords = async () => {
     if (!profile?.is_own_profile || suggesting) return
@@ -188,14 +170,24 @@ export default function ProfilePage() {
     return (
       <div className="max-w-3xl">
         <Link
-          to="/directory"
+          to={isCommercialPartner(user?.role) ? '/dashboard' : '/directory'}
           className="inline-flex items-center gap-2 text-sm text-rhip-teal hover:underline mb-6"
         >
           <ArrowLeftIcon className="w-4 h-4" />
-          Back to directory
+          {isCommercialPartner(user?.role) ? 'Back to dashboard' : 'Back to directory'}
         </Link>
         <p className="text-rhip-muted">{error || 'Profile not found'}</p>
       </div>
+    )
+  }
+
+  if (profile.is_own_profile && isCommercialPartner(user?.role)) {
+    return (
+      <PartnerAccountView
+        profile={profile}
+        user={user}
+        onProfileUpdate={setProfile}
+      />
     )
   }
 
@@ -291,27 +283,6 @@ export default function ProfilePage() {
             </a>
           )}
         </div>
-        {profile.is_own_profile && !editing && (
-          <div className="mb-4 p-4 rounded-xl border border-gray-200 bg-white print:hidden">
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={!!profile.is_public}
-                disabled={savingVisibility}
-                onChange={togglePublic}
-                className="mt-1 rounded border-gray-300 text-rhip-teal focus:ring-rhip-teal"
-              />
-              <span>
-                <span className="block text-sm font-medium text-rhip-dark">
-                  Show me in Directory &amp; Map
-                </span>
-                <span className="block text-xs text-rhip-muted mt-0.5">
-                  Opt in when you are ready — your profile stays private until you choose to appear.
-                </span>
-              </span>
-            </label>
-          </div>
-        )}
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             <span className="px-3 py-1 bg-rhip-dark text-white text-xs rounded-full">
@@ -351,7 +322,10 @@ export default function ProfilePage() {
       {/* Sidebar + content */}
       <div className="grid lg:grid-cols-[220px_1fr] gap-8 items-start">
         <div className="lg:sticky lg:top-6">
-          <ProfileSectionNav activeSection={activeSection} onNavigate={navigateToSection} />
+          <ProfileSectionNav
+            activeSection={activeSection}
+            onNavigate={navigateToSection}
+          />
         </div>
 
         <div className="min-w-0">

@@ -7,22 +7,65 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
+try:
+    import certifi
+
+    _CERT_BUNDLE = certifi.where()
+except ImportError:
+    _CERT_BUNDLE = None
+
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@rhip.edu.au")
 MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
-MAIL_FROM = os.getenv("MAIL_FROM", "noreply@rhipnexus.edu.au")
+MAIL_FROM = os.getenv("MAIL_FROM", "noreply@rhipconnect.edu.au")
 MAIL_FROM_NAME = os.getenv("MAIL_FROM_NAME", "RHIP Connect")
 MAIL_SERVER = os.getenv("MAIL_SERVER", "live.smtp.mailtrap.io")
 MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
 MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "True").lower() == "true"
 MAIL_SSL_TLS = os.getenv("MAIL_SSL_TLS", "False").lower() == "true"
 
+# Mailtrap Email Sandbox (Testing) — preferred for demos when set.
+# From Mailtrap → Email Sandboxes → My Sandbox → Integrations.
+MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN", "").strip()
+MAILTRAP_INBOX_ID = os.getenv("MAILTRAP_INBOX_ID", "").strip()
+MAILTRAP_SANDBOX_API = os.getenv(
+    "MAILTRAP_SANDBOX_API", "https://sandbox.api.mailtrap.io"
+).rstrip("/")
+
+# Demo-only: remap one seeded account's notification emails (login email unchanged).
+DEMO_EMAIL_REMAP_FROM = os.getenv("DEMO_EMAIL_REMAP_FROM", "z5580775@ad.unsw.edu.au").strip().lower()
+DEMO_EMAIL_REMAP_TO = os.getenv("DEMO_EMAIL_REMAP_TO", "").strip()
+# Optional SMTP used only for remapped demo emails; leave blank to use MAIL_* above.
+DEMO_MAIL_USERNAME = os.getenv("DEMO_MAIL_USERNAME", "").strip()
+DEMO_MAIL_PASSWORD = os.getenv("DEMO_MAIL_PASSWORD", "").strip()
+DEMO_MAIL_FROM = os.getenv("DEMO_MAIL_FROM", "").strip() or DEMO_MAIL_USERNAME
+DEMO_MAIL_SERVER = os.getenv("DEMO_MAIL_SERVER", "smtp.office365.com").strip()
+DEMO_MAIL_PORT = int(os.getenv("DEMO_MAIL_PORT", "587"))
+DEMO_MAIL_STARTTLS = os.getenv("DEMO_MAIL_STARTTLS", "True").lower() == "true"
+DEMO_MAIL_SSL_TLS = os.getenv("DEMO_MAIL_SSL_TLS", "False").lower() == "true"
+
 _fastmail = None
+_demo_fastmail = None
+
+
+def _mailtrap_sandbox_configured() -> bool:
+    return bool(MAILTRAP_API_TOKEN and MAILTRAP_INBOX_ID)
 
 
 def _mail_configured() -> bool:
     return bool(MAIL_USERNAME and MAIL_PASSWORD and MAIL_USERNAME != "your-mailtrap-username")
+
+
+def _demo_mail_configured() -> bool:
+    return bool(DEMO_MAIL_USERNAME and DEMO_MAIL_PASSWORD)
+
+
+def _connection_extras() -> dict:
+    """macOS Python often lacks system CA certs — pin certifi bundle when available."""
+    if _CERT_BUNDLE:
+        return {"VALIDATE_CERTS": True, "CERT_BUNDLE": _CERT_BUNDLE}
+    return {}
 
 
 def _get_fastmail():
@@ -40,15 +83,90 @@ def _get_fastmail():
             MAIL_STARTTLS=MAIL_STARTTLS,
             MAIL_SSL_TLS=MAIL_SSL_TLS,
             USE_CREDENTIALS=True,
+            **_connection_extras(),
         )
         _fastmail = FastMail(conf)
     return _fastmail
 
 
+def _get_demo_fastmail():
+    global _demo_fastmail
+    if _demo_fastmail is None:
+        from fastapi_mail import ConnectionConfig, FastMail
+
+        conf = ConnectionConfig(
+            MAIL_USERNAME=DEMO_MAIL_USERNAME,
+            MAIL_PASSWORD=DEMO_MAIL_PASSWORD,
+            MAIL_FROM=DEMO_MAIL_FROM or DEMO_MAIL_USERNAME,
+            MAIL_FROM_NAME=MAIL_FROM_NAME,
+            MAIL_SERVER=DEMO_MAIL_SERVER,
+            MAIL_PORT=DEMO_MAIL_PORT,
+            MAIL_STARTTLS=DEMO_MAIL_STARTTLS,
+            MAIL_SSL_TLS=DEMO_MAIL_SSL_TLS,
+            USE_CREDENTIALS=True,
+            **_connection_extras(),
+        )
+        _demo_fastmail = FastMail(conf)
+    return _demo_fastmail
+
+
+def _apply_demo_remap(to: str) -> tuple[str, bool]:
+    """If To matches the demo seed email, rewrite to DEMO_EMAIL_REMAP_TO."""
+    if DEMO_EMAIL_REMAP_TO and to.strip().lower() == DEMO_EMAIL_REMAP_FROM:
+        return DEMO_EMAIL_REMAP_TO, True
+    return to, False
+
+
+def is_demo_remap_recipient(email: str) -> bool:
+    """True when this address uses the demo Outlook remap path."""
+    return bool(DEMO_EMAIL_REMAP_TO and (email or "").strip().lower() == DEMO_EMAIL_REMAP_FROM)
+
+
+async def _send_via_mailtrap_sandbox(to: str, subject: str, body: str) -> None:
+    """Send into Mailtrap Email Testing sandbox (appears in My Sandbox inbox)."""
+    import httpx
+
+    url = f"{MAILTRAP_SANDBOX_API}/api/send/{MAILTRAP_INBOX_ID}"
+    payload = {
+        "from": {"email": MAIL_FROM or "hello@example.com", "name": MAIL_FROM_NAME},
+        "to": [{"email": to}],
+        "subject": subject,
+        "html": body,
+    }
+    headers = {
+        "Authorization": f"Bearer {MAILTRAP_API_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(url, json=payload, headers=headers)
+        resp.raise_for_status()
+    logger.info("Email sent to %s via Mailtrap sandbox — %s", to, subject)
+
+
 async def _send_email(to: str, subject: str, body: str) -> None:
-    if not _mail_configured():
+    to, is_demo_remap = _apply_demo_remap(to)
+
+    # Prefer Mailtrap sandbox API when configured (matches Email Testing Integrations UI).
+    if _mailtrap_sandbox_configured():
+        try:
+            await _send_via_mailtrap_sandbox(to, subject, body)
+            return
+        except Exception as e:
+            logger.error("Mailtrap sandbox send failed: %s", e)
+            logger.info("=== EMAIL (fallback after error) ===")
+            logger.info("To: %s | Subject: %s", to, subject)
+            logger.info("Body:\n%s", body)
+            return
+
+    use_demo_smtp = is_demo_remap and _demo_mail_configured()
+
+    if use_demo_smtp:
+        mailer = _get_demo_fastmail()
+    elif _mail_configured():
+        mailer = _get_fastmail()
+    else:
         logger.info("=== EMAIL (console fallback) ===")
-        logger.info("To: %s", to)
+        logger.info("To: %s%s", to, " (demo remap)" if is_demo_remap else "")
         logger.info("Subject: %s", subject)
         logger.info("Body:\n%s", body)
         logger.info("================================")
@@ -63,8 +181,13 @@ async def _send_email(to: str, subject: str, body: str) -> None:
             body=body,
             subtype=MessageType.html,
         )
-        await _get_fastmail().send_message(message)
-        logger.info("Email sent to %s — %s", to, subject)
+        await mailer.send_message(message)
+        logger.info(
+            "Email sent to %s — %s%s",
+            to,
+            subject,
+            " (demo remap + demo SMTP)" if use_demo_smtp else (" (demo remap)" if is_demo_remap else ""),
+        )
     except Exception as e:
         logger.error("Email send failed: %s", e)
         logger.info("=== EMAIL (fallback after error) ===")
@@ -157,6 +280,8 @@ async def send_match_notification_email(
     reasoning: str,
     clinician_name: str,
 ) -> None:
+    if not getattr(researcher, "email_matches", True):
+        return
     body = f"""
     <p>Hi {researcher.name},</p>
     <p>Dr. {clinician_name} posted a clinical challenge: <strong>{challenge.title}</strong>.</p>
@@ -176,6 +301,8 @@ async def send_connection_request_email(
     challenge,
     opening_message: str,
 ) -> None:
+    if not getattr(receiver, "email_connections", True):
+        return
     context_line = (
         f'<p>Re: <strong>{challenge.title}</strong></p>'
         if challenge
@@ -196,6 +323,8 @@ async def send_connection_request_email(
 
 
 async def send_new_message_email(recipient, sender, thread_id: str) -> None:
+    if not getattr(recipient, "email_messages", True):
+        return
     body = f"""
     <p>Hi {recipient.name},</p>
     <p>You have a new message from <strong>{sender.name}</strong> on RHIP Connect.</p>
@@ -209,6 +338,8 @@ async def send_new_message_email(recipient, sender, thread_id: str) -> None:
 
 
 async def send_passport_tier_upgrade_email(user, new_tier: str, events_attended: int) -> None:
+    if not getattr(user, "email_passport", True):
+        return
     tier_label = new_tier.capitalize()
     body = f"""
     <p>Hi {user.name},</p>

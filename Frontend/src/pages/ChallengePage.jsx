@@ -194,8 +194,7 @@ export default function ChallengePage() {
     <div>
       <h1 className="font-display text-2xl font-semibold text-rhip-dark mb-2">Challenge Board</h1>
       <p className="text-rhip-muted mb-6">
-        One board for verified precinct members — clinicians, researchers, PhD students, and
-        related roles. Post a need or opportunity, get AI-matched collaborators, and connect in
+        One board for verified precinct members. Post a need or opportunity, get AI-matched collaborators, and connect in
         Messages. You can also review challenges where your profile was matched.
       </p>
 

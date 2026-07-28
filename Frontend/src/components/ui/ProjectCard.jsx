@@ -5,6 +5,7 @@ import {
   indicativeBandClass,
   indicativeBandLabel,
 } from '../../utils/roi'
+import { funderBadgeClass, funderLabel } from '../../utils/funder'
 
 export default function ProjectCard({
   project,
@@ -14,6 +15,7 @@ export default function ProjectCard({
   showIndicativeRoi = false,
 }) {
   const interactive = Boolean(onClick)
+  const funder = funderLabel(project.funder)
 
   return (
     <button
@@ -25,9 +27,16 @@ export default function ProjectCard({
       }`}
     >
       <div className="flex items-start justify-between mb-3 gap-2">
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${trlBadgeClass(project.trl)}`}>
-          {showStageBand ? trlStageBandLabel(project.trl) : trlShortLabel(project.trl)}
-        </span>
+        <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${trlBadgeClass(project.trl)}`}>
+            {showStageBand ? trlStageBandLabel(project.trl) : trlShortLabel(project.trl)}
+          </span>
+          {funder && (
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${funderBadgeClass(project.funder)}`}>
+              {funder}
+            </span>
+          )}
+        </div>
         {showIndicativeRoi && project.indicative_score != null ? (
           <span
             className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ${indicativeBandClass(
@@ -47,6 +56,9 @@ export default function ProjectCard({
         )}
       </div>
       <h3 className="font-display font-semibold text-rhip-dark mb-2">{project.title}</h3>
+      {project.grant_id && (
+        <p className="text-xs text-rhip-muted mb-2 font-mono">{project.grant_id}</p>
+      )}
       <p className="text-sm text-rhip-muted line-clamp-3 mb-3">{project.description}</p>
       <div className="flex items-center justify-between text-xs text-rhip-muted">
         <span>{project.specialty_area}</span>

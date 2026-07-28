@@ -42,6 +42,9 @@ def _project_to_response(project: Project, db: Session) -> ProjectResponse:
         funding_goal=project.funding_goal or 0,
         funding_raised=project.funding_raised or 0,
         started_at=project.started_at,
+        funder=project.funder,
+        grant_id=project.grant_id,
+        grant_url=project.grant_url,
     )
 
 

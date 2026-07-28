@@ -202,8 +202,9 @@ After seeding, you can log in with pre-loaded demo accounts without creating Fir
 | Clinician | `clinician@rhip.edu.au` | `DemoPass1!` |
 | Industry | `james@medtechcorp.com.au` | `Industry1!` |
 | Investor | `sarah@pacificvc.com.au` | `Investor1!` |
+| PhD student | `z5580775@ad.unsw.edu.au` | `DemoPass1!` |
 
-Mock directory profiles from `data/mock_profiles.json` also use password `DemoPass1!`.
+Directory profiles come from [`data/researchers_manifest.json`](data/researchers_manifest.json) (real RHIP researchers). They also use password `DemoPass1!` when logging in via JWT fallback.
 
 ### Platform notification emails (optional SMTP)
 
@@ -214,6 +215,8 @@ Separate from Firebase auth email, the backend can send **platform notifications
 - Tenant and investor enquiry notifications to `ADMIN_EMAIL`
 
 If SMTP is not configured, these emails are **logged to the backend console** instead — the app still works; you just won't receive real emails for those events. In-app notifications (bell icon) work regardless.
+
+**Demo-only Outlook remap (optional):** set `DEMO_EMAIL_REMAP_TO` to your personal inbox (e.g. Outlook). Only emails addressed to `DEMO_EMAIL_REMAP_FROM` (default `z5580775@ad.unsw.edu.au`) are rewritten — all other accounts keep their normal To address and Mailtrap SMTP. To deliver that remapped mail into a real inbox, also set `DEMO_MAIL_*` (Outlook/Gmail SMTP); leave those blank to keep using `MAIL_*`.
 
 There is also a legacy backend-only auth path (`/auth/signup`, `/auth/forgot-password`) that uses this SMTP layer for verification and reset emails. It is only used when Firebase is **not** configured on the frontend.
 

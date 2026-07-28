@@ -12,8 +12,7 @@ from typing import Any
 from app.models import Project, Readiness
 
 _DATA_DIR = Path(__file__).resolve().parents[2] / "data"
-_STORIES_PATH = _DATA_DIR / "mock_stories.json"
-_PROJECTS_PATH = _DATA_DIR / "mock_projects.json"
+_STORIES_PATH = _DATA_DIR / "success_stories.json"
 
 _READINESS_POINTS = {
     Readiness.EARLY: 5,
@@ -48,19 +47,6 @@ def _story_index() -> dict[str, dict]:
     if not isinstance(stories, list):
         return {}
     return {s["title"].strip().lower(): s for s in stories if s.get("title")}
-
-
-def _project_impact_index() -> dict[str, dict]:
-    projects = _load_json(_PROJECTS_PATH)
-    if not isinstance(projects, list):
-        return {}
-    out: dict[str, dict] = {}
-    for p in projects:
-        title = (p.get("title") or "").strip().lower()
-        impact = p.get("impact")
-        if title and isinstance(impact, dict):
-            out[title] = impact
-    return out
 
 
 def _trl_points(trl: int) -> float:
@@ -107,16 +93,11 @@ def _points_from_impact(impact: dict) -> float:
 
 
 def _resolve_impact(project: Project) -> tuple[float, dict | None]:
-    """Prefer DB metrics, then mock project impact, then success-story match."""
+    """Prefer DB impact_metrics, then success-story title match."""
     title_key = (project.title or "").strip().lower()
 
     if isinstance(project.impact_metrics, dict) and project.impact_metrics:
         impact = _normalize_impact(project.impact_metrics, source="project")
-        return _points_from_impact(impact), impact
-
-    project_impacts = _project_impact_index()
-    if title_key in project_impacts:
-        impact = _normalize_impact(project_impacts[title_key], source="project")
         return _points_from_impact(impact), impact
 
     story = _story_index().get(title_key)

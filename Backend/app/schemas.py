@@ -6,9 +6,11 @@ from pydantic import BaseModel, EmailStr, Field
 from app.models import (
     ChallengeKind,
     ChallengeStatus,
+    CpdCategory,
     EventType,
     KPICategory,
     NotificationType,
+    ProjectFunder,
     Readiness,
     RewardTierLevel,
     Role,
@@ -296,6 +298,9 @@ class ProjectResponse(BaseModel):
     funding_goal: float = 0
     funding_raised: float = 0
     started_at: Optional[date] = None
+    funder: Optional[ProjectFunder] = None
+    grant_id: Optional[str] = None
+    grant_url: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -372,6 +377,22 @@ class NotificationResponse(BaseModel):
 class NotificationListResponse(BaseModel):
     notifications: list[NotificationResponse]
     unread_count: int
+
+
+class NotificationPreferencesResponse(BaseModel):
+    email_matches: bool
+    email_connections: bool
+    email_messages: bool
+    email_passport: bool
+
+    model_config = {"from_attributes": True}
+
+
+class NotificationPreferencesUpdate(BaseModel):
+    email_matches: Optional[bool] = None
+    email_connections: Optional[bool] = None
+    email_messages: Optional[bool] = None
+    email_passport: Optional[bool] = None
 
 
 class OkResponse(BaseModel):
@@ -467,6 +488,10 @@ class PassportEntryResponse(BaseModel):
     event_type: EventType
     event_date: date
     scanned_at: datetime
+    cpd_eligible: bool = False
+    cpd_hours: Optional[float] = None
+    cpd_category: Optional[CpdCategory] = None
+    cpd_notes: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -480,6 +505,9 @@ class PassportScanResponse(BaseModel):
     next_tier_at: Optional[int] = None
     tier_upgraded: bool
     already_scanned: bool = False
+    cpd_eligible: bool = False
+    cpd_hours: Optional[float] = None
+    cpd_category: Optional[CpdCategory] = None
 
 
 class PassportMyResponse(BaseModel):
@@ -490,6 +518,8 @@ class PassportMyResponse(BaseModel):
     next_reward: Optional[str] = None
     past_gold: bool
     year: int
+    cpd_hours_total: float = 0.0
+    cpd_events_count: int = 0
 
 
 class PassportEventResponse(BaseModel):
@@ -499,10 +529,36 @@ class PassportEventResponse(BaseModel):
     type: EventType
     qr_code: str
     attended: bool
+    cpd_eligible: bool = False
+    cpd_hours: Optional[float] = None
+    cpd_category: Optional[CpdCategory] = None
 
 
 class PassportEventsResponse(BaseModel):
     events: list[PassportEventResponse]
+
+
+class CpdTranscriptEntry(BaseModel):
+    event_id: str
+    event_name: str
+    event_type: EventType
+    event_date: date
+    scanned_at: datetime
+    cpd_hours: float
+    cpd_category: CpdCategory
+    cpd_notes: Optional[str] = None
+    verified: bool = True
+
+
+class CpdTranscriptResponse(BaseModel):
+    year: int
+    user_name: str
+    user_email: str
+    total_hours: float
+    events_count: int
+    hours_by_category: dict[str, float]
+    entries: list[CpdTranscriptEntry]
+    disclaimer: str
 
 
 # User
@@ -534,6 +590,10 @@ class EventCreate(BaseModel):
     name: str = Field(min_length=1)
     date: date
     type: EventType
+    cpd_eligible: bool = False
+    cpd_hours: Optional[float] = Field(default=None, ge=0, le=40)
+    cpd_category: Optional[CpdCategory] = None
+    cpd_notes: Optional[str] = Field(default=None, max_length=500)
 
 
 class EventAdminResponse(BaseModel):
@@ -543,6 +603,10 @@ class EventAdminResponse(BaseModel):
     event_year: int
     qr_code: str
     type: EventType
+    cpd_eligible: bool = False
+    cpd_hours: Optional[float] = None
+    cpd_category: Optional[CpdCategory] = None
+    cpd_notes: Optional[str] = None
 
     model_config = {"from_attributes": True}
 

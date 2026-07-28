@@ -81,11 +81,25 @@ class Visibility(str, enum.Enum):
     INTERNAL = "internal"
 
 
+class ProjectFunder(str, enum.Enum):
+    ARC = "arc"
+    MRFF = "mrff"
+    OTHER = "other"
+
+
 class EventType(str, enum.Enum):
     CONFERENCE = "conference"
     WORKSHOP = "workshop"
     SHOWCASE = "showcase"
     NETWORKING = "networking"
+
+
+class CpdCategory(str, enum.Enum):
+    """MBA-aligned CPD activity categories for clinician export / MyCPD logging."""
+
+    EDUCATIONAL_ACTIVITIES = "educational_activities"
+    REVIEWING_PERFORMANCE = "reviewing_performance"
+    MEASURING_OUTCOMES = "measuring_outcomes"
 
 
 class RewardTierLevel(str, enum.Enum):
@@ -138,6 +152,10 @@ class User(Base):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=False)
     past_gold: Mapped[bool] = mapped_column(Boolean, default=False)
+    email_matches: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_connections: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_messages: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_passport: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     institution: Mapped["Institution | None"] = relationship(back_populates="users")
@@ -321,6 +339,9 @@ class Project(Base):
     started_at: Mapped[date | None] = mapped_column(Date, nullable=True)
     funding_breakdown: Mapped[list] = mapped_column(JSON, default=list)
     impact_metrics: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    funder: Mapped[ProjectFunder | None] = mapped_column(Enum(ProjectFunder), nullable=True)
+    grant_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    grant_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
 
     investments: Mapped[list["ProjectInvestment"]] = relationship(back_populates="project")
 
@@ -349,6 +370,11 @@ class Event(Base):
     qr_code: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     type: Mapped[EventType] = mapped_column(Enum(EventType), nullable=False)
     created_by: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
+    # Verified CPD evidence for clinicians (export into MyCPD — not college accreditation)
+    cpd_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
+    cpd_hours: Mapped[float | None] = mapped_column(Float, nullable=True)
+    cpd_category: Mapped[CpdCategory | None] = mapped_column(Enum(CpdCategory), nullable=True)
+    cpd_notes: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
 
 class PassportEntry(Base):

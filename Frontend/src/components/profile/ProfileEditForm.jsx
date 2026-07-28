@@ -39,7 +39,6 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
     expertise_tags: '',
     skills: '',
     orcid_id: '',
-    is_public: true,
   })
   const [saving, setSaving] = useState(false)
 
@@ -59,7 +58,6 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
       expertise_tags: listToText(profile.expertise_tags),
       skills: listToText(profile.skills),
       orcid_id: profile.orcid_id || '',
-      is_public: !!profile.is_public,
     })
   }, [profile])
 
@@ -106,7 +104,6 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
         expertise_tags: textToList(form.expertise_tags),
         skills: textToList(form.skills),
         orcid_id: form.orcid_id.trim() || null,
-        is_public: form.is_public,
       })
       toast.success('Profile updated')
       onSaved?.(data)
@@ -265,23 +262,6 @@ export default function ProfileEditForm({ profile, onSaved, onCancel }) {
           <p className="text-xs text-rhip-muted mt-1">Capabilities, e.g. biostatistics, data visualisation</p>
         </div>
       </div>
-
-      <label className="flex items-start gap-3 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={form.is_public}
-          onChange={(e) => setForm({ ...form, is_public: e.target.checked })}
-          className="mt-1 rounded border-gray-300 text-rhip-teal focus:ring-rhip-teal"
-        />
-        <span>
-          <span className="block text-sm font-medium text-rhip-dark">
-            Show me in Directory &amp; Map
-          </span>
-          <span className="block text-xs text-rhip-muted mt-0.5">
-            Turn off to keep your profile private while you edit.
-          </span>
-        </span>
-      </label>
 
       <div className="flex flex-wrap gap-3 pt-1">
         <button
