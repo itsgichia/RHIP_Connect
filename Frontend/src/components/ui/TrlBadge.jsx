@@ -1,6 +1,7 @@
-// Technology Readiness Level (TRL) badge — color-coded 1-9.
-// TRL labels follow UNSW's investment glossary. Colour bands give investors a
-// quick read: 1-3 early (orange), 4-6 in development (amber), 7-9 ready (green).
+// Technology Readiness Level (TRL) badge.
+// Shows a short label per level (words, not "TRL n"), colour-coded per level
+// on a warm-to-green gradient (1 = red/early ... 9 = green/market-ready).
+// TRL_LABELS (full UNSW definitions) is shown on hover as a tooltip.
 
 const TRL_LABELS = {
   1: 'Basic research',
@@ -14,19 +15,31 @@ const TRL_LABELS = {
   9: 'Proven & ready for commercial deployment',
 }
 
+const TRL_SHORT = {
+  1: 'Basic research',
+  2: 'Applied research',
+  3: 'Proof of concept',
+  4: 'Lab prototype',
+  5: 'Lab validation',
+  6: 'Prototype verified',
+  7: 'Pilot demonstrated',
+  8: 'Commercial design',
+  9: 'Market ready',
+}
+
 function trlColor(level) {
   const colors = {
-    1: 'bg-orange-100 text-orange-700',
-    2: 'bg-orange-100 text-orange-700',
-    3: 'bg-amber-100 text-amber-700',
-    4: 'bg-amber-100 text-amber-700',
-    5: 'bg-yellow-100 text-yellow-700',
-    6: 'bg-lime-100 text-lime-700',
-    7: 'bg-green-100 text-green-700',
-    8: 'bg-green-100 text-green-700',
-    9: 'bg-emerald-100 text-emerald-700',
+    1: 'bg-red-500 text-white',
+    2: 'bg-orange-500 text-white',
+    3: 'bg-amber-500 text-white',
+    4: 'bg-amber-600 text-white',
+    5: 'bg-lime-600 text-white',
+    6: 'bg-green-500 text-white',
+    7: 'bg-green-600 text-white',
+    8: 'bg-emerald-600 text-white',
+    9: 'bg-emerald-700 text-white',
   }
-  return colors[level] || 'bg-gray-100 text-gray-700'
+  return colors[level] || 'bg-gray-400 text-white'
 }
 
 export default function TrlBadge({ trl }) {
@@ -37,7 +50,7 @@ export default function TrlBadge({ trl }) {
       title={`TRL ${level}: ${TRL_LABELS[level]}`}
       className={`px-2 py-1 rounded-full text-xs font-semibold ${trlColor(level)}`}
     >
-      TRL {level}
+      {TRL_SHORT[level]}
     </span>
   )
 }

@@ -137,18 +137,13 @@ function MetricsTab({ kpis }) {
 }
 
 function PipelineTab({ projects, onProjectUpdate }) {
-const [trlBand, setTrlBand] = useState('all')
+const [trlFilter, setTrlFilter] = useState('all')
   const [selectedProjectId, setSelectedProjectId] = useState(null)
 
   const getTrl = (p) => p.trl ?? Math.min(p.stage, 9)
-  const inBand = (p, band) => {
-    const trl = getTrl(p)
-    if (band === 'early') return trl <= 3
-    if (band === 'development') return trl >= 4 && trl <= 6
-    if (band === 'ready') return trl >= 7
-    return true
-  }
-  const filtered = trlBand === 'all' ? projects : projects.filter((p) => inBand(p, trlBand))
+  const filtered = trlFilter === 'all'
+    ? projects
+    : projects.filter((p) => getTrl(p) === trlFilter)
 
   const handleInvested = (projectId, amount) => {
     onProjectUpdate?.(projectId, amount)
@@ -161,37 +156,37 @@ const [trlBand, setTrlBand] = useState('all')
         details and express investment interest.
       </p>
       <div className="flex flex-wrap gap-2 mb-6">
-        {[
-          { key: 'all', label: 'All' },
-          { key: 'early', label: 'Early (TRL 1-3)' },
-          { key: 'development', label: 'Development (TRL 4-6)' },
-          { key: 'ready', label: 'Ready (TRL 7-9)' },
-        ].map((f) => (
+        {['all', 1, 2, 3, 4, 5, 6, 7, 8, 9].map((key) => (
           <button
-            key={f.key}
+            key={key}
             type="button"
-            onClick={() => setTrlBand(f.key)}
+            onClick={() => setTrlFilter(key)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-              trlBand === f.key
+              trlFilter === key
                 ? 'bg-rhip-teal text-white'
                 : 'bg-white text-rhip-body border border-gray-200 hover:border-rhip-teal/40'
             }`}
           >
-            {f.label}
+            {key === 'all' ? 'All' : `TRL ${key}`}
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-4 text-xs text-rhip-muted">
-        <span className="font-medium">TRL readiness:</span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-orange-400" /> Early (1-3)
+      <div className="flex flex-wrap items-center gap-2 mb-4 text-xs text-rhip-muted">
+        <span className="font-medium">TRL:</span>
+        <span className="flex items-center gap-1">
+          {[
+            'bg-red-500', 'bg-orange-500', 'bg-amber-500', 'bg-amber-600', 'bg-lime-600',
+            'bg-green-500', 'bg-green-600', 'bg-emerald-600', 'bg-emerald-700',
+          ].map((c, i) => (
+            <span
+              key={i}
+              className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-semibold text-white ${c}`}
+            >
+              {i + 1}
+            </span>
+          ))}
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400" /> Development (4-6)
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-green-500" /> Ready (7-9)
-        </span>
+        <span className="ml-1">early → ready</span>
       </div>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filtered.map((p) => (

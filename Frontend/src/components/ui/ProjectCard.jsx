@@ -25,15 +25,9 @@ export default function ProjectCard({ project, onClick }) {
         interactive ? 'hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-rhip-teal/40' : ''
       }`}
     >
-      <div className="flex items-start justify-between mb-3">
-  <div className="flex items-center gap-2">
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${READINESS_COLORS[project.readiness] || READINESS_COLORS.early}`}>
-      {project.readiness}
-    </span>
-    <TrlBadge trl={project.trl ?? Math.min(project.stage, 9)} />
-  </div>
-  <span className="text-xs text-rhip-muted">Stage {project.stage}: {STAGE_LABELS[project.stage]}</span>
-</div>
+      <div className="mb-3">
+        <TrlBadge trl={project.trl ?? Math.min(project.stage, 9)} />
+      </div>
       <h3 className="font-display font-semibold text-rhip-dark mb-2">{project.title}</h3>
       <p className="text-sm text-rhip-muted line-clamp-3 mb-3">{project.description}</p>
       <div className="flex items-center justify-between text-xs text-rhip-muted">
