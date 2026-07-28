@@ -137,11 +137,18 @@ function MetricsTab({ kpis }) {
 }
 
 function PipelineTab({ projects, onProjectUpdate }) {
-  const [readiness, setReadiness] = useState('all')
+const [trlBand, setTrlBand] = useState('all')
   const [selectedProjectId, setSelectedProjectId] = useState(null)
-  const filtered = readiness === 'all'
-    ? projects
-    : projects.filter((p) => p.readiness === readiness)
+
+  const getTrl = (p) => p.trl ?? Math.min(p.stage, 9)
+  const inBand = (p, band) => {
+    const trl = getTrl(p)
+    if (band === 'early') return trl <= 3
+    if (band === 'development') return trl >= 4 && trl <= 6
+    if (band === 'ready') return trl >= 7
+    return true
+  }
+  const filtered = trlBand === 'all' ? projects : projects.filter((p) => inBand(p, trlBand))
 
   const handleInvested = (projectId, amount) => {
     onProjectUpdate?.(projectId, amount)
@@ -156,16 +163,16 @@ function PipelineTab({ projects, onProjectUpdate }) {
       <div className="flex flex-wrap gap-2 mb-6">
         {[
           { key: 'all', label: 'All' },
-          { key: 'feasibility', label: 'Feasibility' },
-          { key: 'clinical', label: 'Clinical' },
-          { key: 'commercial', label: 'Commercial' },
+          { key: 'early', label: 'Early (TRL 1-3)' },
+          { key: 'development', label: 'Development (TRL 4-6)' },
+          { key: 'ready', label: 'Ready (TRL 7-9)' },
         ].map((f) => (
           <button
             key={f.key}
             type="button"
-            onClick={() => setReadiness(f.key)}
+            onClick={() => setTrlBand(f.key)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-              readiness === f.key
+              trlBand === f.key
                 ? 'bg-rhip-teal text-white'
                 : 'bg-white text-rhip-body border border-gray-200 hover:border-rhip-teal/40'
             }`}
@@ -173,6 +180,18 @@ function PipelineTab({ projects, onProjectUpdate }) {
             {f.label}
           </button>
         ))}
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-4 text-xs text-rhip-muted">
+        <span className="font-medium">TRL readiness:</span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-orange-400" /> Early (1-3)
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400" /> Development (4-6)
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500" /> Ready (7-9)
+        </span>
       </div>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filtered.map((p) => (
