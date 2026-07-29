@@ -1,0 +1,231 @@
+[
+  {
+    "id": "story-zero-childhood-cancer",
+    "title": "Zero Childhood Cancer (ZERO)",
+    "tagline": "Australia’s national precision-medicine program for children with cancer — led from Randwick",
+    "specialty_area": "Personalised Medicine",
+    "outcome": "clinical",
+    "partners": [
+      "Children’s Cancer Institute",
+      "Kids Cancer Centre, Sydney Children’s Hospital Randwick",
+      "UNSW Sydney",
+      "Sydney Children’s Hospitals Network"
+    ],
+    "sources": [
+      "https://www.ccia.org.au/our-research/impact/zero",
+      "https://www.nature.com/articles/s41591-024-03044-0",
+      "https://www.health.gov.au/ministers/the-hon-greg-hunt-mp/media/67-million-for-personalised-treatments-for-every-child-with-cancer"
+    ],
+    "impact": {
+      "patients_helped": 2500,
+      "time_saved_days": 0,
+      "cost_reduced_aud": 67000000,
+      "trl_start": 3,
+      "trl_end": 9,
+      "evidence_level": "validated",
+      "evidence_note": "Nature Medicine 2024 high-risk cohort; national standard-of-care expansion"
+    },
+    "impact_metrics": [
+      {
+        "label": "Children enrolled",
+        "value": "2,500+",
+        "url": "https://www.ccia.org.au/our-research/impact/zero"
+      },
+      {
+        "label": "2-year PFS vs standard care",
+        "value": "2× higher",
+        "url": "https://www.nature.com/articles/s41591-024-03044-0"
+      },
+      {
+        "label": "Expansion funding (2020)",
+        "value": "$67M",
+        "url": "https://www.health.gov.au/ministers/the-hon-greg-hunt-mp/media/67-million-for-personalised-treatments-for-every-child-with-cancer"
+      }
+    ],
+    "milestones": [
+      {
+        "phase": "challenge",
+        "label": "Clinical challenge",
+        "date": "2015",
+        "detail": "High-risk childhood cancers had limited treatment options and poor survival. Clinicians needed tumour molecular drivers to guide personalised therapy."
+      },
+      {
+        "phase": "match",
+        "label": "Precinct partnership",
+        "date": "2015",
+        "detail": "Children’s Cancer Institute joined with the Kids Cancer Centre at Sydney Children’s Hospital, Randwick, to launch ZERO — later expanded with UNSW and national hospital partners."
+      },
+      {
+        "phase": "pipeline",
+        "label": "National trial",
+        "date": "2017–2020",
+        "detail": "First national precision-medicine trial enrolled children with high-risk cancers across Australia’s children’s hospitals, generating molecular reports for treating oncologists."
+      },
+      {
+        "phase": "clinical",
+        "label": "Clinical validation",
+        "date": "2024-06",
+        "detail": "Nature Medicine study of 384 high-risk patients: 55% who received personalised treatment achieved remission or ≥6-month disease stability; 2-year progression-free survival more than doubled vs standard care (26% vs 12%)."
+      },
+      {
+        "phase": "outcome",
+        "label": "National scale-up",
+        "date": "2023–2025",
+        "detail": "From late 2023 ZERO became available to every Australian child (0–18) with cancer. Further Commonwealth investment ($112.6M announced 2025) extends access toward young adults with paediatric-type cancers (~1,300 people/year)."
+      }
+    ]
+  },
+  {
+    "id": "story-kbim",
+    "title": "Keeping the Body in Mind (KBIM)",
+    "tagline": "Embedding lifestyle care in early psychosis services to prevent antipsychotic-related weight gain",
+    "specialty_area": "Mental Health & Neuroscience",
+    "outcome": "clinical",
+    "partners": [
+      "South Eastern Sydney Local Health District",
+      "Mindgardens Neuroscience Network",
+      "UNSW Sydney",
+      "Black Dog Institute",
+      "Neuroscience Research Australia (NeuRA)"
+    ],
+    "sources": [
+      "https://www.mindgardens.org.au/news-events/article/mindgardens-honoured-with-angelo-cocchi-translational-impact-award/",
+      "https://pubmed.ncbi.nlm.nih.gov/38334187/",
+      "https://pubmed.ncbi.nlm.nih.gov/25721464/"
+    ],
+    "impact": {
+      "patients_helped": 182,
+      "time_saved_days": 84,
+      "cost_reduced_aud": 0,
+      "trl_start": 4,
+      "trl_end": 9,
+      "evidence_level": "validated",
+      "evidence_note": "Pilot + routine-care audit across SESLHD early psychosis services (2015–2019)"
+    },
+    "impact_metrics": [
+      {
+        "label": "Youth in routine-care audit",
+        "value": "182",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/38334187/"
+      },
+      {
+        "label": "Avoided clinically significant weight gain",
+        "value": "81%",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/38334187/"
+      },
+      {
+        "label": "Mean weight gain vs usual care (pilot)",
+        "value": "1.8 vs 7.8 kg",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/25721464/"
+      }
+    ],
+    "milestones": [
+      {
+        "phase": "challenge",
+        "label": "Clinical challenge",
+        "date": "2010s",
+        "detail": "Antipsychotic treatment in first-episode psychosis often triggers rapid cardiometabolic harm — historically ~75–80% of youth experienced clinically significant weight gain within weeks."
+      },
+      {
+        "phase": "match",
+        "label": "Precinct collaboration",
+        "date": "2013",
+        "detail": "SESLHD clinicians and UNSW researchers embedded dietitians, exercise physiologists and life-skills support in early psychosis care — later amplified through the Mindgardens Alliance (UNSW, NeuRA, Black Dog Institute, SESLHD)."
+      },
+      {
+        "phase": "pipeline",
+        "label": "Pilot evidence",
+        "date": "2013–2014",
+        "detail": "12-week KBIM pilot limited mean weight gain to ~1.8 kg vs ~7.8 kg under usual care; clinically significant weight gain fell to 13% vs 75% at the control site."
+      },
+      {
+        "phase": "clinical",
+        "label": "Routine care scale-up",
+        "date": "2015–2019",
+        "detail": "Rolled out across three SESLHD early psychosis services. Audit of 182 participants (134 with follow-up): mean +1.5 kg; 81% avoided clinically significant weight gain — matching pilot results in real-world care."
+      },
+      {
+        "phase": "outcome",
+        "label": "Translational impact",
+        "date": "2020–2024",
+        "detail": "KBIM informed policy and practice nationally and internationally. Mindgardens’ KBIM program received the Angelo Cocchi Translational Impact Award (IEPA, Berlin) for translating research into systemic mental-health reform."
+      }
+    ]
+  },
+  {
+    "id": "story-mcccc",
+    "title": "Minderoo Children’s Comprehensive Cancer Centre",
+    "tagline": "Bench-to-bedside children’s cancer care under one roof at the Randwick campus",
+    "specialty_area": "Personalised Medicine",
+    "outcome": "clinical",
+    "partners": [
+      "Sydney Children’s Hospitals Network",
+      "Children’s Cancer Institute",
+      "UNSW Sydney",
+      "Minderoo Foundation",
+      "NSW Health / Health Infrastructure"
+    ],
+    "sources": [
+      "https://www.unsw.edu.au/newsroom/news/2026/05/Australias-first-Childrens-Comprehensive-Cancer-Centre-opens-to-deliver-world-leading-cancer-care",
+      "https://www.nsw.gov.au/departments-and-agencies/health-infrastructure/news/new-sydney-childrens-hospital-randwick-and-minderoo-childrens-comprehensive-cancer-centre-building-now-complete"
+    ],
+    "impact": {
+      "patients_helped": 1000,
+      "time_saved_days": 0,
+      "cost_reduced_aud": 658000000,
+      "trl_start": 5,
+      "trl_end": 9,
+      "evidence_level": "validated",
+      "evidence_note": "Capital and partnership delivery of Australia’s first Children’s Comprehensive Cancer Centre at RHIP"
+    },
+    "impact_metrics": [
+      {
+        "label": "Project investment",
+        "value": "$658M",
+        "url": "https://www.nsw.gov.au/departments-and-agencies/health-infrastructure/news/new-sydney-childrens-hospital-randwick-and-minderoo-childrens-comprehensive-cancer-centre-building-now-complete"
+      },
+      {
+        "label": "ZERO children supported / year (program)",
+        "value": "~1,000+",
+        "url": "https://www.unsw.edu.au/newsroom/news/2026/05/Australias-first-Childrens-Comprehensive-Cancer-Centre-opens-to-deliver-world-leading-cancer-care"
+      },
+      {
+        "label": "Campus partners collocated",
+        "value": "SCHN · CCI · UNSW",
+        "url": "https://www.unsw.edu.au/newsroom/news/2026/05/Australias-first-Childrens-Comprehensive-Cancer-Centre-opens-to-deliver-world-leading-cancer-care"
+      }
+    ],
+    "milestones": [
+      {
+        "phase": "challenge",
+        "label": "System challenge",
+        "date": "Pre-2020",
+        "detail": "Children’s cancer research and care were strong at Randwick but split across sites — slowing the path from discovery to bedside treatment."
+      },
+      {
+        "phase": "match",
+        "label": "Precinct partnership",
+        "date": "40+ years",
+        "detail": "Built on decades of collaboration between Children’s Cancer Institute, the Kids Cancer Centre (SCH Randwick) and UNSW — the same partnership behind ZERO."
+      },
+      {
+        "phase": "pipeline",
+        "label": "Campus redevelopment",
+        "date": "2020–2025",
+        "detail": "Sydney Children’s Hospital Stage 1 and the Minderoo Children’s Comprehensive Cancer Centre delivered as one $658M facility (Bilima Building), linking clinical care with the adjacent UNSW Health Translation Hub."
+      },
+      {
+        "phase": "clinical",
+        "label": "Integrated care & research",
+        "date": "2025–2026",
+        "detail": "Researchers, clinicians and educators work side-by-side so discoveries can move faster to nearby hospital beds — extending the ZERO precision-medicine model into a dedicated comprehensive cancer centre."
+      },
+      {
+        "phase": "outcome",
+        "label": "Official opening",
+        "date": "2026-05",
+        "detail": "Australia’s first Children’s Comprehensive Cancer Centre opened at Randwick with federal and NSW government support plus philanthropy from Minderoo Foundation, CCI, SCH Foundation and UNSW — a flagship RHIP translation outcome."
+      }
+    ]
+  }
+]

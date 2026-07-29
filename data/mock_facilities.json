@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "prince-of-wales-hospital",
+    "name": "Prince of Wales Hospital",
+    "address": "Barker Street, Randwick NSW 2031",
+    "phone": "02 9382 2222",
+    "description": "Major tertiary teaching hospital providing comprehensive adult medical, surgical, and emergency services for South Eastern Sydney.",
+    "district_slug": "seslhd-randwick"
+  },
+  {
+    "slug": "sydney-childrens-hospital-randwick",
+    "name": "Sydney Children's Hospital, Randwick",
+    "address": "High Street, Randwick NSW 2031",
+    "phone": "02 9382 1111",
+    "description": "Specialist paediatric hospital serving children and young people across NSW, co-located within the Randwick Health Campus.",
+    "district_slug": "seslhd-randwick"
+  },
+  {
+    "slug": "prince-of-wales-private-hospital",
+    "name": "Prince of Wales Private Hospital",
+    "address": "Barker Street, Randwick NSW 2031",
+    "phone": "02 9650 8688",
+    "description": "Private hospital on the Randwick campus offering elective surgery, maternity, and specialist outpatient services.",
+    "district_slug": "seslhd-randwick"
+  },
+  {
+    "slug": "health-translation-hub",
+    "name": "Health Translation Hub",
+    "address": "UNSW Randwick Campus, Randwick NSW 2031",
+    "phone": "02 9385 1000",
+    "description": "State-of-the-art facility connecting research, clinical care, and industry innovation across six dedicated industry floors.",
+    "district_slug": "seslhd-randwick"
+  }
+]

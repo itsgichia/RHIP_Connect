@@ -1,0 +1,681 @@
+[
+  {
+    "name": "Prof. Colleen Loo",
+    "email": "c.loo@unsw.edu.au",
+    "title": "Professor of Psychiatry",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Transcranial magnetic stimulation",
+      "ECT",
+      "Ketamine therapy",
+      "Treatment-resistant depression",
+      "Neurostimulation",
+      "Clinical trials",
+      "Precision psychiatry",
+      "Neuroimaging"
+    ],
+    "bio": "Colleen Loo is a clinical psychiatrist and Professor of Psychiatry at UNSW Sydney and the Black Dog Institute, Randwick. She is an internationally recognised expert in electroconvulsive therapy (ECT), transcranial magnetic stimulation (TMS), transcranial direct current stimulation (tDCS) and ketamine for depression.\n\nShe led the first Australian randomised controlled trials of TMS and ketamine in depression and established novel treatment clinics at the Black Dog Institute and Ramsay Clinic Northside. Her work spans clinical trials, neuroimaging, and real-world treatment data through the CARE network.\n\nProf. Loo has published over 300 peer-reviewed papers and advises Australian government health departments and the Royal Australian and New Zealand College of Psychiatrists on neurostimulation policy.",
+    "publications": 130,
+    "active_projects": 5,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "orcid_id": "0000-0003-3267-0554",
+    "pubmed_query": "Loo C[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])",
+    "news": [
+      {
+        "title": "Black Dog Institute TMS clinic \u2014 treatment for depression",
+        "date": "2025-01-15",
+        "summary": "Prof. Loo leads clinical TMS services and research at the Black Dog Institute Randwick campus within RHIP.",
+        "url": "https://www.blackdoginstitute.org.au/clinic/tms/"
+      }
+    ],
+    "awards": [
+      {
+        "title": "President, International Society for ECT and Neurostimulation",
+        "year": 2022,
+        "organisation": "ISEN"
+      }
+    ]
+  },
+  {
+    "name": "Scientia Prof. Gordon Parker",
+    "email": "g.parker@unsw.edu.au",
+    "title": "Scientia Professor of Psychiatry",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Mood disorders",
+      "Depression subtypes",
+      "Bipolar disorder",
+      "Clinical psychiatry",
+      "Black Dog Institute"
+    ],
+    "bio": "Scientia Professor Gordon Parker is a Scientia Professor of Psychiatry at UNSW Sydney and founder of the Black Dog Institute. Over five decades he has led clinical and research programs in mood disorders, served as Head of the UNSW School of Psychiatry, and received the 2020 Australian Mental Health Prize.\n\nHis research focuses on depression classification, bipolar disorder, and translating psychiatric research into clinical practice across the Randwick Health & Innovation Precinct.",
+    "publications": 100,
+    "active_projects": 3,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Parker G[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Samuel Harvey",
+    "email": "s.harvey@unsw.edu.au",
+    "title": "Professor of Psychiatry",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Workplace mental health",
+      "Occupational psychiatry",
+      "Depression prevention",
+      "Epidemiology",
+      "Digital mental health",
+      "Digital health",
+      "Implementation science",
+      "Health systems"
+    ],
+    "bio": "Professor Samuel Harvey is Executive Director and Chief Scientist at the Black Dog Institute and Professor of Psychiatry at UNSW Sydney. His research addresses workplace mental health, depression prevention, and the epidemiology of mental disorders.\n\nHe leads large-scale cohort studies and intervention trials that inform policy across Australia and internationally, with strong links to SESLHD clinical services at Randwick.",
+    "publications": 190,
+    "active_projects": 4,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Harvey SB[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Helen Christensen",
+    "email": "h.christensen@unsw.edu.au",
+    "title": "Professor of Mental Health",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Digital mental health",
+      "e-Mental health",
+      "Suicide prevention",
+      "Online interventions",
+      "Population mental health",
+      "Digital health",
+      "Youth mental health",
+      "Population health"
+    ],
+    "bio": "Professor Helen Christensen is a Professor at UNSW Sydney and former Director of the Black Dog Institute. She is a world leader in digital mental health and e-mental health interventions, with extensive work on online CBT, suicide prevention, and scalable mental health programs.\n\nHer research translates evidence-based digital tools into clinical and community settings across the RHIP precinct.",
+    "publications": 150,
+    "active_projects": 3,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Christensen H[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Philip Mitchell",
+    "email": "p.mitchell@unsw.edu.au",
+    "title": "Professor of Psychiatry",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Bipolar disorder",
+      "Neuroimaging",
+      "Mood disorders",
+      "Clinical trials",
+      "Psychiatric genetics"
+    ],
+    "bio": "Professor Philip Mitchell AM is a Professor of Psychiatry at UNSW Sydney and a senior clinician-researcher in mood disorders. His work spans bipolar disorder, neuroimaging, and psychiatric genetics, with long-standing clinical links to Prince of Wales Hospital within the Randwick campus.",
+    "publications": 200,
+    "active_projects": 4,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Mitchell PB[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "A/Prof. Jill Newby",
+    "email": "j.newby@unsw.edu.au",
+    "title": "Associate Professor",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Digital CBT",
+      "Anxiety disorders",
+      "Internet interventions",
+      "Clinical psychology",
+      "eHealth"
+    ],
+    "bio": "Associate Professor Jill Newby is a clinical psychologist and researcher at the Black Dog Institute and UNSW Sydney. She develops and evaluates internet-delivered cognitive behavioural therapy programs for anxiety and depression, with trials deployed across primary care and hospital settings.",
+    "publications": 180,
+    "active_projects": 3,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Newby JM[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Aliza Werner-Seidler",
+    "email": "a.wernerseidler@unsw.edu.au",
+    "title": "Professor",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Youth mental health",
+      "School-based prevention",
+      "Depression prevention",
+      "Adolescent wellbeing",
+      "Digital interventions"
+    ],
+    "bio": "Professor Aliza Werner-Seidler leads youth mental health research at the Black Dog Institute and UNSW Sydney. Her programs focus on school-based prevention, adolescent depression, and scalable digital interventions integrated with NSW education and health services.",
+    "publications": 120,
+    "active_projects": 3,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Werner-Seidler A[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Jennie Hudson",
+    "email": "j.hudson@unsw.edu.au",
+    "title": "Professor of Psychology",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Child anxiety",
+      "Paediatric mental health",
+      "Cognitive behavioural therapy",
+      "Anxiety disorders",
+      "Family interventions"
+    ],
+    "bio": "Professor Jennie Hudson is Director of Research at the Black Dog Institute and Professor at UNSW Sydney. She specialises in child and adolescent anxiety, developing evidence-based CBT programs used in clinical services at Sydney Children's Hospital and across SESLHD.",
+    "publications": 160,
+    "active_projects": 2,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Hudson JL[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Anushka Patel",
+    "email": "a.patel@georgeinstitute.org.au",
+    "title": "Professor of Medicine",
+    "specialty_area": "Personalised Medicine",
+    "expertise_tags": [
+      "Cardiovascular disease",
+      "Global health",
+      "Clinical trials",
+      "Digital health",
+      "Precision medicine",
+      "Implementation science"
+    ],
+    "bio": "Professor Anushka Patel is Chief Scientist at The George Institute for Global Health and a Professor at UNSW Sydney. Her research focuses on cardiovascular disease prevention, digital health tools, and large-scale clinical trials relevant to personalised medicine within the RHIP partnership network.",
+    "publications": 170,
+    "active_projects": 4,
+    "institution": "The George Institute",
+    "role": "researcher",
+    "pubmed_query": "Patel A[Author] AND George Institute[Affiliation]"
+  },
+  {
+    "name": "Prof. Bruce Neal",
+    "email": "b.neal@georgeinstitute.org.au",
+    "title": "Professor of Medicine",
+    "specialty_area": "Health Systems",
+    "expertise_tags": [
+      "Salt reduction",
+      "Health policy",
+      "Clinical trials",
+      "Epidemiology",
+      "Non-communicable disease",
+      "Cardiovascular disease"
+    ],
+    "bio": "Professor Bruce Neal is Executive Director at The George Institute for Global Health and Professor at UNSW Sydney. He leads research on health systems interventions, salt reduction, and large pragmatic trials that inform policy across Australia and globally.",
+    "publications": 170,
+    "active_projects": 3,
+    "institution": "The George Institute",
+    "role": "researcher",
+    "pubmed_query": "Neal B[Author] AND George Institute[Affiliation]"
+  },
+  {
+    "name": "Prof. Louisa Jorm",
+    "email": "l.jorm@unsw.edu.au",
+    "title": "Professor of Population Health",
+    "specialty_area": "Health Systems",
+    "expertise_tags": [
+      "Health data linkage",
+      "Big data",
+      "Population health",
+      "Health services research",
+      "Epidemiology",
+      "Clinical trials",
+      "Rare diseases"
+    ],
+    "bio": "Professor Louisa Jorm is Foundation Director of the Centre for Big Data Research in Health at UNSW Sydney. Her work uses linked administrative and clinical data to improve health services, inform policy, and support translational research across the Randwick Health & Innovation Precinct.",
+    "publications": 180,
+    "active_projects": 4,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "orcid_id": "0000-0003-0390-661X",
+    "pubmed_query": "Jorm L[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "Prof. Michelle Haber",
+    "email": "m.haber@ccia.org.au",
+    "title": "Professor",
+    "specialty_area": "Rare Diseases",
+    "expertise_tags": [
+      "Childhood cancer",
+      "Neuroblastoma",
+      "Drug discovery",
+      "Translational research",
+      "Paediatric oncology",
+      "Clinical trials",
+      "Precision oncology"
+    ],
+    "bio": "Professor Michelle Haber AM is Executive Director of the Children's Cancer Institute, located within the Randwick Health & Innovation Precinct. She leads translational research in childhood cancer, particularly neuroblastoma, with programs spanning drug discovery through to clinical trials at Sydney Children's Hospital.",
+    "publications": 120,
+    "active_projects": 5,
+    "institution": "Children's Cancer Institute",
+    "role": "researcher",
+    "pubmed_query": "Haber M[Author] AND (Children's Cancer Institute[Affiliation] OR Randwick[Affiliation])"
+  },
+  {
+    "name": "Prof. Tracey O'Brien",
+    "email": "t.obrien@health.nsw.gov.au",
+    "title": "Professor of Paediatrics",
+    "specialty_area": "Rare Diseases",
+    "expertise_tags": [
+      "Paediatric oncology",
+      "Bone marrow transplant",
+      "Cell therapy",
+      "Sydney Children's Hospital",
+      "Clinical trials",
+      "Precision oncology"
+    ],
+    "bio": "Professor Tracey O'Brien is a paediatric oncologist and researcher at Sydney Children's Hospital and UNSW Sydney within the Randwick campus. Her work spans bone marrow transplantation, cellular therapies, and clinical trials for children with cancer and rare haematological disorders.",
+    "publications": 150,
+    "active_projects": 3,
+    "institution": "SCHN",
+    "role": "researcher",
+    "pubmed_query": "O'Brien TA[Author] AND (Sydney Children's[Affiliation] OR UNSW[Affiliation])"
+  },
+  {
+    "name": "Prof. Vaughan Macefield",
+    "email": "v.macefield@unsw.edu.au",
+    "title": "Professor of Integrative Physiology",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Autonomic neuroscience",
+      "Microneurography",
+      "Blood pressure",
+      "Neurophysiology",
+      "Human neuroscience",
+      "Cardiovascular disease"
+    ],
+    "bio": "Professor Vaughan Macefield is a neurophysiologist at UNSW Medicine & Health, based at the Randwick campus within RHIP. His research uses microneurography and neuroimaging to study autonomic nervous system control in health and disease.",
+    "publications": 100,
+    "active_projects": 2,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Macefield VG[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "Prof. Maria Kavanagh",
+    "email": "m.kavanagh@unsw.edu.au",
+    "title": "Professor of Paediatrics",
+    "specialty_area": "Personalised Medicine",
+    "expertise_tags": [
+      "Clinical genetics",
+      "Genomic medicine",
+      "Rare genetic disorders",
+      "Paediatrics",
+      "Precision diagnostics"
+    ],
+    "bio": "Professor Maria Kavanagh is a clinical geneticist at UNSW Sydney and Sydney Children's Hospital, Randwick. Her research and clinical work focus on genomic diagnostics and personalised treatment pathways for children with rare genetic conditions within the RHIP precinct.",
+    "publications": 95,
+    "active_projects": 2,
+    "institution": "SCHN",
+    "role": "researcher",
+    "pubmed_query": "Kavanagh M[Author] AND (UNSW[Affiliation] OR Sydney Children's[Affiliation])"
+  },
+  {
+    "name": "Prof. Peter Schofield",
+    "email": "p.schofield@neura.edu.au",
+    "title": "Professor of Neuroscience",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Neurodegeneration",
+      "Dementia",
+      "Alzheimer's disease",
+      "Neuroscience",
+      "Clinical trials",
+      "Ageing"
+    ],
+    "bio": "Professor Peter Schofield AO is former CEO of Neuroscience Research Australia (NeuRA) and a leading researcher in neurodegeneration and dementia genetics within the Randwick Health & Innovation Precinct.",
+    "publications": 150,
+    "active_projects": 4,
+    "institution": "NeuRA",
+    "role": "researcher",
+    "pubmed_query": "Schofield PR[Author] AND (NeuRA[Affiliation] OR UNSW[Affiliation] OR Prince of Wales[Affiliation])"
+  },
+  {
+    "name": "Prof. Glenda Halliday",
+    "email": "g.halliday@neura.edu.au",
+    "title": "Professor of Neuroscience",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Parkinson's disease",
+      "Neuropathology",
+      "Neurodegeneration",
+      "Dementia",
+      "Biomarkers",
+      "Clinical trials"
+    ],
+    "bio": "Professor Glenda Halliday AO is a world-leading neuropathologist at NeuRA and UNSW Sydney, specialising in Parkinson's disease and related neurodegenerative disorders at the Randwick campus.",
+    "publications": 400,
+    "active_projects": 5,
+    "institution": "NeuRA",
+    "role": "researcher",
+    "pubmed_query": "Halliday GM[Author] AND (NeuRA[Affiliation] OR UNSW[Affiliation])"
+  },
+  {
+    "name": "Prof. Cyndi Shannon Weickert",
+    "email": "c.weickert@neura.edu.au",
+    "title": "Professor of Schizophrenia Research",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Schizophrenia",
+      "Neuroinflammation",
+      "Neurodevelopment",
+      "Molecular psychiatry",
+      "Biomarkers",
+      "Genomics"
+    ],
+    "bio": "Professor Cyndi Shannon Weickert leads schizophrenia research at NeuRA and UNSW, integrating molecular neuroscience with clinical psychiatry across the RHIP Mindgardens network.",
+    "publications": 280,
+    "active_projects": 3,
+    "institution": "NeuRA",
+    "role": "researcher",
+    "pubmed_query": "Weickert CS[Author] AND (NeuRA[Affiliation] OR UNSW[Affiliation])"
+  },
+  {
+    "name": "Prof. Kaarin Anstey",
+    "email": "k.anstey@unsw.edu.au",
+    "title": "Professor of Psychology and Neuroscience",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Dementia prevention",
+      "Cognitive ageing",
+      "Population health",
+      "Epidemiology",
+      "Digital health",
+      "Implementation science"
+    ],
+    "bio": "Professor Kaarin Anstey is Director of the UNSW Ageing Futures Institute and a NeuRA-affiliated researcher focused on dementia prevention and cognitive ageing within RHIP.",
+    "publications": 350,
+    "active_projects": 4,
+    "institution": "NeuRA",
+    "role": "researcher",
+    "pubmed_query": "Anstey KJ[Author] AND (UNSW[Affiliation] OR NeuRA[Affiliation])"
+  },
+  {
+    "name": "Scientia Prof. Henry Brodaty",
+    "email": "h.brodaty@unsw.edu.au",
+    "title": "Scientia Professor of Ageing and Mental Health",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Dementia",
+      "Memory clinics",
+      "Geriatric psychiatry",
+      "Caregiver support",
+      "Clinical trials",
+      "Health systems"
+    ],
+    "bio": "Scientia Professor Henry Brodaty AO is co-director of the Centre for Healthy Brain Ageing (CHeBA) at UNSW and a clinician-researcher linked to aged care and memory services across SESLHD.",
+    "publications": 300,
+    "active_projects": 4,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Brodaty H[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "Scientia Prof. Perminder Sachdev",
+    "email": "p.sachdev@unsw.edu.au",
+    "title": "Scientia Professor of Neuropsychiatry",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Neuropsychiatry",
+      "Dementia",
+      "Neuroimaging",
+      "Cognitive disorders",
+      "Biomarkers",
+      "Genomics"
+    ],
+    "bio": "Scientia Professor Perminder Sachdev AM co-directs CHeBA at UNSW and leads large cohort studies in cognitive ageing with clinical links to Prince of Wales Hospital.",
+    "publications": 200,
+    "active_projects": 5,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Sachdev PS[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "Prof. Richard Bryant",
+    "email": "r.bryant@unsw.edu.au",
+    "title": "Scientia Professor of Psychology",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "PTSD",
+      "Trauma",
+      "Digital interventions",
+      "Clinical trials",
+      "Anxiety disorders",
+      "Implementation science"
+    ],
+    "bio": "Scientia Professor Richard Bryant AC is a world authority on PTSD and trauma at UNSW Sydney, with translational programs connecting psychology research to clinical services across NSW.",
+    "publications": 650,
+    "active_projects": 4,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Bryant RA[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "Prof. Maree Teesson",
+    "email": "m.teesson@unsw.edu.au",
+    "title": "Professor of Mental Health and Substance Use",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Substance use",
+      "Addiction",
+      "Youth mental health",
+      "Prevention",
+      "Digital interventions",
+      "Health policy"
+    ],
+    "bio": "Professor Maree Teesson AC is Director of the Matilda Centre at UNSW and a leading researcher in substance use and mental health prevention, collaborating with Mindgardens and SESLHD services.",
+    "publications": 450,
+    "active_projects": 4,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Teesson M[Author] AND UNSW[Affiliation]"
+  },
+  {
+    "name": "Prof. Glenn Marshall",
+    "email": "g.marshall@ccia.org.au",
+    "title": "Professor of Paediatric Oncology",
+    "specialty_area": "Rare Diseases",
+    "expertise_tags": [
+      "Paediatric oncology",
+      "Neuroblastoma",
+      "Precision oncology",
+      "Clinical trials",
+      "Drug discovery",
+      "Genomics"
+    ],
+    "bio": "Professor Glenn Marshall AM is Head of Translational Research at Children's Cancer Institute and a paediatric oncologist at Sydney Children's Hospital within RHIP.",
+    "publications": 280,
+    "active_projects": 5,
+    "institution": "Children's Cancer Institute",
+    "role": "researcher",
+    "pubmed_query": "Marshall GM[Author] AND (Children's Cancer Institute[Affiliation] OR UNSW[Affiliation])"
+  },
+  {
+    "name": "Prof. Richard Lock",
+    "email": "r.lock@ccia.org.au",
+    "title": "Professor",
+    "specialty_area": "Rare Diseases",
+    "expertise_tags": [
+      "Leukaemia",
+      "Drug discovery",
+      "Paediatric oncology",
+      "Preclinical models",
+      "Clinical trials",
+      "Precision oncology"
+    ],
+    "bio": "Professor Richard Lock leads leukaemia research at Children's Cancer Institute on the Randwick campus, developing preclinical models that feed clinical trials at Sydney Children's Hospital.",
+    "publications": 220,
+    "active_projects": 3,
+    "institution": "Children's Cancer Institute",
+    "role": "researcher",
+    "pubmed_query": "Lock RB[Author] AND Children's Cancer Institute[Affiliation]"
+  },
+  {
+    "name": "Prof. David Ziegler",
+    "email": "d.ziegler@unsw.edu.au",
+    "title": "Professor of Paediatric Oncology",
+    "specialty_area": "Personalised Medicine",
+    "expertise_tags": [
+      "Paediatric oncology",
+      "Brain tumours",
+      "Precision oncology",
+      "Clinical trials",
+      "Drug discovery",
+      "Neuro-oncology"
+    ],
+    "bio": "Professor David Ziegler is a paediatric oncologist at Sydney Children's Hospital and UNSW, leading precision medicine programs for childhood brain tumours within the Minderoo Children's Comprehensive Cancer Centre.",
+    "publications": 180,
+    "active_projects": 4,
+    "institution": "SCHN",
+    "role": "researcher",
+    "pubmed_query": "Ziegler DS[Author] AND (Sydney Children's[Affiliation] OR UNSW[Affiliation])"
+  },
+  {
+    "name": "Prof. Claire Wakefield",
+    "email": "c.wakefield@unsw.edu.au",
+    "title": "Professor of Paediatrics",
+    "specialty_area": "Rare Diseases",
+    "expertise_tags": [
+      "Psycho-oncology",
+      "Paediatric oncology",
+      "Survivorship",
+      "Family support",
+      "Digital interventions",
+      "Youth mental health"
+    ],
+    "bio": "Professor Claire Wakefield leads behavioural sciences research in childhood cancer at UNSW and Sydney Children's Hospital, bridging oncology care with mental health and family support across RHIP.",
+    "publications": 250,
+    "active_projects": 4,
+    "institution": "SCHN",
+    "role": "researcher",
+    "pubmed_query": "Wakefield CE[Author] AND (UNSW[Affiliation] OR Sydney Children's[Affiliation])"
+  },
+  {
+    "name": "Prof. Vlado Perkovic",
+    "email": "v.perkovic@unsw.edu.au",
+    "title": "Professor of Medicine",
+    "specialty_area": "Personalised Medicine",
+    "expertise_tags": [
+      "Nephrology",
+      "Clinical trials",
+      "Cardiovascular disease",
+      "Kidney disease",
+      "Health systems",
+      "Implementation science"
+    ],
+    "bio": "Professor Vlado Perkovic is Provost at UNSW and a kidney and cardiovascular trialist with longstanding affiliations to The George Institute and clinical services at Randwick.",
+    "publications": 400,
+    "active_projects": 3,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Perkovic V[Author] AND (UNSW[Affiliation] OR George Institute[Affiliation])"
+  },
+  {
+    "name": "Prof. Anthony Rodgers",
+    "email": "a.rodgers@georgeinstitute.org.au",
+    "title": "Professor of Global Health",
+    "specialty_area": "Health Systems",
+    "expertise_tags": [
+      "Cardiovascular disease",
+      "Polypill",
+      "Clinical trials",
+      "Global health",
+      "Health policy",
+      "Implementation science"
+    ],
+    "bio": "Professor Anthony Rodgers leads cardiovascular and health systems research at The George Institute for Global Health and UNSW, focused on scalable prevention strategies.",
+    "publications": 350,
+    "active_projects": 3,
+    "institution": "The George Institute",
+    "role": "researcher",
+    "pubmed_query": "Rodgers A[Author] AND George Institute[Affiliation]"
+  },
+  {
+    "name": "Prof. Carolyn Sue",
+    "email": "c.sue@neura.edu.au",
+    "title": "Professor of Neurogenetics",
+    "specialty_area": "Rare Diseases",
+    "expertise_tags": [
+      "Mitochondrial disease",
+      "Neurogenetics",
+      "Rare genetic disorders",
+      "Clinical trials",
+      "Genomic medicine",
+      "Neurology"
+    ],
+    "bio": "Professor Carolyn Sue AM is a neurologist and neurogeneticist at NeuRA and UNSW specialising in mitochondrial disease, linking rare disease genomics with clinical neurology at Randwick.",
+    "publications": 200,
+    "active_projects": 3,
+    "institution": "NeuRA",
+    "role": "researcher",
+    "pubmed_query": "Sue CM[Author] AND (NeuRA[Affiliation] OR UNSW[Affiliation])"
+  },
+  {
+    "name": "Prof. Katherine Boydell",
+    "email": "k.boydell@unsw.edu.au",
+    "title": "Professor of Mental Health",
+    "specialty_area": "Mental Health & Neuroscience",
+    "expertise_tags": [
+      "Youth mental health",
+      "Arts-based methods",
+      "Knowledge translation",
+      "Implementation science",
+      "Digital mental health",
+      "Health systems"
+    ],
+    "bio": "Professor Katherine Boydell is Black Dog Institute Chair of Mental Health at UNSW, focusing on youth mental health, knowledge translation, and creative approaches to engagement across the precinct.",
+    "publications": 180,
+    "active_projects": 3,
+    "institution": "Black Dog Institute",
+    "role": "researcher",
+    "pubmed_query": "Boydell KM[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])"
+  },
+  {
+    "name": "Prof. Adam Jaffe",
+    "email": "a.jaffe@unsw.edu.au",
+    "title": "Professor of Paediatrics",
+    "specialty_area": "Personalised Medicine",
+    "expertise_tags": [
+      "Cystic fibrosis",
+      "Paediatric respiratory",
+      "Clinical trials",
+      "Rare diseases",
+      "Precision medicine",
+      "Genomics"
+    ],
+    "bio": "Professor Adam Jaffe is Head of the School of Clinical Medicine at UNSW and a paediatric respiratory physician at Sydney Children's Hospital, leading cystic fibrosis and rare lung disease research.",
+    "publications": 220,
+    "active_projects": 3,
+    "institution": "SCHN",
+    "role": "researcher",
+    "pubmed_query": "Jaffe A[Author] AND (UNSW[Affiliation] OR Sydney Children's[Affiliation])"
+  },
+  {
+    "name": "Prof. John Mattick",
+    "email": "j.mattick@unsw.edu.au",
+    "title": "Professor of RNA Biology",
+    "specialty_area": "Personalised Medicine",
+    "expertise_tags": [
+      "Genomics",
+      "RNA biology",
+      "Precision medicine",
+      "Bioinformatics",
+      "Biomarkers",
+      "Drug discovery"
+    ],
+    "bio": "Professor John Mattick AO FAHMS is a genomics researcher at UNSW Medicine & Health whose work on non-coding RNA underpins precision medicine programs across the Randwick precinct.",
+    "publications": 300,
+    "active_projects": 2,
+    "institution": "UNSW Sydney",
+    "role": "researcher",
+    "pubmed_query": "Mattick JS[Author] AND UNSW[Affiliation]"
+  }
+]

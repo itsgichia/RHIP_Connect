@@ -1,0 +1,162 @@
+[
+  {
+    "grant_id": "DP200100597",
+    "funder": "arc",
+    "lead_email": "k.boydell@unsw.edu.au",
+    "trl": 5,
+    "stage": 5,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 420,
+      "time_saved_days": 0,
+      "cost_reduced_aud": 0,
+      "evidence_level": "pilot",
+      "evidence_note": "ARC Discovery Project — arts-based and participatory mental health research"
+    }
+  },
+  {
+    "grant_id": "LP180100681",
+    "funder": "arc",
+    "lead_email": "r.bryant@unsw.edu.au",
+    "trl": 6,
+    "stage": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1850,
+      "time_saved_days": 120,
+      "cost_reduced_aud": 2400000,
+      "evidence_level": "validated",
+      "evidence_note": "ARC Linkage with emergency services — workplace mental health productivity"
+    }
+  },
+  {
+    "grant_id": "DP120102078",
+    "funder": "arc",
+    "lead_email": "p.sachdev@unsw.edu.au",
+    "trl": 5,
+    "stage": 5,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 960,
+      "time_saved_days": 40,
+      "cost_reduced_aud": 850000,
+      "evidence_level": "pilot",
+      "evidence_note": "ARC Discovery — plasma biomarkers for ageing and early dementia"
+    }
+  },
+  {
+    "grant_id": "FT100100295",
+    "funder": "arc",
+    "lead_email": "b.neal@georgeinstitute.org.au",
+    "trl": 7,
+    "stage": 7,
+    "specialty_area": "Health Systems",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 12500,
+      "time_saved_days": 0,
+      "cost_reduced_aud": 18000000,
+      "evidence_level": "validated",
+      "evidence_note": "ARC Future Fellowship — healthier food supply policy and industry action"
+    }
+  },
+  {
+    "grant_id": "DP0772977",
+    "funder": "arc",
+    "lead_email": "m.teesson@unsw.edu.au",
+    "trl": 5,
+    "stage": 5,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 2800,
+      "time_saved_days": 80,
+      "cost_reduced_aud": 1100000,
+      "evidence_level": "pilot",
+      "evidence_note": "ARC Discovery — adolescent fear, sadness and alcohol prevention curricula"
+    }
+  },
+  {
+    "grant_id": "MRF2022782",
+    "funder": "mrff",
+    "lead_email": "c.loo@unsw.edu.au",
+    "trl": 7,
+    "stage": 7,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 640,
+      "time_saved_days": 90,
+      "cost_reduced_aud": 3200000,
+      "evidence_level": "validated",
+      "evidence_note": "MRFF Clinical Trials Activity — ketamine vs esketamine for treatment-resistant depression"
+    }
+  },
+  {
+    "grant_id": "MRF1200195",
+    "funder": "mrff",
+    "lead_email": "h.christensen@unsw.edu.au",
+    "trl": 6,
+    "stage": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 4100,
+      "time_saved_days": 200,
+      "cost_reduced_aud": 5600000,
+      "evidence_level": "validated",
+      "evidence_note": "MRFF Million Minds — Under the Radar suicide prevention care pathway"
+    }
+  },
+  {
+    "grant_id": "MRF1199403",
+    "funder": "mrff",
+    "lead_email": "d.ziegler@unsw.edu.au",
+    "trl": 7,
+    "stage": 8,
+    "specialty_area": "Rare Diseases",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 890,
+      "time_saved_days": 150,
+      "cost_reduced_aud": 4100000,
+      "evidence_level": "clinical",
+      "evidence_note": "MRFF — LOGGIC phase III trial for paediatric low-grade glioma"
+    }
+  },
+  {
+    "grant_id": "MRF2031963",
+    "funder": "mrff",
+    "lead_email": "k.anstey@unsw.edu.au",
+    "trl": 6,
+    "stage": 6,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 2200,
+      "time_saved_days": 110,
+      "cost_reduced_aud": 2800000,
+      "evidence_level": "clinical",
+      "evidence_note": "MRFF — CogCoach-Brain lifestyle risk reduction for cognitively at-risk older adults"
+    }
+  },
+  {
+    "grant_id": "MRF2040489",
+    "funder": "mrff",
+    "lead_email": "a.wernerseidler@unsw.edu.au",
+    "trl": 5,
+    "stage": 5,
+    "specialty_area": "Mental Health & Neuroscience",
+    "visibility": "public",
+    "impact": {
+      "patients_helped": 1500,
+      "time_saved_days": 60,
+      "cost_reduced_aud": 900000,
+      "evidence_level": "pilot",
+      "evidence_note": "MRFF — school-based adolescent sleep health to prevent depression"
+    }
+  }
+]
