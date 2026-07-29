@@ -80,12 +80,33 @@ export default function TranslationJourney({ stories = [] }) {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 p-5 border-b border-rhip-border bg-rhip-lightBg/60">
-            {metrics.slice(0, 3).map((m) => (
-              <div key={m.label}>
-                <p className="text-xs uppercase tracking-wide text-rhip-muted mb-1">{m.label}</p>
-                <p className="font-display text-2xl font-bold text-rhip-dark">{m.value}</p>
-              </div>
-            ))}
+            {metrics.slice(0, 3).map((m) => {
+              const content = (
+                <>
+                  <p className="text-xs uppercase tracking-wide text-rhip-muted mb-1">{m.label}</p>
+                  <p className="font-display text-2xl font-bold text-rhip-dark">{m.value}</p>
+                  {m.url && (
+                    <p className="mt-1.5 text-[11px] font-medium text-rhip-teal">
+                      View source →
+                    </p>
+                  )}
+                </>
+              )
+              return m.url ? (
+                <a
+                  key={m.label}
+                  href={m.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-xl p-1 -m-1 hover:bg-white/70 transition-colors focus:outline-none focus:ring-2 focus:ring-rhip-teal/40"
+                  title={`Source for ${m.label}`}
+                >
+                  {content}
+                </a>
+              ) : (
+                <div key={m.label}>{content}</div>
+              )
+            })}
           </div>
 
           <div className="p-5 md:p-6">
@@ -120,10 +141,26 @@ export default function TranslationJourney({ stories = [] }) {
             </ol>
 
             {active.sources?.length > 0 && (
-              <p className="mt-6 pt-4 border-t border-rhip-border text-xs text-rhip-muted">
-                Based on publicly reported precinct partner outcomes. See partner publications for full
-                study details.
-              </p>
+              <div className="mt-6 pt-4 border-t border-rhip-border text-xs text-rhip-muted">
+                <p className="mb-2">
+                  Based on publicly reported precinct partner outcomes. Each impact figure links to its
+                  source; see also:
+                </p>
+                <ul className="space-y-1">
+                  {active.sources.map((src) => (
+                    <li key={src}>
+                      <a
+                        href={src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-rhip-teal hover:underline break-all"
+                      >
+                        {src}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         </div>

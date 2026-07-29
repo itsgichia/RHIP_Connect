@@ -12,8 +12,9 @@
       "Sydney Children’s Hospitals Network"
     ],
     "sources": [
-      "https://www.zerochildhoodcancer.org.au/about/our-impact",
-      "https://www.ccia.org.au/our-research/impact/zero"
+      "https://www.ccia.org.au/our-research/impact/zero",
+      "https://www.nature.com/articles/s41591-024-03044-0",
+      "https://www.health.gov.au/ministers/the-hon-greg-hunt-mp/media/67-million-for-personalised-treatments-for-every-child-with-cancer"
     ],
     "impact": {
       "patients_helped": 2500,
@@ -27,15 +28,18 @@
     "impact_metrics": [
       {
         "label": "Children enrolled",
-        "value": "2,500+"
+        "value": "2,500+",
+        "url": "https://www.ccia.org.au/our-research/impact/zero"
       },
       {
         "label": "2-year PFS vs standard care",
-        "value": "2× higher"
+        "value": "2× higher",
+        "url": "https://www.nature.com/articles/s41591-024-03044-0"
       },
       {
         "label": "Expansion funding (2020)",
-        "value": "$67M"
+        "value": "$67M",
+        "url": "https://www.health.gov.au/ministers/the-hon-greg-hunt-mp/media/67-million-for-personalised-treatments-for-every-child-with-cancer"
       }
     ],
     "milestones": [
@@ -86,7 +90,8 @@
     ],
     "sources": [
       "https://www.mindgardens.org.au/news-events/article/mindgardens-honoured-with-angelo-cocchi-translational-impact-award/",
-      "https://doi.org/10.1111/eip.13508"
+      "https://pubmed.ncbi.nlm.nih.gov/38334187/",
+      "https://pubmed.ncbi.nlm.nih.gov/25721464/"
     ],
     "impact": {
       "patients_helped": 182,
@@ -100,15 +105,18 @@
     "impact_metrics": [
       {
         "label": "Youth in routine-care audit",
-        "value": "182"
+        "value": "182",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/38334187/"
       },
       {
         "label": "Avoided clinically significant weight gain",
-        "value": "81%"
+        "value": "81%",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/38334187/"
       },
       {
         "label": "Mean weight gain vs usual care (pilot)",
-        "value": "1.8 vs 7.8 kg"
+        "value": "1.8 vs 7.8 kg",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/25721464/"
       }
     ],
     "milestones": [
@@ -159,7 +167,7 @@
     ],
     "sources": [
       "https://www.unsw.edu.au/newsroom/news/2026/05/Australias-first-Childrens-Comprehensive-Cancer-Centre-opens-to-deliver-world-leading-cancer-care",
-      "https://www.nsw.gov.au/health-and-wellbeing/health-infrastructure-projects/randwick-campus-redevelopment"
+      "https://www.nsw.gov.au/departments-and-agencies/health-infrastructure/news/new-sydney-childrens-hospital-randwick-and-minderoo-childrens-comprehensive-cancer-centre-building-now-complete"
     ],
     "impact": {
       "patients_helped": 1000,
@@ -173,15 +181,18 @@
     "impact_metrics": [
       {
         "label": "Project investment",
-        "value": "$658M"
+        "value": "$658M",
+        "url": "https://www.nsw.gov.au/departments-and-agencies/health-infrastructure/news/new-sydney-childrens-hospital-randwick-and-minderoo-childrens-comprehensive-cancer-centre-building-now-complete"
       },
       {
         "label": "ZERO children supported / year (program)",
-        "value": "~1,000+"
+        "value": "~1,000+",
+        "url": "https://www.unsw.edu.au/newsroom/news/2026/05/Australias-first-Childrens-Comprehensive-Cancer-Centre-opens-to-deliver-world-leading-cancer-care"
       },
       {
         "label": "Campus partners collocated",
-        "value": "SCHN · CCI · UNSW"
+        "value": "SCHN · CCI · UNSW",
+        "url": "https://www.unsw.edu.au/newsroom/news/2026/05/Australias-first-Childrens-Comprehensive-Cancer-Centre-opens-to-deliver-world-leading-cancer-care"
       }
     ],
     "milestones": [
