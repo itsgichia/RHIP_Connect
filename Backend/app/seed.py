@@ -125,6 +125,7 @@ def _add_profile(db, institutions: dict, profile_data: dict) -> Profile:
     facets = derive_facets_from_seed(profile_data)
     primary = validate_primary_lens(facets, profile_data.get("primary_lens"))
     career = derive_career_level(profile_data)
+    orcid_id = profile_data.get("orcid_id")
     profile = Profile(
         user_id=user.id,
         name=profile_data["name"],
@@ -143,6 +144,8 @@ def _add_profile(db, institutions: dict, profile_data: dict) -> Profile:
         primary_lens=primary,
         professional_title=profile_data.get("professional_title"),
         career_level=career,
+        orcid_id=orcid_id,
+        orcid_checked=bool(orcid_id),
     )
     db.add(profile)
     db.flush()

@@ -1,20 +1,33 @@
-# Data sources — PubMed vs OpenAlex
+# Data sources — PubMed, ORCID, and OpenAlex
 
-**Decision (this branch):** PubMed is the primary source for publications, seeding, and Knowledge Map co-author edges. OpenAlex is **not** used as a replacement for paper lists.
+**Decision (this branch):** PubMed is the primary source for publications, seeding, and Knowledge Map co-author edges. ORCID identifies researchers and supplies live works on profiles. OpenAlex powers the world Collaboration Map keyed by `orcid_id`. OpenAlex is **not** used as a replacement for paper lists.
 
 ## What each source is for
 
 | Goal | Source |
 |------|--------|
-| Paper list on a profile | **PubMed** |
+| Paper list on a profile (seed / Knowledge Map) | **PubMed** |
+| Live scholarly works on a profile | **ORCID** Public API |
 | Who in RHIP co-authored with whom? | **PubMed** PMIDs → Knowledge Map |
-| Which countries/institutions has this ORCID collaborated with? | OpenAlex (optional; not on this branch) |
-| “Currently at UNSW” badge | ORCID (identity/affiliation; not PubMed or OpenAlex) |
+| Which countries/institutions has this ORCID collaborated with? | **OpenAlex** → Collaboration Map |
+| Researcher identity (`orcid_id`) | **ORCID** |
 
 They answer different questions:
 
-- **PubMed:** “What papers did this person publish?”
-- **OpenAlex:** “What field are they in, and who/where have they collaborated with?”
+- **PubMed:** “What papers did this person publish?” (seed + internal co-author graph)
+- **ORCID:** “Who is this person, and what are their live publications?”
+- **OpenAlex:** “Where in the world are their co-authors?”
+
+```mermaid
+flowchart LR
+  Profile[Profile page]
+  ORCID[ORCID API]
+  OpenAlex[OpenAlex API]
+  Works[Scholarly Works list]
+  CollabMap[Collaboration Map]
+  Profile -->|"resolve orcid_id + fetch works"| ORCID --> Works
+  Profile -->|"orcid_id query"| OpenAlex --> CollabMap
+```
 
 ## How PubMed is used here
 
@@ -32,7 +45,7 @@ flowchart LR
 3. [`Backend/app/seed.py`](../Backend/app/seed.py) stores `Publication` rows and updates profile publication counts.
 4. [`Backend/app/services/map_service.py`](../Backend/app/services/map_service.py) builds **coauthor** edges when two seeded profiles share a PMID.
 
-PubMed does **not** supply a world collaboration map, OpenAlex-style primary-field health filters, or a live UNSW employment badge.
+PubMed does **not** supply a world collaboration map.
 
 ## Why not switch to OpenAlex for publications
 
@@ -41,14 +54,21 @@ PubMed does **not** supply a world collaboration map, OpenAlex-style primary-fie
 - Cached PubMed responses keep demos reliable offline (`PUBMED_MODE=cache` / `auto`).
 - Replacing PubMed with OpenAlex for papers would break PMID-based coauthor edges unless that graph is rebuilt.
 
-## OpenAlex (deferred)
+## ORCID + OpenAlex (on this branch)
 
-OpenAlex + ORCID (see the `diva` branch) is useful for:
+**ORCID** ([`orcid_service.py`](../Backend/app/services/orcid_service.py), [`routers/orcid.py`](../Backend/app/routers/orcid.py)):
 
-- Discovering researchers by ORCID and filtering by primary research field
-- A **world** collaboration map (co-author countries/institutions)
+- Resolves and stores `Profile.orcid_id` when uniquely matched
+- Fetches live works for the Scholarly Works section
+- Requires `ORCID_CLIENT_ID` / `ORCID_CLIENT_SECRET` (see README)
 
-If that map becomes a priority later, treat OpenAlex as an **extra** feature keyed by `orcid_id` — keep PubMed for paper lists and the internal Knowledge Map. Do not run two competing “where do papers come from?” pipelines.
+**OpenAlex** ([`openalex_service.py`](../Backend/app/services/openalex_service.py)):
+
+- `GET /api/v1/orcid/collaborations?orcid_id=…` aggregates co-author countries and institutions
+- Frontend [`CollaborationMap.jsx`](../Frontend/src/components/CollaborationMap.jsx) renders the world map on profiles that have an `orcid_id`
+- No API key; optional `OPENALEX_EMAIL` for the polite pool
+
+Seed can set known public `orcid_id` values on selected manifest researchers so demos show the map without waiting on live ORCID resolve. Keep PubMed for paper lists and the internal Knowledge Map. Do not run two competing “where do papers come from?” pipelines.
 
 ## ARC / MRFF competitive grants (Investor Portal)
 

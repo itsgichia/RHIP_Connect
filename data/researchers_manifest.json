@@ -19,6 +19,7 @@
     "active_projects": 5,
     "institution": "Black Dog Institute",
     "role": "researcher",
+    "orcid_id": "0000-0003-3267-0554",
     "pubmed_query": "Loo C[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])",
     "news": [
       {
@@ -234,6 +235,7 @@
     "active_projects": 4,
     "institution": "UNSW Sydney",
     "role": "researcher",
+    "orcid_id": "0000-0003-0390-661X",
     "pubmed_query": "Jorm L[Author] AND UNSW[Affiliation]"
   },
   {
