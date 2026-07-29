@@ -20,6 +20,7 @@ import {
 import { CAREER_LEVEL_LABELS, canViewPipeline, isCommercialPartner } from '../utils/roles'
 
 import { trlFullLabel, trlShortLabel } from '../utils/trl'
+import CollaborationMap from '../components/CollaborationMap'
 
 function formatNewsDate(dateStr) {
   try {
@@ -140,7 +141,10 @@ export default function ProfilePage() {
     if (!profile) return undefined
 
     const observerRoot = getObserverRoot()
-    const observers = PROFILE_SECTIONS.map(({ id }) => {
+    const sections = PROFILE_SECTIONS.filter(
+      ({ id }) => id !== 'collaboration-map' || profile.orcid_id,
+    )
+    const observers = sections.map(({ id }) => {
       const el = document.getElementById(id)
       if (!el) return null
 
@@ -325,6 +329,9 @@ export default function ProfilePage() {
           <ProfileSectionNav
             activeSection={activeSection}
             onNavigate={navigateToSection}
+            sections={PROFILE_SECTIONS.filter(
+              ({ id }) => id !== 'collaboration-map' || profile.orcid_id,
+            )}
           />
         </div>
 
@@ -561,6 +568,15 @@ export default function ProfilePage() {
               )
             )}
           </ProfileSection>
+
+          {profile.orcid_id && (
+            <ProfileSection id="collaboration-map" title="Collaboration Map">
+              <p className="text-sm text-rhip-muted mb-4">
+                Where co-authors are based, based on OpenAlex publication data linked to this ORCID.
+              </p>
+              <CollaborationMap orcidId={profile.orcid_id} />
+            </ProfileSection>
+          )}
 
           <ProfileSection id="news" title="News">
             {news.length > 0 && (

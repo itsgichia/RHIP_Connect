@@ -43,6 +43,31 @@ const PARTNER_LINKS = [
   { name: "Children's Cancer Institute", href: 'https://www.childrenscancer.org.au/' },
 ]
 
+// Landmark buildings — photos in Frontend/public/LandingPageImages/RHIP/
+const RHIP_BUILDINGS = [
+  {
+    name: 'UNSW Health Translation Hub',
+    opened: '2025',
+    focus: 'Education, innovation & translation',
+    specs: ['6 industry floors', '35,000 m²', '$600M'],
+    image: '/LandingPageImages/RHIP/hth-exterior.jpg',
+  },
+  {
+    name: 'Prince of Wales Hospital Acute Services Building',
+    opened: '2023',
+    focus: 'Clinical care',
+    specs: ['388 beds', '55,000 m²', '$870M'],
+    image: '/LandingPageImages/RHIP/prince-of-wales.jpg',
+  },
+  {
+    name: "Sydney Children's Hospital & Minderoo Children's Comprehensive Cancer Centre (Bilima)",
+    opened: '2025',
+    focus: 'Specialised care & research',
+    specs: ['340 beds', '36,000 m²', '$658M'],
+    image: '/LandingPageImages/RHIP/childrens-hospital.png',
+  },
+]
+
 const FOOTER_LINKS = [
   { label: 'Community health services', to: '/community' },
   { label: 'Government impact dashboard', to: '/government' },
@@ -88,11 +113,13 @@ export default function LandingPage() {
       <PublicNavBar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: 'var(--rhip-hero-gradient)' }}>
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl bg-rhip-teal" />
-          <div className="absolute bottom-0 left-20 w-64 h-64 rounded-full translate-y-1/2 blur-2xl bg-rhip-seafoam" />
-        </div>
+      <section
+        className="relative overflow-hidden bg-rhip-dark bg-cover bg-center"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(10,25,41,0.78), rgba(10,25,41,0.85)), url(/LandingPageImages/RHIP/hero-precinct.jpg)',
+        }}
+      >
         <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-28 text-center">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border mb-6 text-rhip-ice border-rhip-ice/30 bg-white/10">
             Randwick, Sydney · RHIP Precinct
@@ -148,6 +175,40 @@ export default function LandingPage() {
               >
                 <span className="font-semibold text-rhip-dark text-sm">{name}</span>
               </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* New buildings */}
+      <section className="bg-white px-6 pb-20 pt-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-display text-3xl font-semibold text-rhip-dark mb-2">New Buildings</h2>
+          <p className="text-rhip-muted mb-8">Landmark facilities shaping the precinct</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {RHIP_BUILDINGS.map((b) => (
+              <article
+                key={b.name}
+                className="flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+              >
+                <div className="aspect-[4/3] bg-rhip-lightBg">
+                  <img src={b.image} alt={b.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col flex-1 p-5">
+                  <span className="self-start px-2.5 py-0.5 rounded-full bg-rhip-lightBg text-rhip-teal text-xs font-semibold uppercase tracking-wide mb-2">
+                    Opened {b.opened}
+                  </span>
+                  <h3 className="font-display text-base font-semibold text-rhip-dark mb-1">{b.name}</h3>
+                  <p className="text-sm text-rhip-muted mb-4">{b.focus}</p>
+                  <ul className="mt-auto flex flex-wrap gap-2 text-xs font-medium text-rhip-body">
+                    {b.specs.map((s) => (
+                      <li key={s} className="px-2.5 py-1 rounded-full bg-rhip-lightBg">
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
             ))}
           </div>
         </div>

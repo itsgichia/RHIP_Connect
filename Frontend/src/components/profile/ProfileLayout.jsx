@@ -19,6 +19,7 @@ export const PROFILE_SECTIONS = [
   { id: 'patents', label: 'Patents' },
   { id: 'projects', label: 'Projects' },
   { id: 'scholarly-works', label: 'Scholarly Works' },
+  { id: 'collaboration-map', label: 'Collaboration Map' },
   { id: 'news', label: 'News' },
   { id: 'awards', label: 'Awards' },
   { id: 'credentials', label: 'Credentials' },

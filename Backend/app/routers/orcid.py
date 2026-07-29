@@ -7,6 +7,7 @@ from app.database import get_db
 from app.models import Profile, User
 from app.schemas import OrcidWorksResponse, PublicationResponse
 from app.services import orcid_service
+from app.services.openalex_service import get_collaborations
 
 router = APIRouter(prefix="/orcid", tags=["orcid"])
 
@@ -130,3 +131,29 @@ def get_profile_orcid_works(
         orcid_id=orcid_id,
         works=[PublicationResponse(**work) for work in works],
     )
+
+
+@router.get("/collaborations")
+def orcid_collaborations(orcid_id: str):
+    """Return co-author countries/institutions from OpenAlex for the collaboration map.
+
+    Public: returns only open OpenAlex aggregates (CC0).
+    e.g. GET /api/v1/orcid/collaborations?orcid_id=0000-0003-0390-661X
+    """
+    try:
+        normalised = orcid_service.normalize_orcid_id(orcid_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if not normalised:
+        raise HTTPException(status_code=400, detail="ORCID iD is required")
+
+    try:
+        return get_collaborations(normalised)
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=502, detail=f"OpenAlex fetch failed: {exc}"
+        ) from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502, detail=f"OpenAlex fetch failed: {exc}"
+        ) from exc
