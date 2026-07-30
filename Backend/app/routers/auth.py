@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import logging
+import os
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -38,6 +39,12 @@ from app.schemas import (
     TokenResponse,
 )
 
+logger = logging.getLogger(__name__)
+
+
+def _skip_email_verification() -> bool:
+    return os.getenv("DEMO_SKIP_EMAIL_VERIFICATION", "").lower() in ("1", "true", "yes")
+
 # Demo mapping: email domain → institution display name
 _DOMAIN_INSTITUTIONS = {
     "unsw.edu.au": "UNSW Sydney",
@@ -54,7 +61,6 @@ _DOMAIN_INSTITUTIONS = {
 }
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-logger = logging.getLogger(__name__)
 
 
 def _get_or_create_institution(db: Session, name: str) -> Institution:
@@ -405,7 +411,7 @@ async def firebase_signup(body: FirebaseSignupRequest, db: Session = Depends(get
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Specialty area required")
 
     institution = _get_or_create_institution(db, body.institution_name)
-    email_verified = decoded.get("email_verified", False)
+    email_verified = decoded.get("email_verified", False) or _skip_email_verification()
     user = User(
         name=body.name,
         email=email,
@@ -431,6 +437,8 @@ async def firebase_signup(body: FirebaseSignupRequest, db: Session = Depends(get
     )
 
     db.commit()
+    if _skip_email_verification():
+        return MessageResponse(message="Account created. You can log in now.")
     return MessageResponse(
         message="Account created. Check your inbox to verify your email, then log in."
     )
@@ -450,7 +458,7 @@ def firebase_login(body: FirebaseLoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token")
 
     email = decoded.get("email", "").lower()
-    if not decoded.get("email_verified"):
+    if not decoded.get("email_verified") and not _skip_email_verification():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Please verify your email first")
 
     user = db.query(User).filter(User.email == email).first()

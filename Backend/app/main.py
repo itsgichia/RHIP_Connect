@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
@@ -6,6 +8,24 @@ from app.database import Base, engine
 from app.routers import admin, admin_community, auth, challenges, community, directory, forms, government, impact, investor, knowledge_map, messages, notifications, orcid, passport, pipeline, pulse
 
 Base.metadata.create_all(bind=engine)
+
+
+def _cors_origins() -> list[str]:
+    origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://rhip-connect-pdsr.vercel.app",
+        "https://rhip-connect.vercel.app",
+    ]
+    frontend = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
+    if frontend and frontend not in origins:
+        origins.append(frontend)
+    extra = os.getenv("CORS_ORIGINS", "")
+    for part in extra.split(","):
+        origin = part.strip().rstrip("/")
+        if origin and origin not in origins:
+            origins.append(origin)
+    return origins
 
 
 def _ensure_sqlite_columns() -> None:
@@ -89,7 +109,7 @@ app = FastAPI(title="RHIP Connect API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
