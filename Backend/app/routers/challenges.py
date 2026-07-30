@@ -116,7 +116,10 @@ async def run_ai_matching(challenge_id: str):
                 action_url=f"/challenges?challenge={challenge.id}",
             ))
 
-        db.flush()
+        challenge.status = ChallengeStatus.MATCHED
+        db.commit()
+
+        # Emails after commit so Mailtrap delays/rate-limits never block the UI.
         challenger = db.query(User).filter(User.id == challenge.posted_by).first()
         for m in matches:
             profile = db.query(Profile).filter(Profile.id == m["profile_id"]).first()
@@ -131,9 +134,6 @@ async def run_ai_matching(challenge_id: str):
                     m["reasoning"],
                     challenger.name,
                 )
-
-        challenge.status = ChallengeStatus.MATCHED
-        db.commit()
     finally:
         db.close()
 

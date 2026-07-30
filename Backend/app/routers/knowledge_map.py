@@ -73,7 +73,7 @@ async def get_map_briefing(
     db: Session = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
-    """Qwen (Ollama) briefing explaining why this person sits where they do on the map."""
+    """Claude briefing explaining why this person sits where they do on the map."""
     payload = build_knowledge_map(
         db,
         focus_id=focus,
@@ -106,5 +106,5 @@ async def get_map_briefing(
         "profile_id": focus,
         "briefing": text,
         "model": ai.model,
-        "provider": "qwen-ollama",
+        "provider": "anthropic",
     }

@@ -143,7 +143,7 @@ Phase 2 also fixes the “need a biostatistician → psychiatry professors” fa
 **Files:** [Backend/app/services/pubmed_service.py](../Backend/app/services/pubmed_service.py), [Backend/app/services/ai_service.py](../Backend/app/services/ai_service.py), directory/profile endpoint
 
 - Extend PubMed fetch with `efetch` abstracts (cache in `pubmed_cache.json` or publication row)
-- `POST /profiles/me/suggest-keywords` (opt-in): LLM (Qwen/mock) reads recent titles+abstracts → proposed `expertise_tags` + `skills`
+- `POST /profiles/me/suggest-keywords` (opt-in): LLM (Anthropic/mock) reads recent titles+abstracts → proposed `expertise_tags` + `skills`
 - Response is **suggestions only**; `PATCH` applies after user confirms (no silent overwrite)
 - Seed path: optional auto-suggest into manifest gaps when tags empty
 

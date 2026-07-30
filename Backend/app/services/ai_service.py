@@ -12,7 +12,7 @@ import os
 import re
 from typing import Any
 
-import httpx
+from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
 
 from app.constants import ALL_SPECIALTIES
@@ -306,9 +306,29 @@ def _skills(profile: Profile) -> list[str]:
 
 class AIOrchestrator:
     def __init__(self):
-        self.url = os.getenv("QWEN_URL", "http://localhost:11434")
-        self.model = os.getenv("QWEN_MODEL", "qwen2.5:3b")
-        self.use_mock = os.getenv("USE_MOCK_AI", "false").lower() == "true"
+        self.api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
+        self.model = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5")
+        mock_flag = os.getenv("USE_MOCK_AI", "false").lower() == "true"
+        self.use_mock = mock_flag or not self.api_key
+        self._client: AsyncAnthropic | None = (
+            None if self.use_mock else AsyncAnthropic(api_key=self.api_key)
+        )
+
+    async def _complete(self, prompt: str, *, max_tokens: int = 1024) -> str:
+        """Call Anthropic Messages API; returns concatenated text content."""
+        if not self._client:
+            raise RuntimeError("Anthropic client not configured")
+        message = await self._client.messages.create(
+            model=self.model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        parts: list[str] = []
+        for block in message.content:
+            text = getattr(block, "text", None)
+            if text:
+                parts.append(text)
+        return "".join(parts).strip()
 
     async def match_challenge(
         self,
@@ -317,7 +337,7 @@ class AIOrchestrator:
     ) -> list[dict[str, Any]]:
         if self.use_mock:
             return self._mock_match(challenge, profiles)
-        results = await self._call_qwen(challenge, profiles)
+        results = await self._call_claude(challenge, profiles)
         # If the LLM finds nothing, still try semantic/related matching locally.
         if not results:
             return self._mock_match(challenge, profiles)
@@ -604,7 +624,7 @@ class AIOrchestrator:
             )
         return "\n".join(lines)
 
-    async def _call_qwen(self, challenge: Challenge, profiles: list[Profile]) -> list[dict]:
+    async def _call_claude(self, challenge: Challenge, profiles: list[Profile]) -> list[dict]:
         kind = _challenge_kind(challenge)
         challenge_text = f"{challenge.title} {challenge.description}".lower()
         raw_keywords = _tokenize(challenge_text)
@@ -654,50 +674,42 @@ Format:
 ]
 Scores range 0.0 to 1.0."""
 
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False,
-            "format": "json",
-        }
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                resp = await client.post(f"{self.url}/api/generate", json=payload)
-                raw = resp.json().get("response", "[]")
-                raw = re.sub(r"```json|```", "", raw).strip()
-                matches = json.loads(raw)
-                if isinstance(matches, dict):
-                    matches = matches.get("matches") or matches.get("results") or []
-                validated: list[dict[str, Any]] = []
-                seen: set[str] = set()
-                for m in matches:
-                    if not isinstance(m, dict) or not m.get("profile_id"):
-                        continue
-                    profile_id = m["profile_id"]
-                    if profile_id in seen:
-                        continue
-                    profile = profiles_by_id.get(profile_id)
-                    if not profile:
-                        continue
-                    # Local scorer is source of truth for fit + reasoning text.
-                    local = self._score_profile(
-                        challenge,
-                        profile,
-                        kind=kind,
-                        keywords=keywords,
-                        challenge_text=challenge_text,
-                        raw_keywords=raw_keywords,
-                    )
-                    if not local:
-                        continue
-                    seen.add(profile_id)
-                    validated.append(local)
-                validated.sort(key=lambda x: x["score"], reverse=True)
-                for rank, item in enumerate(validated[:3], start=1):
-                    item["rank"] = rank
-                return validated[:3]
+            raw = await self._complete(prompt, max_tokens=1024)
+            raw = re.sub(r"```json|```", "", raw).strip()
+            matches = json.loads(raw)
+            if isinstance(matches, dict):
+                matches = matches.get("matches") or matches.get("results") or []
+            validated: list[dict[str, Any]] = []
+            seen: set[str] = set()
+            for m in matches:
+                if not isinstance(m, dict) or not m.get("profile_id"):
+                    continue
+                profile_id = m["profile_id"]
+                if profile_id in seen:
+                    continue
+                profile = profiles_by_id.get(profile_id)
+                if not profile:
+                    continue
+                # Local scorer is source of truth for fit + reasoning text.
+                local = self._score_profile(
+                    challenge,
+                    profile,
+                    kind=kind,
+                    keywords=keywords,
+                    challenge_text=challenge_text,
+                    raw_keywords=raw_keywords,
+                )
+                if not local:
+                    continue
+                seen.add(profile_id)
+                validated.append(local)
+            validated.sort(key=lambda x: x["score"], reverse=True)
+            for rank, item in enumerate(validated[:3], start=1):
+                item["rank"] = rank
+            return validated[:3]
         except Exception as e:
-            print(f"Qwen error: {e}")
+            print(f"Anthropic match error: {e}")
             return self._mock_match(challenge, profiles)
 
     async def suggest_keywords_from_publications(
@@ -722,24 +734,16 @@ Publications:
 
 Return ONLY JSON: {{"expertise_tags": ["..."], "skills": ["..."]}}"""
 
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False,
-            "format": "json",
-        }
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                resp = await client.post(f"{self.url}/api/generate", json=payload)
-                raw = resp.json().get("response", "{}")
-                raw = re.sub(r"```json|```", "", raw).strip()
-                data = json.loads(raw)
-                return {
-                    "expertise_tags": [str(t).strip() for t in (data.get("expertise_tags") or []) if str(t).strip()][:8],
-                    "skills": [str(t).strip() for t in (data.get("skills") or []) if str(t).strip()][:6],
-                }
+            raw = await self._complete(prompt, max_tokens=512)
+            raw = re.sub(r"```json|```", "", raw).strip()
+            data = json.loads(raw)
+            return {
+                "expertise_tags": [str(t).strip() for t in (data.get("expertise_tags") or []) if str(t).strip()][:8],
+                "skills": [str(t).strip() for t in (data.get("skills") or []) if str(t).strip()][:6],
+            }
         except Exception as e:
-            print(f"Qwen suggest keywords error: {e}")
+            print(f"Anthropic suggest keywords error: {e}")
             return self._mock_suggest_keywords(publications)
 
     def _mock_suggest_keywords(self, publications: list[dict[str, Any]]) -> dict[str, list[str]]:
@@ -787,7 +791,7 @@ Return ONLY JSON: {{"expertise_tags": ["..."], "skills": ["..."]}}"""
         nearby: list[str],
         challenge_title: str | None = None,
     ) -> str:
-        """Short Knowledge Map briefing via Qwen (Ollama). Falls back locally if unavailable."""
+        """Short Knowledge Map briefing via Claude. Falls back locally if unavailable."""
         if self.use_mock:
             return self._mock_map_briefing(
                 name=name,
@@ -820,19 +824,12 @@ Context: {challenge_line}
 
 Return ONLY plain text (no JSON, no markdown)."""
 
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False,
-        }
         try:
-            async with httpx.AsyncClient(timeout=20.0) as client:
-                resp = await client.post(f"{self.url}/api/generate", json=payload)
-                text = (resp.json().get("response") or "").strip()
-                if text:
-                    return text[:600]
+            text = await self._complete(prompt, max_tokens=256)
+            if text:
+                return text[:600]
         except Exception as e:
-            print(f"Qwen map briefing error: {e}")
+            print(f"Anthropic map briefing error: {e}")
 
         return self._mock_map_briefing(
             name=name,

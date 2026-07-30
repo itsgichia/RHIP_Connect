@@ -2,7 +2,7 @@
 
 Digital operating system for the Randwick Health & Innovation Precinct (RHIP). The platform includes a public landing page with precinct KPIs and an authenticated area for precinct workers: expertise directory, AI-powered challenge board, innovation pipeline, and precinct passport.
 
-**Tech stack:** React 18 + Vite + Tailwind CSS · Python 3.11 + FastAPI · SQLite · Qwen via Ollama (local AI) · Firebase Auth · JWT
+**Tech stack:** React 18 + Vite + Tailwind CSS · Python 3.11 + FastAPI · SQLite · Anthropic Claude (Haiku) · Firebase Auth · JWT
 
 ---
 
@@ -11,7 +11,7 @@ Digital operating system for the Randwick Health & Innovation Precinct (RHIP). T
 - **Node.js** 18+ and npm
 - **Python** 3.11+
 - **Firebase project** — handles sign-up, email verification, and password reset — [Firebase Console](https://console.firebase.google.com)
-- **Ollama** (optional, for AI challenge matching) — [ollama.com](https://ollama.com)
+- **Anthropic API key** (optional, for AI challenge matching) — [console.anthropic.com](https://console.anthropic.com)
 
 ---
 
@@ -92,19 +92,15 @@ python -m app.seed
 
 This creates `Backend/rhip_connect.db` and loads demo users, profiles, projects, KPIs, and events from `data/`. **Warning:** re-running the seed drops and recreates all tables.
 
-### 6. AI — Ollama (optional)
+### 6. AI — Anthropic Claude (optional)
 
-AI challenge matching uses Qwen locally. Skip this step and set `USE_MOCK_AI=true` in `Backend/.env` if you do not have Ollama installed.
-
-```bash
-ollama pull qwen2.5:3b    # one-time download (lighter; use qwen2.5:7b if you have more RAM)
-ollama serve              # leave running (or use the Ollama desktop app)
-```
-
-Verify the model is available:
+AI challenge matching, keyword suggestions, and Knowledge Map briefings use the Anthropic API (`claude-haiku-4-5` by default). Set `ANTHROPIC_API_KEY` in `Backend/.env`. Skip this and set `USE_MOCK_AI=true` to use rule-based matching only (no API calls).
 
 ```bash
-ollama list
+# In Backend/.env
+ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_MODEL=claude-haiku-4-5   # cheapest; override if needed
+USE_MOCK_AI=false
 ```
 
 ---
@@ -113,15 +109,7 @@ ollama list
 
 Use separate terminal windows/tabs. Start services in this order:
 
-### Terminal 1 — AI (optional)
-
-```bash
-ollama serve
-```
-
-Skip if using `USE_MOCK_AI=true`.
-
-### Terminal 2 — Backend API
+### Terminal 1 — Backend API
 
 ```bash
 source .venv/bin/activate
@@ -132,7 +120,7 @@ uvicorn app.main:app --reload --port 8000
 API docs: [http://localhost:8000/docs](http://localhost:8000/docs)  
 Health check: [http://localhost:8000/health](http://localhost:8000/health)
 
-### Terminal 3 — Frontend
+### Terminal 2 — Frontend
 
 ```bash
 cd Frontend
@@ -153,8 +141,9 @@ Key settings for `Backend/.env`:
 |----------|-------------|
 | `SECRET_KEY` | JWT signing key — generate with `python3 -c "import secrets; print(secrets.token_urlsafe(64))"` |
 | `DATABASE_URL` | SQLite path, e.g. `sqlite:///./rhip_connect.db` |
-| `QWEN_URL` / `QWEN_MODEL` | Ollama endpoint and model (default: `http://localhost:11434`, `qwen2.5:3b`) |
-| `USE_MOCK_AI` | Set to `true` to use rule-based matching instead of Ollama |
+| `ANTHROPIC_API_KEY` | Anthropic API key for Claude (challenge matching, keywords, map briefings) |
+| `ANTHROPIC_MODEL` | Claude model id (default: `claude-haiku-4-5`) |
+| `USE_MOCK_AI` | Set to `true` to use rule-based matching instead of the Anthropic API |
 | `FIREBASE_SERVICE_ACCOUNT_PATH` | Path to Firebase service account JSON (required for Firebase auth) |
 | `FRONTEND_URL` | Frontend origin used in platform notification email links |
 | `ADMIN_EMAIL` | Recipient for tenant/investor enquiry notifications |
@@ -242,7 +231,7 @@ cd Frontend && npm run lint
 | Issue | Fix |
 |-------|-----|
 | CORS errors | Ensure the backend is on port 8000 and frontend on 5173 |
-| AI matching fails | Check Ollama is running (`ollama list`) or set `USE_MOCK_AI=true` |
+| AI matching fails | Confirm `ANTHROPIC_API_KEY` is set (no spaces), credits available in Claude Console, or set `USE_MOCK_AI=true` |
 | Firebase sign-up/login errors | Verify `VITE_FIREBASE_*` in frontend and service account JSON on backend |
 | Verification email not received | Check spam; confirm Email/Password is enabled in Firebase Console |
 | Demo account login fails | Use seeded credentials above — backend JWT fallback only runs when Firebase auth fails for that email |

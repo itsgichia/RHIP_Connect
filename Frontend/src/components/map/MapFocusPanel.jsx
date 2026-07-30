@@ -119,7 +119,7 @@ export default function MapFocusPanel({
             Map briefing
           </h3>
           {briefingLoading ? (
-            <p className="text-rhip-muted text-sm animate-pulse">Qwen is explaining this neighbourhood…</p>
+            <p className="text-rhip-muted text-sm animate-pulse">Anthropic is explaining this neighbourhood…</p>
           ) : briefing ? (
             <p className="text-rhip-body leading-relaxed">{briefing}</p>
           ) : (
