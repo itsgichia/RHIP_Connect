@@ -17,6 +17,16 @@ dist/
 .idea/
 .vscode/
 
+# macOS Finder duplicate copies (e.g. "file 2.py", ".gitignore 2")
+* 2
+* 2.*
+* 3
+* 3.*
+* 4
+* 4.*
+* 5
+* 5.*
+
 # Firebase credentials
 firebase-service-account.json
 **/firebase-service-account.json
