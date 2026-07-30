@@ -1,0 +1,12 @@
+#!/bin/sh
+# Block macOS Finder duplicate copies (e.g. "file 2.py", ".gitignore 2")
+# Enable once: git config core.hooksPath .githooks
+
+duplicates=$(git diff --cached --name-only --diff-filter=A | grep -E ' [0-9]+(\.|$)')
+if [ -n "$duplicates" ]; then
+  echo "error: refusing to commit macOS duplicate 'N' copies:"
+  echo "$duplicates"
+  echo "Remove these files (or unstage them) and try again."
+  exit 1
+fi
+exit 0
