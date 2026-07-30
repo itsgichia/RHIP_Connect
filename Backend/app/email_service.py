@@ -25,6 +25,9 @@ MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
 MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "True").lower() == "true"
 MAIL_SSL_TLS = os.getenv("MAIL_SSL_TLS", "False").lower() == "true"
 
+# Live demo: skip all outbound email (avoids Mailtrap rate limits / SMTP load).
+DISABLE_EMAILS = os.getenv("DISABLE_EMAILS", "false").lower() in ("1", "true", "yes")
+
 # Mailtrap Email Sandbox (Testing) — preferred for demos when set.
 # From Mailtrap → Email Sandboxes → My Sandbox → Integrations.
 MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN", "").strip()
@@ -144,6 +147,11 @@ async def _send_via_mailtrap_sandbox(to: str, subject: str, body: str) -> None:
 
 
 async def _send_email(to: str, subject: str, body: str) -> None:
+    if DISABLE_EMAILS:
+        logger.info("=== EMAIL (disabled for demo) ===")
+        logger.info("To: %s | Subject: %s", to, subject)
+        return
+
     to, is_demo_remap = _apply_demo_remap(to)
 
     # Prefer Mailtrap sandbox API when configured (matches Email Testing Integrations UI).
@@ -285,7 +293,7 @@ async def send_match_notification_email(
     body = f"""
     <p>Hi {researcher.name},</p>
     <p>Dr. {clinician_name} posted a clinical challenge: <strong>{challenge.title}</strong>.</p>
-    <p>Qwen ranked you #{match_rank} because: <em>{reasoning}</em></p>
+    <p>Anthropic ranked you #{match_rank} because: <em>{reasoning}</em></p>
     <p><a href="{FRONTEND_URL}/challenges">Log in to RHIP Connect</a> to view and respond.</p>
     """
     await _send_email(
