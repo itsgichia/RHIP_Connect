@@ -7,7 +7,10 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./rhip_connect.db")
+DATABASE_URL = (os.getenv("DATABASE_URL") or "").strip()
+# Empty/unset → local SQLite. A blank Railway var must not reach create_engine.
+if not DATABASE_URL:
+    DATABASE_URL = "sqlite:///./rhip_connect.db"
 # Railway / Heroku style URLs use postgres://; SQLAlchemy expects postgresql://
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)

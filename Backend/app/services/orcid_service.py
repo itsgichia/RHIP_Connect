@@ -50,6 +50,12 @@ def normalize_orcid_id(value: str | None) -> str | None:
     return raw
 
 
+def _has_client_credentials() -> bool:
+    client_id = (os.getenv("ORCID_CLIENT_ID") or "").strip()
+    client_secret = (os.getenv("ORCID_CLIENT_SECRET") or "").strip()
+    return bool(client_id and client_secret)
+
+
 def _client_credentials() -> tuple[str, str]:
     client_id = (os.getenv("ORCID_CLIENT_ID") or "").strip()
     client_secret = (os.getenv("ORCID_CLIENT_SECRET") or "").strip()
@@ -303,7 +309,11 @@ def resolve_orcid_id(
     3. given-names + family-name alone (exactly one hit)
 
     Returns None when the person is not uniquely found in ORCID.
+    Search requires ORCID_CLIENT_ID / ORCID_CLIENT_SECRET; without them returns None.
     """
+    if not _has_client_credentials():
+        return None
+
     email_clean = (email or "").strip().lower()
     if email_clean and "@" in email_clean:
         hits = _search_orcid_ids(f"email:{_escape_solr(email_clean)}", rows=3)
@@ -338,30 +348,7 @@ def resolve_orcid_id(
     return None
 
 
-def fetch_works(orcid_id: str) -> list[dict[str, Any]]:
-    """Return normalised publication records for a public ORCID iD."""
-    orcid = normalize_orcid_id(orcid_id)
-    if not orcid:
-        raise ValueError("ORCID iD is required")
-
-    token = _get_access_token()
-    url = f"{_api_base()}/{orcid}/works"
-
-    with httpx.Client(timeout=REQUEST_TIMEOUT) as client:
-        response = client.get(url, headers=_auth_headers(token))
-        if response.status_code == 401:
-            token = _get_access_token(force=True)
-            response = client.get(url, headers=_auth_headers(token))
-
-    if response.status_code == 404:
-        raise OrcidApiError("ORCID record not found", status_code=404)
-    if response.status_code >= 400:
-        raise OrcidApiError(
-            f"ORCID works request failed ({response.status_code})",
-            status_code=response.status_code,
-        )
-
-    data = response.json()
+def _parse_works_payload(data: dict[str, Any]) -> list[dict[str, Any]]:
     works: list[dict[str, Any]] = []
     seen_titles: set[str] = set()
     for group in data.get("group") or []:
@@ -378,3 +365,37 @@ def fetch_works(orcid_id: str) -> list[dict[str, Any]]:
 
     works.sort(key=lambda w: (w.get("year") is None, -(w.get("year") or 0), w.get("title") or ""))
     return works
+
+
+def fetch_works(orcid_id: str) -> list[dict[str, Any]]:
+    """Return normalised publication records for a public ORCID iD.
+
+    Uses client credentials when configured; otherwise reads the Public API
+    anonymously (works for public records without Railway/local secrets).
+    """
+    orcid = normalize_orcid_id(orcid_id)
+    if not orcid:
+        raise ValueError("ORCID iD is required")
+
+    url = f"{_api_base()}/{orcid}/works"
+    public_headers = {"Accept": "application/vnd.orcid+json"}
+
+    with httpx.Client(timeout=REQUEST_TIMEOUT) as client:
+        if _has_client_credentials():
+            token = _get_access_token()
+            response = client.get(url, headers=_auth_headers(token))
+            if response.status_code == 401:
+                token = _get_access_token(force=True)
+                response = client.get(url, headers=_auth_headers(token))
+        else:
+            response = client.get(url, headers=public_headers)
+
+    if response.status_code == 404:
+        raise OrcidApiError("ORCID record not found", status_code=404)
+    if response.status_code >= 400:
+        raise OrcidApiError(
+            f"ORCID works request failed ({response.status_code})",
+            status_code=response.status_code,
+        )
+
+    return _parse_works_payload(response.json())

@@ -109,14 +109,17 @@ def get_profile_orcid_works(
 
     try:
         orcid_id = _resolve_and_store_orcid(profile, db)
-    except orcid_service.OrcidConfigError as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except orcid_service.OrcidConfigError:
+        # Search needs client credentials; still serve works if orcid_id is already stored.
+        orcid_id = profile.orcid_id
 
     if not orcid_id:
         return OrcidWorksResponse(orcid_id=None, works=[])
 
     try:
         works = orcid_service.fetch_works(orcid_id)
+    except orcid_service.OrcidConfigError:
+        return OrcidWorksResponse(orcid_id=orcid_id, works=[])
     except orcid_service.OrcidApiError as exc:
         status = 404 if exc.status_code == 404 else 502
         if exc.status_code in (401, 403):
