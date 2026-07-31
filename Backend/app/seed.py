@@ -508,6 +508,59 @@ def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: li
     )
 
 
+def _enrich_skills_from_publications(
+    db, profiles_by_email: dict[str, Profile]
+) -> None:
+    """Fill empty skills/expertise from publication titles (and abstracts when present).
+
+    Uses the same keyword extractor as the opt-in Suggest flow (mock heuristics at
+    seed time so Railway seed stays fast). Live Anthropic suggestions still run
+    via POST /directory/me/suggest-keywords when ANTHROPIC_API_KEY is set.
+    """
+    from app.services.ai_service import AIOrchestrator
+
+    ai = AIOrchestrator()
+    filled_skills = 0
+    filled_tags = 0
+
+    for profile in profiles_by_email.values():
+        needs_skills = not (profile.skills or [])
+        needs_tags = not (profile.expertise_tags or [])
+        if not needs_skills and not needs_tags:
+            continue
+
+        pubs = (
+            db.query(Publication)
+            .filter(Publication.profile_id == profile.id)
+            .order_by(Publication.year.desc())
+            .limit(10)
+            .all()
+        )
+        if not pubs:
+            continue
+
+        suggested = ai._mock_suggest_keywords(
+            [
+                {
+                    "title": p.title,
+                    "abstract": getattr(p, "abstract", None) or "",
+                }
+                for p in pubs
+            ]
+        )
+        if needs_skills and suggested.get("skills"):
+            profile.skills = suggested["skills"]
+            filled_skills += 1
+        if needs_tags and suggested.get("expertise_tags"):
+            profile.expertise_tags = suggested["expertise_tags"]
+            filled_tags += 1
+
+    print(
+        f"  Skills/tags from papers: {filled_skills} skills, "
+        f"{filled_tags} expertise tag profiles filled"
+    )
+
+
 def _seed_grant_projects(db, users_by_email: dict[str, User]) -> int:
     """Create investable projects from curated ARC/MRFF grant IDs."""
     manifest_path = os.path.join(DATA_DIR, "grants_manifest.json")
@@ -755,6 +808,7 @@ def seed():
             profiles_by_email,
             researchers_data + PROFESSIONAL_TECHNICAL_REAL + POLICY_REAL,
         )
+        _enrich_skills_from_publications(db, profiles_by_email)
 
         admin = db.query(User).filter(User.email == "admin@rhip.edu.au").first()
         users_by_email = {u.email: u for u in db.query(User).all()}
