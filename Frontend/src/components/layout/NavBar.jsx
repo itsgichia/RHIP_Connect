@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowRightOnRectangleIcon,
+  Bars3Icon,
   ChevronDownIcon,
   Cog6ToothIcon,
   UserCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../context/AuthContext'
@@ -13,7 +15,7 @@ import RoleBadge from '../ui/RoleBadge'
 import NotificationBell from '../ui/NotificationBell'
 import api from '../../hooks/useApi'
 
-export default function NavBar() {
+export default function NavBar({ mobileNavOpen = false, onToggleMobileNav }) {
   const { user, logout, updateUser } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [openingProfile, setOpeningProfile] = useState(false)
@@ -72,9 +74,24 @@ export default function NavBar() {
   const handleMyProfile = () => openOwnProfile()
 
   return (
-    <header className="bg-white border-b border-rhip-border px-6 py-3 flex items-center justify-between">
-      <BrandLogo />
-      <div className="flex items-center gap-2">
+    <header className="bg-white border-b border-rhip-border px-4 md:px-6 py-3 flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2 min-w-0">
+        <button
+          type="button"
+          className="md:hidden p-2 -ml-1 rounded-xl text-rhip-dark hover:bg-rhip-lightBg transition-colors"
+          aria-label={mobileNavOpen ? 'Close navigation' : 'Open navigation'}
+          aria-expanded={mobileNavOpen}
+          onClick={onToggleMobileNav}
+        >
+          {mobileNavOpen ? (
+            <XMarkIcon className="w-6 h-6" />
+          ) : (
+            <Bars3Icon className="w-6 h-6" />
+          )}
+        </button>
+        <BrandLogo />
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
         <NotificationBell />
         <div className="relative" ref={menuRef}>
           <button

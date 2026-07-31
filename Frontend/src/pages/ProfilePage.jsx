@@ -10,6 +10,7 @@ import RoleBadge from '../components/ui/RoleBadge'
 import ProfileEditForm from '../components/profile/ProfileEditForm'
 import PartnerAccountView from '../components/profile/PartnerAccountView'
 import {
+  EmptySection,
   getObserverRoot,
   PROFILE_SECTIONS,
   ProfileSection,
@@ -375,7 +376,7 @@ export default function ProfilePage() {
           </ProfileSection>
 
           <ProfileSection id="skills" title="Skills">
-            {skills.length > 0 && (
+            {skills.length > 0 ? (
               <div className="flex flex-wrap gap-2 mb-4">
                 {skills.map((skill) => (
                   <span
@@ -386,11 +387,16 @@ export default function ProfilePage() {
                   </span>
                 ))}
               </div>
+            ) : (
+              !profile.is_own_profile && (
+                <EmptySection message="No skills listed yet." />
+              )
             )}
             {profile.is_own_profile && (
               <div className="mt-4 p-4 rounded-xl border border-gray-200 bg-white space-y-3">
                 <p className="text-sm text-rhip-muted">
-                  Opt in to suggest skills and expertise from your publications. Nothing is saved until you confirm.
+                  Opt in to suggest skills and expertise from your publications with AI.
+                  Nothing is saved until you confirm.
                 </p>
                 <button
                   type="button"
