@@ -56,7 +56,19 @@ export function getObserverRoot() {
 export function scrollToSection(id) {
   const el = document.getElementById(id)
   if (!el) return
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+  const container = getScrollContainer(el)
+  const viewport = document.scrollingElement || document.documentElement
+  if (!container || container === viewport || container === document.body) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    return
+  }
+
+  const top =
+    el.getBoundingClientRect().top -
+    container.getBoundingClientRect().top +
+    container.scrollTop
+  container.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' })
 }
 
 export function scrollPageToTop() {
