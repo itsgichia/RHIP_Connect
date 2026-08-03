@@ -2,6 +2,8 @@
 
 Presentation-ready diagrams of how the platform works. Verified **precinct members** (clinicians, researchers, PhD students, and related roles) share **one Challenge Board** — anyone can post and get matched.
 
+**Hosting (demo / shared environment):** React SPA on **Vercel**; FastAPI API in a **Docker** image on **Railway**; **PostgreSQL** on Railway. Local development can still use SQLite.
+
 ---
 
 ## 1. System story (problem → outcomes)
@@ -20,7 +22,7 @@ flowchart LR
     end
 
     subgraph frontend ["3. What people use"]
-        web["React app"]
+        web["React app on Vercel"]
         landing["Landing and KPIs"]
         directory["Directory"]
         challenges["Challenge Board"]
@@ -31,9 +33,9 @@ flowchart LR
     end
 
     subgraph backend ["4. Behind the scenes"]
-        api["FastAPI"]
+        api["FastAPI in Docker on Railway"]
         auth["Auth and secure login"]
-        data[("SQLite")]
+        data[("PostgreSQL on Railway")]
     end
 
     subgraph intelligence ["5. Matching and data"]
@@ -67,7 +69,7 @@ flowchart LR
     data -.-> pubmed
 ```
 
-**How to read it:** Needs sit in silos → different audiences arrive → the website and API connect them → AI matches people on the Challenge Board → collaboration, pipeline visibility, and engagement.
+**How to read it:** Needs sit in silos → different audiences arrive → the website (Vercel) and API (Railway + Docker) connect them → AI matches people on the Challenge Board → collaboration, pipeline visibility, and engagement. Shared demo data lives in **PostgreSQL**, not a laptop SQLite file.
 
 **Data sources:** profile publications and Knowledge Map co-author edges come from **PubMed** (seed + cache). OpenAlex is not the primary paper source on this branch — see [`DATA_SOURCES.md`](./DATA_SOURCES.md).
 
@@ -171,6 +173,27 @@ flowchart TD
 | Reviews Top 3 matches | Scores + short reasons from AI (or mock scoring) |
 | Sends an intro | Opens a Messages thread; other person is notified |
 | Sees Matches for you | Their profile was selected for someone else’s challenge |
+
+---
+
+## 5. Deployed shape (shared demo)
+
+```mermaid
+flowchart LR
+    users[Users] --> vercel[Vercel SPA]
+    vercel -->|"HTTPS /api/v1"| railway[Railway FastAPI Docker]
+    railway --> pg[(PostgreSQL)]
+    railway --> firebase[Firebase Auth]
+```
+
+| Piece | Where it runs |
+|-------|----------------|
+| React + Vite frontend | **Vercel** |
+| FastAPI backend | **Railway** (built from repo **Dockerfile**) |
+| Database | **PostgreSQL** on Railway |
+| Auth emails / ID tokens | **Firebase Auth** |
+
+Seed the Railway database once (`python -m app.seed`) so directory and demo accounts appear for everyone using the Vercel link. Local SQLite is only for laptop development.
 
 ---
 

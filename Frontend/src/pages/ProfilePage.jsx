@@ -202,7 +202,6 @@ export default function ProfilePage() {
   const tags = profile.expertise_tags || []
   const skills = profile.skills || []
   const projects = profile.projects || []
-  const patents = profile.patents || []
   const news = profile.news || []
   const awards = profile.awards || []
   const dbScholarlyWorks = profile.scholarly_works || []
@@ -347,34 +346,6 @@ export default function ProfilePage() {
             )}
           </ProfileSection>
 
-          <ProfileSection id="highlights" title="Highlights">
-            {tags.length > 0 && (
-              <ul className="space-y-2 text-sm text-rhip-body">
-                {tags.slice(0, 5).map((tag) => (
-                  <li key={tag} className="flex items-start gap-2">
-                    <span className="text-rhip-teal mt-0.5">•</span>
-                    <span>{tag}</span>
-                  </li>
-                ))}
-                {(profile.publications > 0 || profile.active_projects > 0) && (
-                  <li className="flex items-start gap-2">
-                    <span className="text-rhip-teal mt-0.5">•</span>
-                    <span>
-                      {[
-                        profile.publications > 0 && `${profile.publications} publications`,
-                        profile.active_projects > 0 &&
-                          `${profile.active_projects} active research projects`,
-                      ]
-                        .filter(Boolean)
-                        .join(' and ')}
-                      .
-                    </span>
-                  </li>
-                )}
-              </ul>
-            )}
-          </ProfileSection>
-
           <ProfileSection id="skills" title="Skills">
             {skills.length > 0 ? (
               <div className="flex flex-wrap gap-2 mb-4">
@@ -432,9 +403,7 @@ export default function ProfilePage() {
             )}
           </ProfileSection>
 
-          <ProfileSection id="study-with-me" title="Study With Me" />
-
-          <ProfileSection id="insights" title="Insights">
+          <ProfileSection id="expertise" title="Expertise">
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
@@ -446,22 +415,6 @@ export default function ProfilePage() {
                   </span>
                 ))}
               </div>
-            )}
-          </ProfileSection>
-
-          <ProfileSection id="patents" title="Patents">
-            {patents.length > 0 && (
-              <ul className="divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
-                {patents.map((patent) => (
-                  <li key={`${patent.number}-${patent.title}`} className="p-4 bg-white">
-                    <p className="text-sm font-medium text-rhip-dark">{patent.title}</p>
-                    <div className="flex flex-wrap gap-3 mt-1 text-xs text-rhip-muted">
-                      {patent.number && <span>{patent.number}</span>}
-                      {patent.year && <span>{patent.year}</span>}
-                    </div>
-                  </li>
-                ))}
-              </ul>
             )}
           </ProfileSection>
 

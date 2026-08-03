@@ -61,7 +61,7 @@ Add on `Profile`:
 - `career_level: str | None` — enum-like: `student | ecr | mid | senior | executive`
 - Keep `is_public`; enforce on detail GET
 
-Migration approach (SQLite demo DB): extend model + recreate/reseed in dev (`seed.py`); document that production would need Alembic.
+Migration approach: extend model + recreate/reseed in dev (`seed.py`) against local SQLite or Railway PostgreSQL; document that longer-lived production would need Alembic.
 
 Seed mapping:
 

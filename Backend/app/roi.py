@@ -17,7 +17,7 @@ _STORIES_PATH = _DATA_DIR / "success_stories.json"
 _READINESS_POINTS = {
     Readiness.EARLY: 5,
     Readiness.FEASIBILITY: 10,
-    Readiness.CLINICAL: 16,
+    Readiness.CLINICAL: 15,
     Readiness.COMMERCIAL: 20,
 }
 
