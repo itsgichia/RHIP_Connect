@@ -1,10 +1,6 @@
 import { formatAud } from '../../utils/formatters'
 import { trlBadgeClass, trlFullLabel, trlShortLabel, trlStageBandLabel } from '../../utils/trl'
-import {
-  formatIllustrativeMultiple,
-  indicativeBandClass,
-  indicativeBandLabel,
-} from '../../utils/roi'
+import { indicativeBandClass, indicativeBandLabel } from '../../utils/roi'
 import { funderBadgeClass, funderLabel } from '../../utils/funder'
 
 export default function ProjectCard({
@@ -65,11 +61,8 @@ export default function ProjectCard({
         {project.lead_researcher_name && <span>{project.lead_researcher_name}</span>}
       </div>
       {showIndicativeRoi && project.indicative_score != null && (
-        <div className="mt-3 flex items-center justify-between gap-2 text-xs">
-          <span className="text-rhip-muted">{indicativeBandLabel(project.indicative_band)}</span>
-          <span className="font-medium text-rhip-dark">
-            Illus. {formatIllustrativeMultiple(project.illustrative_multiple)}
-          </span>
+        <div className="mt-3 text-xs text-rhip-muted">
+          {indicativeBandLabel(project.indicative_band)}
         </div>
       )}
       {(project.funding_raised > 0 || project.funding_goal > 0) && (
