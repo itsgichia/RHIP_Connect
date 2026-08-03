@@ -12,11 +12,8 @@ import { canInitiateChat } from '../../utils/roles'
 
 export const PROFILE_SECTIONS = [
   { id: 'overview', label: 'Overview' },
-  { id: 'highlights', label: 'Highlights' },
   { id: 'skills', label: 'Skills' },
-  { id: 'study-with-me', label: 'Study With Me' },
-  { id: 'insights', label: 'Insights' },
-  { id: 'patents', label: 'Patents' },
+  { id: 'expertise', label: 'Expertise' },
   { id: 'projects', label: 'Projects' },
   { id: 'scholarly-works', label: 'Scholarly Works' },
   { id: 'collaboration-map', label: 'Collaboration Map' },
