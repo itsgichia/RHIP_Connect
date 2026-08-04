@@ -549,6 +549,9 @@ def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: li
         if publications:
             profile.publications = max(profile.publications, len(publications))
 
+    # Session uses autoflush=False — flush so skills enrichment can query publications.
+    db.flush()
+
     orcid_service.save_cache(orcid_cache_path, orcid_cache)
     save_pubmed_cache(pubmed_cache_path, pubmed_cache)
     print(
