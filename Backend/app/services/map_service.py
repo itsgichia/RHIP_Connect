@@ -36,6 +36,62 @@ def _normalize_topic(raw: str) -> str:
     return re.sub(r"\s+", " ", (raw or "").strip().lower())
 
 
+def _normalize_doi(raw: str | None) -> str | None:
+    """Canonical DOI for co-authorship matching (ORCID paper identity)."""
+    if not raw:
+        return None
+    doi = str(raw).strip()
+    if not doi:
+        return None
+    lower = doi.lower()
+    for prefix in (
+        "https://doi.org/",
+        "http://doi.org/",
+        "https://dx.doi.org/",
+        "http://dx.doi.org/",
+        "doi:",
+    ):
+        if lower.startswith(prefix):
+            doi = doi[len(prefix) :]
+            break
+    doi = doi.strip().rstrip("/").lower()
+    return doi or None
+
+
+def _paper_identity(pub: Publication) -> tuple[str, dict[str, Any]] | None:
+    """Return (match_key, paper meta) for co-authorship.
+
+    Same principle as the old PubMed PMID graph: two profiles sharing a paper
+    identifier are collaborators. Prefer DOI (ORCID's primary external id);
+    fall back to PMID when a work has no DOI.
+    """
+    doi = _normalize_doi(pub.doi)
+    pmid = str(pub.pmid).strip() if pub.pmid else ""
+    title = pub.title or ""
+    year = pub.year
+    if doi:
+        url = pub.url or f"https://doi.org/{doi}"
+        return f"doi:{doi}", {
+            "key": f"doi:{doi}",
+            "doi": doi,
+            "pmid": pmid or None,
+            "title": title,
+            "year": year,
+            "url": url,
+        }
+    if pmid:
+        url = pub.url or f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+        return f"pmid:{pmid}", {
+            "key": f"pmid:{pmid}",
+            "doi": None,
+            "pmid": pmid,
+            "title": title,
+            "year": year,
+            "url": url,
+        }
+    return None
+
+
 def _display_topic(raw: str) -> str:
     cleaned = re.sub(r"\s+", " ", (raw or "").strip())
     return cleaned or "General"
@@ -226,47 +282,40 @@ def _real_edges(db: Session, profile_ids: set[str], profile_by_id: dict[str, Pro
             }
         )
 
-    # PubMed co-authorship (shared PMID across profiles — not private messages)
+    # ORCID-style co-authorship: shared paper identity (DOI preferred, PMID fallback)
     pubs = (
         db.query(Publication)
-        .filter(
-            Publication.profile_id.in_(profile_ids),
-            Publication.pmid.isnot(None),
-            Publication.pmid != "",
-        )
+        .filter(Publication.profile_id.in_(profile_ids))
         .all()
     )
-    pmid_profiles: dict[str, set[str]] = defaultdict(set)
-    pmid_meta: dict[str, dict[str, Any]] = {}
+    paper_profiles: dict[str, set[str]] = defaultdict(set)
+    paper_meta: dict[str, dict[str, Any]] = {}
     for pub in pubs:
-        pmid = str(pub.pmid).strip()
-        if not pmid:
+        identity = _paper_identity(pub)
+        if not identity:
             continue
-        pmid_profiles[pmid].add(pub.profile_id)
-        if pmid not in pmid_meta:
-            pmid_meta[pmid] = {"title": pub.title or "", "year": pub.year}
+        key, meta = identity
+        paper_profiles[key].add(pub.profile_id)
+        if key not in paper_meta:
+            paper_meta[key] = meta
 
     pair_papers: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
-    for pmid, owners in pmid_profiles.items():
+    for key, owners in paper_profiles.items():
         if len(owners) < 2:
             continue
         owner_list = sorted(owners)
-        meta = pmid_meta.get(pmid) or {}
+        meta = paper_meta.get(key) or {}
         for i, a in enumerate(owner_list):
             for b in owner_list[i + 1 :]:
-                pair_papers[(a, b)].append(
-                    {
-                        "pmid": pmid,
-                        "title": meta.get("title") or "",
-                        "year": meta.get("year"),
-                    }
-                )
+                pair_papers[(a, b)].append(dict(meta))
 
     for (a, b), papers in pair_papers.items():
         shared_count = len(papers)
         weight = min(0.99, 0.75 + 0.05 * shared_count)
         titles = [p["title"] for p in papers if p.get("title")][:3]
-        pmids = [p["pmid"] for p in papers]
+        dois = [p["doi"] for p in papers if p.get("doi")]
+        pmids = [p["pmid"] for p in papers if p.get("pmid")]
+        urls = [p["url"] for p in papers if p.get("url")]
         add_edge(
             a,
             b,
@@ -274,12 +323,17 @@ def _real_edges(db: Session, profile_ids: set[str], profile_by_id: dict[str, Pro
             kind="coauthor",
             weight=weight,
             provenance={
-                "source": "pubmed",
+                "source": "orcid",
                 "shared_count": shared_count,
+                "papers": papers,
+                "dois": dois,
                 "pmids": pmids,
                 "titles": titles,
+                "urls": urls,
+                "doi": dois[0] if dois else None,
                 "pmid": pmids[0] if pmids else None,
                 "title": titles[0] if titles else None,
+                "url": urls[0] if urls else None,
             },
         )
 
@@ -901,25 +955,57 @@ def build_knowledge_map(
                 continue
             edge = edge_by_neighbour.get(n["id"]) or {}
             prov = edge.get("provenance") or {}
-            pmids = list(prov.get("pmids") or [])
-            if not pmids and prov.get("pmid"):
-                pmids = [prov["pmid"]]
-            titles = list(prov.get("titles") or [])
-            if not titles and prov.get("title"):
-                titles = [prov["title"]]
+            papers = list(prov.get("papers") or [])
             shared_publications = []
-            for i, pmid in enumerate(pmids):
-                pmid_str = str(pmid).strip()
-                if not pmid_str:
-                    continue
-                title = titles[i] if i < len(titles) else (titles[0] if titles else f"PMID {pmid_str}")
-                shared_publications.append(
-                    {
-                        "pmid": pmid_str,
-                        "title": title,
-                        "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid_str}/",
-                    }
-                )
+            if papers:
+                for paper in papers:
+                    doi = paper.get("doi")
+                    pmid = paper.get("pmid")
+                    title = paper.get("title") or (
+                        f"DOI {doi}" if doi else (f"PMID {pmid}" if pmid else "Shared work")
+                    )
+                    url = paper.get("url")
+                    if not url and doi:
+                        url = f"https://doi.org/{doi}"
+                    elif not url and pmid:
+                        url = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+                    shared_publications.append(
+                        {
+                            "doi": doi,
+                            "pmid": pmid,
+                            "title": title,
+                            "url": url,
+                            "year": paper.get("year"),
+                        }
+                    )
+            else:
+                # Backward-compatible provenance without papers[]
+                dois = list(prov.get("dois") or [])
+                if not dois and prov.get("doi"):
+                    dois = [prov["doi"]]
+                pmids = list(prov.get("pmids") or [])
+                if not pmids and prov.get("pmid"):
+                    pmids = [prov["pmid"]]
+                titles = list(prov.get("titles") or [])
+                if not titles and prov.get("title"):
+                    titles = [prov["title"]]
+                n = max(len(dois), len(pmids), 1 if titles else 0)
+                for i in range(n):
+                    doi = dois[i] if i < len(dois) else None
+                    pmid = pmids[i] if i < len(pmids) else None
+                    title = (
+                        titles[i]
+                        if i < len(titles)
+                        else (titles[0] if titles else (f"DOI {doi}" if doi else f"PMID {pmid}"))
+                    )
+                    url = (
+                        f"https://doi.org/{doi}"
+                        if doi
+                        else (f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else None)
+                    )
+                    shared_publications.append(
+                        {"doi": doi, "pmid": pmid, "title": title, "url": url}
+                    )
             collaborator_nodes.append(
                 {
                     **n,
@@ -1001,7 +1087,7 @@ def build_knowledge_map(
                 {
                     "type": "real",
                     "label": "Recorded collaboration",
-                    "description": "PubMed co-authorship (shared publications)",
+                    "description": "ORCID co-authorship (shared publications by DOI)",
                 },
                 {
                     "type": "affinity",
