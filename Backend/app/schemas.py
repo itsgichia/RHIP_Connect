@@ -520,6 +520,7 @@ class PassportMyResponse(BaseModel):
     year: int
     cpd_hours_total: float = 0.0
     cpd_events_count: int = 0
+    can_view_cpd: bool = False
 
 
 class PassportEventResponse(BaseModel):

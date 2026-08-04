@@ -19,6 +19,8 @@
     "active_projects": 5,
     "institution": "Black Dog Institute",
     "role": "researcher",
+    "identity_facets": ["clinician", "researcher"],
+    "primary_lens": "clinician",
     "orcid_id": "0000-0003-3267-0554",
     "pubmed_query": "Loo C[Author] AND (UNSW[Affiliation] OR Black Dog[Affiliation])",
     "news": [

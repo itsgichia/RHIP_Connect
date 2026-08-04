@@ -9,12 +9,14 @@ from sqlalchemy.orm import Session
 from app import email_service
 from app.auth import get_current_user, require_roles
 from app.database import get_db
+from app.identity import user_can_view_cpd
 from app.models import (
     CpdCategory,
     Event,
     Notification,
     NotificationType,
     PassportEntry,
+    Profile,
     RewardTier,
     RewardTierLevel,
     Role,
@@ -309,6 +311,7 @@ def get_my_passport(
                 cpd_hours_total += float(event.cpd_hours)
                 cpd_events_count += 1
 
+    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
     return PassportMyResponse(
         tier=reward.tier,
         events_attended=reward.events_attended,
@@ -319,6 +322,7 @@ def get_my_passport(
         year=year,
         cpd_hours_total=round(cpd_hours_total, 2),
         cpd_events_count=cpd_events_count,
+        can_view_cpd=user_can_view_cpd(current_user, profile),
     )
 
 

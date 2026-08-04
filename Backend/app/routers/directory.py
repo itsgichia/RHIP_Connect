@@ -7,12 +7,13 @@ from sqlalchemy.orm import Session
 from app.auth import get_current_user
 from app.database import get_db
 from app.identity import (
+    access_role_from_facets,
     normalize_career_level,
     normalize_facets,
     profile_facets,
     validate_primary_lens,
 )
-from app.models import Institution, Profile, Project, Publication, User
+from app.models import Institution, Profile, Project, Publication, Role, User
 from app.routers.pipeline import _allowed_visibilities, _project_to_response
 from app.schemas import (
     DirectorySearchResponse,
@@ -155,6 +156,9 @@ def update_my_profile(
             raise HTTPException(status_code=400, detail="Select at least one identity facet")
         profile.identity_facets = facets
         profile.primary_lens = validate_primary_lens(facets, body.primary_lens or profile.primary_lens)
+        # Keep access role aligned for member accounts so dual clinician+researcher unlocks CPD.
+        if current_user.role in (Role.CLINICIAN, Role.RESEARCHER):
+            current_user.role = access_role_from_facets(facets, fallback=current_user.role)
     elif body.primary_lens is not None:
         facets = profile_facets(profile, current_user)
         profile.primary_lens = validate_primary_lens(facets, body.primary_lens)
