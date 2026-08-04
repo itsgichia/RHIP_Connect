@@ -23,6 +23,7 @@ from app.services.pubmed_service import (
     save_cache as save_pubmed_cache,
     _resolve_pubmed_mode,
 )
+from app.services import orcid_service
 from app.trl import readiness_from_trl
 from app.models import (
     AIMatch,
@@ -447,50 +448,91 @@ POLICY_REAL = [
 
 
 def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: list[dict]) -> None:
-    cache_path = os.path.join(DATA_DIR, "pubmed_cache.json")
-    cache = load_pubmed_cache(cache_path)
-    mode = _resolve_pubmed_mode()
-    max_results = int(os.getenv("PUBMED_MAX_RESULTS", "8"))
-    stats = {"cache": 0, "live": 0, "none": 0, "papers": 0}
+    """Load scholarly works for the knowledge map.
 
-    researchers_with_query = [
-        e for e in manifest if e.get("pubmed_query") and e.get("email")
-    ]
-    missing = sum(1 for e in researchers_with_query if not cache.get(e["email"]))
+    Prefer ORCID works (shared DOI co-authorship). Fall back to PubMed queries
+    when a researcher has no ORCID / no ORCID works.
+    """
+    orcid_cache_path = os.path.join(DATA_DIR, "orcid_works_cache.json")
+    orcid_cache = orcid_service.load_cache(orcid_cache_path)
+    orcid_mode = orcid_service._resolve_orcid_works_mode()
+    orcid_max = int(os.getenv("ORCID_WORKS_MAX_RESULTS", "40"))
+    orcid_stats = {"cache": 0, "live": 0, "none": 0, "papers": 0, "profiles": 0}
 
-    if mode == "auto":
-        if missing:
-            print(
-                f"  PubMed (auto): {len(cache)} cached, fetching {missing} missing from NCBI..."
-            )
-        else:
-            print(f"  PubMed (auto): all {len(researchers_with_query)} researchers cached")
-    elif mode == "live":
-        print(f"  PubMed (live): refreshing all {len(researchers_with_query)} researchers...")
-    else:
-        print(f"  PubMed (cache only): {len(cache)} researchers in cache")
+    pubmed_cache_path = os.path.join(DATA_DIR, "pubmed_cache.json")
+    pubmed_cache = load_pubmed_cache(pubmed_cache_path)
+    pubmed_mode = _resolve_pubmed_mode()
+    pubmed_max = int(os.getenv("PUBMED_MAX_RESULTS", "8"))
+    pubmed_stats = {"cache": 0, "live": 0, "none": 0, "papers": 0}
+
+    print(f"  ORCID works mode: {orcid_mode}")
+    print(f"  PubMed mode (fallback): {pubmed_mode}")
 
     for entry in manifest:
-        query = entry.get("pubmed_query")
         email = entry.get("email")
-        if not query or not email:
+        if not email:
             continue
         profile = profiles_by_email.get(email)
         if not profile:
             continue
 
-        publications, source = fetch_or_load_publications(
-            email=email,
-            query=query,
-            cache=cache,
-            max_results=max_results,
-            mode=mode,
-        )
-        stats[source] += 1
-        stats["papers"] += len(publications)
+        publications: list[dict] = []
+        used_orcid = False
 
-        if source == "live":
-            print(f"    + {len(publications)} papers for {entry['name']}")
+        orcid_id = profile.orcid_id or entry.get("orcid_id")
+        if not orcid_id and orcid_mode != "cache":
+            try:
+                orcid_id = orcid_service.resolve_orcid_id(
+                    email=email,
+                    name=entry.get("name") or profile.name,
+                    institution=entry.get("institution") or None,
+                )
+            except (orcid_service.OrcidConfigError, orcid_service.OrcidApiError, ValueError):
+                orcid_id = None
+            if orcid_id:
+                profile.orcid_id = orcid_id
+                profile.orcid_checked = True
+            elif not profile.orcid_checked:
+                profile.orcid_checked = True
+
+        if orcid_id:
+            try:
+                profile.orcid_id = orcid_service.normalize_orcid_id(orcid_id) or orcid_id
+            except ValueError:
+                profile.orcid_id = orcid_id
+            works, source = orcid_service.fetch_or_load_works(
+                cache_key=email,
+                orcid_id=profile.orcid_id,
+                cache=orcid_cache,
+                mode=orcid_mode,
+                max_results=orcid_max,
+            )
+            orcid_stats[source] += 1
+            if works:
+                used_orcid = True
+                orcid_stats["profiles"] += 1
+                orcid_stats["papers"] += len(works)
+                publications = works
+                if source == "live":
+                    print(f"    + ORCID {len(works)} works for {entry.get('name')}")
+
+        if not used_orcid:
+            query = entry.get("pubmed_query")
+            if query:
+                pubs, source = fetch_or_load_publications(
+                    email=email,
+                    query=query,
+                    cache=pubmed_cache,
+                    max_results=pubmed_max,
+                    mode=pubmed_mode,
+                )
+                pubmed_stats[source] += 1
+                pubmed_stats["papers"] += len(pubs)
+                publications = pubs
+                if source == "live":
+                    print(f"    + PubMed {len(pubs)} papers for {entry.get('name')}")
+            else:
+                pubmed_stats["none"] += 1
 
         for pub in publications:
             db.add(Publication(
@@ -507,10 +549,15 @@ def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: li
         if publications:
             profile.publications = max(profile.publications, len(publications))
 
-    save_pubmed_cache(cache_path, cache)
+    orcid_service.save_cache(orcid_cache_path, orcid_cache)
+    save_pubmed_cache(pubmed_cache_path, pubmed_cache)
     print(
-        f"  PubMed: {stats['papers']} papers "
-        f"({stats['cache']} from cache, {stats['live']} live, {stats['none']} missing)"
+        f"  ORCID: {orcid_stats['papers']} works on {orcid_stats['profiles']} profiles "
+        f"({orcid_stats['cache']} cache, {orcid_stats['live']} live, {orcid_stats['none']} missing)"
+    )
+    print(
+        f"  PubMed fallback: {pubmed_stats['papers']} papers "
+        f"({pubmed_stats['cache']} cache, {pubmed_stats['live']} live, {pubmed_stats['none']} missing)"
     )
 
 

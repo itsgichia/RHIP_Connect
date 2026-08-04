@@ -351,7 +351,7 @@ export default function MapPage() {
                 <>
                   <span
                     className="inline-flex items-center gap-1.5"
-                    title="PubMed co-authorship (shared publications)"
+                    title="ORCID co-authorship (shared publications by DOI)"
                   >
                     <span className="w-6 border-t-2 border-rhip-teal" />
                     Recorded collaboration

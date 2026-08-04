@@ -176,7 +176,7 @@ export default function MapFocusPanel({
                   {(c.shared_publications || []).length > 0 && (
                     <ul className="mt-1.5 ml-0.5 space-y-1 border-l-2 border-rhip-lightTeal pl-2.5">
                       {(c.shared_publications || []).slice(0, 3).map((paper) => (
-                        <li key={paper.pmid || paper.title}>
+                        <li key={paper.doi || paper.pmid || paper.title}>
                           {paper.url ? (
                             <a
                               href={paper.url}
@@ -191,9 +191,11 @@ export default function MapFocusPanel({
                               {paper.title}
                             </span>
                           )}
-                          {paper.pmid && (
+                          {paper.doi ? (
+                            <span className="text-[10px] text-rhip-muted">DOI {paper.doi}</span>
+                          ) : paper.pmid ? (
                             <span className="text-[10px] text-rhip-muted">PMID {paper.pmid}</span>
-                          )}
+                          ) : null}
                         </li>
                       ))}
                       {(c.shared_count || 0) > 3 && (

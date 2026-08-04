@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import time
@@ -399,3 +400,64 @@ def fetch_works(orcid_id: str) -> list[dict[str, Any]]:
         )
 
     return _parse_works_payload(response.json())
+
+
+def load_cache(cache_path: str) -> dict[str, list[dict[str, Any]]]:
+    if not os.path.isfile(cache_path):
+        return {}
+    with open(cache_path) as handle:
+        return json.load(handle)
+
+
+def save_cache(cache_path: str, cache: dict[str, list[dict[str, Any]]]) -> None:
+    os.makedirs(os.path.dirname(cache_path) or ".", exist_ok=True)
+    with open(cache_path, "w") as handle:
+        json.dump(cache, handle, indent=2)
+
+
+def _resolve_orcid_works_mode() -> str:
+    """How seed loads ORCID works: auto (default), cache, or live."""
+    explicit = (os.getenv("ORCID_WORKS_MODE") or "").lower().strip()
+    if explicit in ("auto", "cache", "live"):
+        return explicit
+    return "auto"
+
+
+def fetch_or_load_works(
+    *,
+    cache_key: str,
+    orcid_id: str,
+    cache: dict[str, list[dict[str, Any]]],
+    mode: str | None = None,
+    max_results: int | None = None,
+) -> tuple[list[dict[str, Any]], str]:
+    """Return (works, source) where source is cache | live | none.
+
+    Same caching pattern as PubMed seed enrichment.
+    """
+    resolved_mode = mode or _resolve_orcid_works_mode()
+    cached = cache.get(cache_key)
+
+    if resolved_mode == "cache":
+        return (list(cached) if cached else []), ("cache" if cached else "none")
+
+    if resolved_mode == "auto" and cached is not None:
+        works = list(cached)
+        if max_results is not None:
+            works = works[:max_results]
+        return works, "cache"
+
+    try:
+        works = fetch_works(orcid_id)
+    except (OrcidConfigError, OrcidApiError, ValueError, httpx.HTTPError):
+        if cached is not None:
+            works = list(cached)
+            if max_results is not None:
+                works = works[:max_results]
+            return works, "cache"
+        return [], "none"
+
+    if max_results is not None:
+        works = works[:max_results]
+    cache[cache_key] = works
+    return works, "live"
