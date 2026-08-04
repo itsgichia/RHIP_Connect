@@ -108,7 +108,7 @@ export default function ProfilePage() {
     try {
       const { data } = await api.post('/directory/me/suggest-keywords')
       setSuggestions(data)
-      toast.success('Suggestions ready, please review and apply below')
+      toast.success('New suggestions ready — replace or add to your current set')
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Could not suggest keywords')
     } finally {
@@ -116,21 +116,28 @@ export default function ProfilePage() {
     }
   }
 
-  const applySuggestions = async () => {
+  const applySuggestions = async ({ replace = true } = {}) => {
     if (!suggestions || savingSkills) return
     setSavingSkills(true)
     try {
-      const expertise = [
-        ...new Set([...(profile.expertise_tags || []), ...(suggestions.expertise_tags || [])]),
-      ]
-      const skills = [...new Set([...(profile.skills || []), ...(suggestions.skills || [])])]
+      const expertise = replace
+        ? [...new Set(suggestions.expertise_tags || [])]
+        : [
+            ...new Set([
+              ...(profile.expertise_tags || []),
+              ...(suggestions.expertise_tags || []),
+            ]),
+          ]
+      const skills = replace
+        ? [...new Set(suggestions.skills || [])]
+        : [...new Set([...(profile.skills || []), ...(suggestions.skills || [])])]
       const { data } = await api.patch('/directory/me', {
         expertise_tags: expertise,
         skills,
       })
       setProfile(data)
       setSuggestions(null)
-      toast.success('Tags and skills updated')
+      toast.success(replace ? 'Skills and expertise replaced' : 'Tags and skills updated')
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Could not apply suggestions')
     } finally {
@@ -375,8 +382,8 @@ export default function ProfilePage() {
             {profile.is_own_profile && (
               <div className="mt-4 p-4 rounded-xl border border-gray-200 bg-white space-y-3">
                 <p className="text-sm text-rhip-muted">
-                  Opt in to suggest skills and expertise from your publications with AI.
-                  Nothing is saved until you confirm.
+                  Skills and expertise are seeded from your publications with AI.
+                  Regenerate anytime if you want a different set — nothing is saved until you confirm.
                 </p>
                 <button
                   type="button"
@@ -384,7 +391,11 @@ export default function ProfilePage() {
                   disabled={suggesting}
                   className="px-4 py-2 text-sm rounded-xl border border-rhip-teal text-rhip-teal hover:bg-rhip-lightTeal disabled:opacity-50"
                 >
-                  {suggesting ? 'Suggesting…' : 'Suggest from my publications'}
+                  {suggesting
+                    ? 'Generating…'
+                    : skills.length || tags.length
+                      ? 'Regenerate with AI'
+                      : 'Suggest from my publications'}
                 </button>
                 {suggestions && (
                   <div className="space-y-2">
@@ -398,14 +409,24 @@ export default function ProfilePage() {
                         Expertise: {(suggestions.expertise_tags || []).join(', ')}
                       </p>
                     )}
-                    <button
-                      type="button"
-                      onClick={applySuggestions}
-                      disabled={savingSkills}
-                      className="px-4 py-2 text-sm rounded-xl bg-rhip-teal text-white hover:bg-rhip-seafoam disabled:opacity-50"
-                    >
-                      {savingSkills ? 'Saving…' : 'Apply suggestions'}
-                    </button>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => applySuggestions({ replace: true })}
+                        disabled={savingSkills}
+                        className="px-4 py-2 text-sm rounded-xl bg-rhip-teal text-white hover:bg-rhip-seafoam disabled:opacity-50"
+                      >
+                        {savingSkills ? 'Saving…' : 'Replace with these'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applySuggestions({ replace: false })}
+                        disabled={savingSkills}
+                        className="px-4 py-2 text-sm rounded-xl border border-gray-300 text-rhip-dark hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        Add to existing
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
