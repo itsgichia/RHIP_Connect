@@ -564,24 +564,47 @@ def _enrich_publications(db, profiles_by_email: dict[str, Profile], manifest: li
 def _enrich_skills_from_publications(
     db, profiles_by_email: dict[str, Profile]
 ) -> None:
-    """Fill empty skills/expertise from publication titles (and abstracts when present).
+    """Generate skills/expertise from publications after seed.
 
-    Uses the same keyword extractor as the opt-in Suggest flow (mock heuristics at
-    seed time so Railway seed stays fast). Live Anthropic suggestions still run
-    via POST /directory/me/suggest-keywords when ANTHROPIC_API_KEY is set.
+    Mode via SEED_AI_KEYWORDS:
+      - auto (default): live Anthropic when ANTHROPIC_API_KEY is set, else mock
+      - live: force Anthropic (falls back to mock if no key)
+      - mock: keyword heuristics only (fast, no API)
+      - off: skip
+
+    Overwrites skills and expertise_tags when suggestions are returned so every
+    researcher with papers gets a seeded set. Profile owners can regenerate later
+    via POST /directory/me/suggest-keywords.
     """
+    import asyncio
+
     from app.services.ai_service import AIOrchestrator
 
+    mode = (os.getenv("SEED_AI_KEYWORDS") or "auto").lower().strip()
+    if mode not in ("auto", "live", "mock", "off"):
+        mode = "auto"
+    if mode == "off":
+        print("  Skills/tags: skipped (SEED_AI_KEYWORDS=off)")
+        return
+
     ai = AIOrchestrator()
+    use_live = mode == "live" or (mode == "auto" and not ai.use_mock)
+    if mode == "live" and ai.use_mock:
+        print("  Skills/tags: SEED_AI_KEYWORDS=live but no API key — using mock")
+        use_live = False
+
+    print(f"  Skills/tags mode: {'anthropic' if use_live else 'mock'}")
+
     filled_skills = 0
     filled_tags = 0
+    skipped = 0
+
+    async def _suggest(pubs: list[dict]) -> dict:
+        if use_live:
+            return await ai.suggest_keywords_from_publications(pubs)
+        return ai._mock_suggest_keywords(pubs)
 
     for profile in profiles_by_email.values():
-        needs_skills = not (profile.skills or [])
-        needs_tags = not (profile.expertise_tags or [])
-        if not needs_skills and not needs_tags:
-            continue
-
         pubs = (
             db.query(Publication)
             .filter(Publication.profile_id == profile.id)
@@ -590,27 +613,34 @@ def _enrich_skills_from_publications(
             .all()
         )
         if not pubs:
+            skipped += 1
             continue
 
-        suggested = ai._mock_suggest_keywords(
-            [
-                {
-                    "title": p.title,
-                    "abstract": getattr(p, "abstract", None) or "",
-                }
-                for p in pubs
-            ]
-        )
-        if needs_skills and suggested.get("skills"):
-            profile.skills = suggested["skills"]
+        payload = [
+            {
+                "title": p.title,
+                "abstract": getattr(p, "abstract", None) or "",
+            }
+            for p in pubs
+        ]
+        try:
+            suggested = asyncio.run(_suggest(payload))
+        except Exception as exc:
+            print(f"    ! skills AI failed for {profile.name}: {exc}")
+            suggested = ai._mock_suggest_keywords(payload)
+
+        skills = suggested.get("skills") or []
+        tags = suggested.get("expertise_tags") or []
+        if skills:
+            profile.skills = skills
             filled_skills += 1
-        if needs_tags and suggested.get("expertise_tags"):
-            profile.expertise_tags = suggested["expertise_tags"]
+        if tags:
+            profile.expertise_tags = tags
             filled_tags += 1
 
     print(
-        f"  Skills/tags from papers: {filled_skills} skills, "
-        f"{filled_tags} expertise tag profiles filled"
+        f"  Skills/tags seeded: {filled_skills} skills, {filled_tags} expertise "
+        f"({skipped} profiles had no publications)"
     )
 
 
