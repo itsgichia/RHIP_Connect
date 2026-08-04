@@ -4,11 +4,7 @@ import api from '../../hooks/useApi'
 import ProjectInvestForm from '../forms/ProjectInvestForm'
 import { formatAud, formatDuration, formatStartDate } from '../../utils/formatters'
 import { trlBadgeClass, trlFullLabel, trlShortLabel } from '../../utils/trl'
-import {
-  formatIllustrativeMultiple,
-  indicativeBandClass,
-  indicativeBandLabel,
-} from '../../utils/roi'
+import { indicativeBandClass, indicativeBandLabel } from '../../utils/roi'
 import { funderBadgeClass, funderLabel } from '../../utils/funder'
 
 export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
@@ -170,30 +166,22 @@ export default function ProjectDetailModal({ projectId, onClose, onInvested }) {
 
               {project.indicative_score != null && (
                 <div className="rounded-xl border border-rhip-border p-5 space-y-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-medium text-rhip-muted uppercase tracking-wide mb-1">
-                        Indicative investment outlook
-                      </p>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${indicativeBandClass(
-                            project.indicative_band
-                          )}`}
-                        >
-                          {indicativeBandLabel(project.indicative_band)}
-                        </span>
-                        <span className="font-display text-2xl font-bold text-rhip-dark">
-                          {Math.round(project.indicative_score)}
-                          <span className="text-sm font-medium text-rhip-muted"> / 100</span>
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-rhip-muted mb-1">Illustrative multiple</p>
-                      <p className="font-display text-xl font-semibold text-rhip-teal">
-                        {formatIllustrativeMultiple(project.illustrative_multiple)}
-                      </p>
+                  <div>
+                    <p className="text-xs font-medium text-rhip-muted uppercase tracking-wide mb-1">
+                      Indicative investment outlook
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-xs font-medium ${indicativeBandClass(
+                          project.indicative_band
+                        )}`}
+                      >
+                        {indicativeBandLabel(project.indicative_band)}
+                      </span>
+                      <span className="font-display text-2xl font-bold text-rhip-dark">
+                        {Math.round(project.indicative_score)}
+                        <span className="text-sm font-medium text-rhip-muted"> / 100</span>
+                      </span>
                     </div>
                   </div>
 

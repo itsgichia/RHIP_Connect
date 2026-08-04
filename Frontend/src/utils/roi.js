@@ -9,8 +9,3 @@ export function indicativeBandClass(band) {
   if (band === 'promising') return 'bg-rhip-seafoam text-white'
   return 'bg-rhip-cardBg text-rhip-body'
 }
-
-export function formatIllustrativeMultiple(value) {
-  if (value == null || Number.isNaN(Number(value))) return '—'
-  return `${Number(value).toFixed(1)}×`
-}
