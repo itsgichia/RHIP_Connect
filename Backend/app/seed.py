@@ -601,13 +601,15 @@ def _enrich_skills_from_publications(
     filled_skills = 0
     filled_tags = 0
     skipped = 0
+    profiles = list(profiles_by_email.values())
+    with_pubs = 0
 
     async def _suggest(pubs: list[dict]) -> dict:
         if use_live:
             return await ai.suggest_keywords_from_publications(pubs)
         return ai._mock_suggest_keywords(pubs)
 
-    for profile in profiles_by_email.values():
+    for profile in profiles:
         pubs = (
             db.query(Publication)
             .filter(Publication.profile_id == profile.id)
@@ -618,6 +620,9 @@ def _enrich_skills_from_publications(
         if not pubs:
             skipped += 1
             continue
+
+        with_pubs += 1
+        print(f"    … skills/tags {with_pubs}: {profile.name}", flush=True)
 
         payload = [
             {
@@ -999,7 +1004,8 @@ def seed():
             profiles_by_email,
             researchers_data + PROFESSIONAL_TECHNICAL_REAL + POLICY_REAL,
         )
-        _enrich_skills_from_publications(db, profiles_by_email)
+        # Skills/tags AI runs after the main commit — it is slow and must not
+        # block logins if the process is interrupted (seed starts with drop_all).
 
         admin = db.query(User).filter(User.email == "admin@rhip.edu.au").first()
         users_by_email = {u.email: u for u in db.query(User).all()}
@@ -1216,6 +1222,12 @@ def seed():
             ))
 
         db.commit()
+        print("  Core seed committed — demo logins are available.")
+
+        # Slow Anthropic pass: safe to interrupt; core users/pubs already persisted.
+        _enrich_skills_from_publications(db, profiles_by_email)
+        db.commit()
+        print("  Seed complete.")
     finally:
         db.close()
 
