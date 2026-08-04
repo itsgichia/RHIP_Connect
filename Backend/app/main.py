@@ -98,11 +98,17 @@ def _ensure_sqlite_columns() -> None:
 _ensure_sqlite_columns()
 
 try:
-    from app.seed import sync_event_cpd_metadata
+    from app.seed import (
+        sync_clinician_access_roles,
+        sync_demo_cpd_attendance,
+        sync_event_cpd_metadata,
+    )
 
     sync_event_cpd_metadata()
+    sync_clinician_access_roles()
+    sync_demo_cpd_attendance()
 except Exception:
-    # Non-fatal: CPD metadata sync is best-effort for existing DBs.
+    # Non-fatal: CPD / clinician demo sync is best-effort for existing DBs.
     pass
 
 app = FastAPI(title="RHIP Connect API", version="1.0.0")

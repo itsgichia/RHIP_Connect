@@ -105,6 +105,17 @@ def profile_has_all_facets(profile: Profile, required: list[str], user: User | N
     return all(f in have for f in required)
 
 
+def user_can_view_cpd(user: User, profile: Profile | None = None) -> bool:
+    """CPD / MyCPD export for admins, clinicians, and dual clinician+researcher identities."""
+    if user.role == Role.ADMIN or user.role == Role.CLINICIAN:
+        return True
+    facets = profile_facets(profile, user) if profile else []
+    # Clinical academics often keep researcher access role but hold both facets.
+    if "clinician" in facets:
+        return True
+    return False
+
+
 def validate_primary_lens(facets: list[str], primary: str | None) -> str | None:
     if not facets:
         return None

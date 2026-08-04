@@ -5,6 +5,7 @@ from datetime import date, datetime
 from app.auth import hash_password
 from app.database import Base, SessionLocal, engine
 from app.identity import (
+    access_role_from_facets,
     derive_career_level,
     derive_facets_from_seed,
     validate_primary_lens,
@@ -39,11 +40,14 @@ from app.models import (
     KPI,
     KPICategory,
     ParticipantRole,
+    PassportEntry,
     Profile,
     Project,
     ProjectFunder,
     Publication,
     Readiness,
+    RewardTier,
+    RewardTierLevel,
     Role,
     ServiceTeamMember,
     Thread,
@@ -108,7 +112,11 @@ def _add_profile(db, institutions: dict, profile_data: dict) -> Profile:
         db.flush()
         institutions[inst_name] = inst
 
-    role = Role.RESEARCHER if profile_data.get("role") == "researcher" else Role.CLINICIAN
+    fallback_role = Role.RESEARCHER if profile_data.get("role") == "researcher" else Role.CLINICIAN
+    extras = build_profile_extras(profile_data)
+    facets = derive_facets_from_seed(profile_data)
+    # Clinical researchers (e.g. Colleen Loo) need CLINICIAN access for CPD / MyCPD.
+    role = access_role_from_facets(facets, fallback=fallback_role)
     user = User(
         name=profile_data["name"],
         email=profile_data["email"],
@@ -121,8 +129,6 @@ def _add_profile(db, institutions: dict, profile_data: dict) -> Profile:
     )
     db.add(user)
     db.flush()
-    extras = build_profile_extras(profile_data)
-    facets = derive_facets_from_seed(profile_data)
     primary = validate_primary_lens(facets, profile_data.get("primary_lens"))
     career = derive_career_level(profile_data)
     orcid_id = profile_data.get("orcid_id")
@@ -649,6 +655,78 @@ def _seed_grant_projects(db, users_by_email: dict[str, User]) -> int:
     return stats["seeded"]
 
 
+# Demo CPD scans for clinician demos (Passport QR codes shown in the UI).
+DEMO_CPD_ATTENDANCE = {
+    "c.loo@unsw.edu.au": [
+        "RHIP-SHOWCASE-2026",
+        "RHIP-CONF-2026-04",
+        "RHIP-WORKSHOP-2026-05",
+    ],
+}
+
+
+def _seed_passport_attendance(db, users_by_email: dict[str, User]) -> int:
+    """Attach demo passport scans + reward tiers for curated clinician accounts."""
+    created = 0
+    year = date.today().year
+    total_events = db.query(Event).filter(Event.event_year == year).count()
+    for email, qr_codes in DEMO_CPD_ATTENDANCE.items():
+        user = users_by_email.get(email)
+        if not user:
+            continue
+        attended = 0
+        for qr_code in qr_codes:
+            event = db.query(Event).filter(Event.qr_code == qr_code).first()
+            if not event:
+                continue
+            exists = (
+                db.query(PassportEntry)
+                .filter(PassportEntry.user_id == user.id, PassportEntry.event_id == event.id)
+                .first()
+            )
+            if exists:
+                attended += 1
+                continue
+            db.add(PassportEntry(
+                user_id=user.id,
+                event_id=event.id,
+                event_year=event.event_year,
+                scanned_at=datetime.combine(event.date, datetime.min.time()),
+            ))
+            created += 1
+            attended += 1
+        if attended == 0:
+            continue
+        if attended >= total_events > 0:
+            tier = RewardTierLevel.GOLD
+        elif attended >= 6:
+            tier = RewardTierLevel.SILVER
+        elif attended >= 3:
+            tier = RewardTierLevel.BRONZE
+        else:
+            tier = RewardTierLevel.NONE
+        reward = db.query(RewardTier).filter(RewardTier.user_id == user.id).first()
+        if not reward:
+            reward = RewardTier(
+                user_id=user.id,
+                year=year,
+                tier=tier,
+                events_attended=attended,
+                total_events_in_year=total_events,
+                grant_awarded=tier == RewardTierLevel.GOLD,
+            )
+            db.add(reward)
+        else:
+            reward.year = year
+            reward.tier = tier
+            reward.events_attended = attended
+            reward.total_events_in_year = total_events
+            if tier == RewardTierLevel.GOLD:
+                reward.grant_awarded = True
+            reward.last_calculated = datetime.utcnow()
+    return created
+
+
 def sync_event_cpd_metadata() -> int:
     """Patch CPD fields on existing events from mock_events.json (by qr_code)."""
     events_data = _load_json("mock_events.json")
@@ -676,6 +754,39 @@ def sync_event_cpd_metadata() -> int:
     finally:
         db.close()
     return updated
+
+
+def sync_clinician_access_roles() -> int:
+    """Promote users with a clinician identity facet to CLINICIAN access role."""
+    db = SessionLocal()
+    updated = 0
+    try:
+        for profile in db.query(Profile).all():
+            facets = profile.identity_facets or []
+            if "clinician" not in facets:
+                continue
+            user = db.query(User).filter(User.id == profile.user_id).first()
+            if not user or user.role in (Role.ADMIN, Role.INDUSTRY, Role.INVESTOR):
+                continue
+            if user.role != Role.CLINICIAN:
+                user.role = Role.CLINICIAN
+                updated += 1
+        db.commit()
+    finally:
+        db.close()
+    return updated
+
+
+def sync_demo_cpd_attendance() -> int:
+    """Backfill demo passport/CPD scans for curated clinician accounts on existing DBs."""
+    db = SessionLocal()
+    try:
+        users_by_email = {u.email: u for u in db.query(User).all()}
+        created = _seed_passport_attendance(db, users_by_email)
+        db.commit()
+        return created
+    finally:
+        db.close()
 
 
 def seed():
@@ -889,6 +1000,10 @@ def seed():
                 cpd_category=CpdCategory(cpd_category) if cpd_eligible and cpd_category else None,
                 cpd_notes=ev.get("cpd_notes") if cpd_eligible else None,
             ))
+        db.flush()
+
+        # Demo CPD evidence for Colleen Loo (clinical psychiatrist demo account)
+        _seed_passport_attendance(db, users_by_email)
 
         project_count = grant_count
         kpis = [

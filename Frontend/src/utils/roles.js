@@ -109,9 +109,20 @@ export function canInitiateChat(role) {
   return [ROLES.ADMIN, ROLES.CLINICIAN, ROLES.RESEARCHER].includes(role)
 }
 
-/** Clinicians (and admins) see CPD transcript / MyCPD export on Passport. */
-export function canViewCpd(role) {
-  return [ROLES.ADMIN, ROLES.CLINICIAN].includes(role)
+/**
+ * CPD / MyCPD export on Passport.
+ * Visible to admins, clinician access role, and anyone with a clinician identity facet
+ * (including dual clinician + researcher profiles).
+ */
+export function canViewCpd(role, identityFacets = []) {
+  if ([ROLES.ADMIN, ROLES.CLINICIAN].includes(role)) return true
+  if (
+    hasFacet(identityFacets, IDENTITY_FACETS.CLINICIAN) &&
+    hasFacet(identityFacets, IDENTITY_FACETS.RESEARCHER)
+  ) {
+    return true
+  }
+  return hasFacet(identityFacets, IDENTITY_FACETS.CLINICIAN)
 }
 
 export function getNavLinks(role) {

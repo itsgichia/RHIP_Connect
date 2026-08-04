@@ -24,7 +24,6 @@ const CPD_CATEGORY_LABELS = {
 export default function PassportPage() {
   const { user } = useAuth()
   const { refresh: refreshNotifications } = useNotifications()
-  const showCpd = canViewCpd(user?.role)
   const [passport, setPassport] = useState(null)
   const [events, setEvents] = useState([])
   const [cpd, setCpd] = useState(null)
@@ -33,23 +32,33 @@ export default function PassportPage() {
   const [showStamp, setShowStamp] = useState(false)
   const [exporting, setExporting] = useState(false)
   const [loading, setLoading] = useState(true)
+  // Prefer server flag (covers dual clinician+researcher); fall back to local session facets.
+  const showCpd =
+    passport?.can_view_cpd === true || canViewCpd(user?.role, user?.identity_facets)
 
   const loadPassport = useCallback(async () => {
     setLoading(true)
     try {
-      const requests = [
+      const [passportRes, eventsRes] = await Promise.all([
         api.get('/passport/my'),
         api.get('/passport/events'),
-      ]
-      if (showCpd) requests.push(api.get('/passport/cpd'))
-      const [passportRes, eventsRes, cpdRes] = await Promise.all(requests)
+      ])
       setPassport(passportRes.data)
       setEvents(eventsRes.data.events)
-      setCpd(cpdRes?.data || null)
+
+      const allowCpd =
+        passportRes.data?.can_view_cpd === true ||
+        canViewCpd(user?.role, user?.identity_facets)
+      if (allowCpd) {
+        const cpdRes = await api.get('/passport/cpd')
+        setCpd(cpdRes.data)
+      } else {
+        setCpd(null)
+      }
     } finally {
       setLoading(false)
     }
-  }, [showCpd])
+  }, [user?.role, user?.identity_facets])
 
   useEffect(() => {
     loadPassport()

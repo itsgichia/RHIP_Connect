@@ -310,11 +310,20 @@ export default function ProfilePage() {
           onSaved={(data) => {
             setProfile(data)
             setEditing(false)
+            const facets = data.identity_facets || []
+            const rolePatch = facets.includes('clinician')
+              ? { role: 'clinician' }
+              : facets.some((f) =>
+                  ['researcher', 'professional_technical', 'policy'].includes(f),
+                )
+                ? { role: 'researcher' }
+                : {}
             updateUser?.({
-              identity_facets: data.identity_facets || [],
+              identity_facets: facets,
               primary_lens: data.primary_lens || null,
               career_level: data.career_level || null,
               profile_id: data.id,
+              ...rolePatch,
             })
           }}
           onCancel={() => setEditing(false)}
